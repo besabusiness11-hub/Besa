@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "wouter";
-import { Star, ExternalLink, ArrowLeft, Shield, Truck, HeartHandshake, Award } from "lucide-react";
+import { Star, ExternalLink, ArrowLeft, Shield, Truck, HeartHandshake, Award, User } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ProductCard from "@/components/product-card";
@@ -9,6 +9,80 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { ProductWithDetails } from "@shared/schema";
+
+interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  date: string;
+  comment: string;
+  verified: boolean;
+}
+
+const productReviews: Record<string, Review[]> = {
+  "prod-1": [
+    {
+      id: "rev-1",
+      author: "Marco Rossi",
+      rating: 5,
+      date: "15 Settembre 2024",
+      comment: "Macchina eccezionale! La usiamo nel nostro bar da 3 mesi e non ha mai avuto problemi. Il caffè è sempre perfetto e i clienti lo apprezzano molto. Ottimo investimento.",
+      verified: true
+    },
+    {
+      id: "rev-2",
+      author: "Laura Bianchi",
+      rating: 4,
+      date: "8 Settembre 2024",
+      comment: "Buona macchina professionale, fa un ottimo espresso. L'unico piccolo difetto è che ci mette un po' a scaldarsi la mattina, ma per il resto è perfetta.",
+      verified: true
+    },
+    {
+      id: "rev-3",
+      author: "Giuseppe Verdi",
+      rating: 5,
+      date: "1 Settembre 2024",
+      comment: "Qualità costruttiva eccellente, in acciaio inox molto solido. Il controllo temperatura è preciso e permette di ottenere sempre risultati costanti. Consigliata!",
+      verified: false
+    }
+  ],
+  "prod-2": [
+    {
+      id: "rev-4",
+      author: "Dott.ssa Elena Ferrari",
+      rating: 5,
+      date: "20 Settembre 2024",
+      comment: "Poltrona odontoiatrica di altissima qualità. I pazienti la trovano molto comoda e il sistema di regolazione elettrica è fluido e silenzioso. Ottimo acquisto per il mio studio.",
+      verified: true
+    },
+    {
+      id: "rev-5",
+      author: "Dott. Paolo Russo",
+      rating: 5,
+      date: "12 Settembre 2024",
+      comment: "Design moderno e funzionale. I materiali antimicrobici sono un grande plus per l'igiene. La consiglio a tutti i colleghi che vogliono rinnovare lo studio.",
+      verified: true
+    }
+  ],
+  "prod-3": [
+    {
+      id: "rev-6",
+      author: "Andrea Colombo",
+      rating: 4,
+      date: "25 Settembre 2024",
+      comment: "Sistema POS completo e facile da usare. Il software è intuitivo e il supporto clienti è stato molto disponibile durante l'installazione. Unica nota: la stampante è un po' rumorosa.",
+      verified: true
+    },
+    {
+      id: "rev-7",
+      author: "Silvia Martini",
+      rating: 5,
+      date: "18 Settembre 2024",
+      comment: "Perfetto per il mio negozio di abbigliamento. Gestisco facilmente inventario, vendite e clienti tutto da un unico sistema. Ottimo rapporto qualità-prezzo!",
+      verified: true
+    }
+  ]
+};
 
 export default function ProductDetail() {
   const params = useParams();
@@ -37,24 +111,26 @@ export default function ProductDetail() {
     enabled: !!product,
   });
 
-  const renderStars = (rating: number) => {
+  const renderStars = (rating: number, size: string = "w-5 h-5") => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={i} className="w-5 h-5 fill-yellow-500 text-yellow-500" />);
+      stars.push(<Star key={i} className={`${size} fill-yellow-500 text-yellow-500`} />);
     }
     if (hasHalfStar) {
-      stars.push(<Star key="half" className="w-5 h-5 fill-yellow-500/50 text-yellow-500" />);
+      stars.push(<Star key="half" className={`${size} fill-yellow-500/50 text-yellow-500`} />);
     }
     const remainingStars = 5 - Math.ceil(rating);
     for (let i = 0; i < remainingStars; i++) {
-      stars.push(<Star key={`empty-${i}`} className="w-5 h-5 text-gray-300" />);
+      stars.push(<Star key={`empty-${i}`} className={`${size} text-gray-300`} />);
     }
 
     return stars;
   };
+
+  const reviews = product ? (productReviews[product.id] || []) : [];
 
   if (productLoading) {
     return (

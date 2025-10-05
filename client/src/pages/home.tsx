@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Sparkles, CheckCircle, TrendingUp, Users, Package, Star } from "lucide-react";
@@ -8,8 +9,37 @@ import ProductCard from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Category, ProductWithDetails } from "@shared/schema";
+import logoPath from "@assets/ChatGPT Image 25 set 2025, 13_13_58_1759676591455.png";
 
 export default function Home() {
+  const [showLogoAnimation, setShowLogoAnimation] = useState(true);
+  const [logoAnimationPhase, setLogoAnimationPhase] = useState<'initial' | 'shrinking' | 'done'>('initial');
+
+  useEffect(() => {
+    const hasSeenAnimation = sessionStorage.getItem('besa-logo-animation');
+    
+    if (hasSeenAnimation) {
+      setShowLogoAnimation(false);
+      setLogoAnimationPhase('done');
+      return;
+    }
+
+    const timer1 = setTimeout(() => {
+      setLogoAnimationPhase('shrinking');
+    }, 1500);
+
+    const timer2 = setTimeout(() => {
+      setLogoAnimationPhase('done');
+      setShowLogoAnimation(false);
+      sessionStorage.setItem('besa-logo-animation', 'true');
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
+
   const { data: categories, isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
   });
@@ -52,10 +82,37 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      {/* Logo Animation Overlay */}
+      {showLogoAnimation && (
+        <div 
+          className={`fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-1000 ${
+            logoAnimationPhase === 'shrinking' ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
+        >
+          <div
+            className={`transition-all duration-1500 ease-in-out ${
+              logoAnimationPhase === 'initial' 
+                ? 'scale-150' 
+                : 'scale-50 translate-x-[-200vw] translate-y-[-200vh]'
+            }`}
+          >
+            <img 
+              src={logoPath} 
+              alt="BeSa Logo" 
+              className="w-64 h-auto"
+            />
+          </div>
+        </div>
+      )}
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-secondary via-white to-secondary overflow-hidden">
+      {/* Main Content */}
+      <div className={`transition-opacity duration-1000 ${
+        logoAnimationPhase === 'done' ? 'opacity-100' : 'opacity-0'
+      }`}>
+        <Header />
+
+        {/* Hero Section */}
+        <section className="relative bg-gradient-to-br from-secondary via-white to-secondary overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
@@ -128,8 +185,8 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
       </section>
 
-      {/* Categories Section */}
-      <section className="py-16 lg:py-24 bg-muted">
+        {/* Categories Section */}
+        <section className="py-16 lg:py-24 bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="categories-title">Esplora per Categoria</h2>
@@ -154,8 +211,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section className="py-16 lg:py-24 bg-background">
+        {/* Featured Products Section */}
+        <section className="py-16 lg:py-24 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="featured-title">Prodotti in Evidenza</h2>
@@ -186,8 +243,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-16 lg:py-24 bg-muted">
+        {/* How It Works Section */}
+        <section className="py-16 lg:py-24 bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="how-it-works-title">Come Funziona BeSa</h2>
@@ -259,8 +316,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-16 lg:py-24 bg-background">
+        {/* Testimonials Section */}
+        <section className="py-16 lg:py-24 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="testimonials-title">Cosa Dicono i Nostri Clienti</h2>
@@ -298,7 +355,8 @@ export default function Home() {
         </div>
       </section>
 
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 }

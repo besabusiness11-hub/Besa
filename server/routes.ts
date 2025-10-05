@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { insertNewsletterSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Categories routes
@@ -64,6 +65,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(product);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch product" });
+    }
+  });
+
+  // Newsletter routes
+  app.post("/api/newsletter/subscribe", async (req, res) => {
+    try {
+      const validation = insertNewsletterSchema.safeParse({
+        ...req.body,
+        subscribedAt: new Date().toISOString()
+      });
+
+      if (!validation.success) {
+        return res.status(400).json({ 
+          error: "Dati non validi",
+          details: validation.error.issues 
+        });
+      }
+
+      const newsletter = await storage.subscribeNewsletter(validation.data);
+      res.status(201).json({ 
+        success: true,
+        message: "Iscrizione completata con successo!"
+      });
+    } catch (error: any) {
+      if (error.message === "Email già registrata") {
+        return res.status(409).json({ error: "Email già registrata" });
+      }
+      res.status(500).json({ error: "Errore durante l'iscrizione" });
     }
   });
 

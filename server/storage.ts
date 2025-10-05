@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type ProductWithDetails } from "@shared/schema";
+import { type User, type InsertUser, type Category, type InsertCategory, type Product, type InsertProduct, type ProductWithDetails, type Newsletter, type InsertNewsletter } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -18,17 +18,23 @@ export interface IStorage {
   getFeaturedProducts(limit?: number): Promise<ProductWithDetails[]>;
   getProductsByCategory(categoryId: string): Promise<ProductWithDetails[]>;
   createProduct(product: InsertProduct): Promise<Product>;
+  
+  // Newsletter
+  subscribeNewsletter(newsletter: InsertNewsletter): Promise<Newsletter>;
+  getNewsletterByEmail(email: string): Promise<Newsletter | undefined>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private categories: Map<string, Category>;
   private products: Map<string, Product>;
+  private newsletters: Map<string, Newsletter>;
 
   constructor() {
     this.users = new Map();
     this.categories = new Map();
     this.products = new Map();
+    this.newsletters = new Map();
     this.seedData();
   }
 
@@ -332,6 +338,28 @@ export class MemStorage implements IStorage {
     };
     this.products.set(id, product);
     return product;
+  }
+
+  async subscribeNewsletter(insertNewsletter: InsertNewsletter): Promise<Newsletter> {
+    const existing = await this.getNewsletterByEmail(insertNewsletter.email);
+    if (existing) {
+      throw new Error("Email già registrata");
+    }
+    
+    const id = randomUUID();
+    const newsletter: Newsletter = {
+      id,
+      email: insertNewsletter.email,
+      subscribedAt: insertNewsletter.subscribedAt
+    };
+    this.newsletters.set(id, newsletter);
+    return newsletter;
+  }
+
+  async getNewsletterByEmail(email: string): Promise<Newsletter | undefined> {
+    return Array.from(this.newsletters.values()).find(
+      (newsletter) => newsletter.email.toLowerCase() === email.toLowerCase()
+    );
   }
 }
 

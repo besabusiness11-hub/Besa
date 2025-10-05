@@ -36,6 +36,12 @@ export const products = pgTable("products", {
   featured: boolean("featured").default(false),
 });
 
+export const newsletters = pgTable("newsletters", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull().unique(),
+  subscribedAt: text("subscribed_at").notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
 });
@@ -48,6 +54,10 @@ export const insertProductSchema = createInsertSchema(products).omit({
   id: true,
 });
 
+export const insertNewsletterSchema = createInsertSchema(newsletters).omit({
+  id: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -56,6 +66,9 @@ export type Category = typeof categories.$inferSelect;
 
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type Product = typeof products.$inferSelect;
+
+export type InsertNewsletter = z.infer<typeof insertNewsletterSchema>;
+export type Newsletter = typeof newsletters.$inferSelect;
 
 export interface ProductWithDetails extends Product {
   category: Category;

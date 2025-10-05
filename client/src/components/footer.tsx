@@ -1,8 +1,53 @@
+import { useState } from "react";
 import { Link } from "wouter";
-import { Mail, Phone, MapPin, Twitter, Linkedin, Facebook } from "lucide-react";
+import { Mail, Phone, MapPin, Twitter, Linkedin, Facebook, Send } from "lucide-react";
 import logoPath from "@assets/ChatGPT Image 25 set 2025, 13_13_58_1759676591455.png";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const { toast } = useToast();
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes("@")) {
+      toast({
+        title: "Errore",
+        description: "Inserisci un indirizzo email valido",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubscribing(true);
+    
+    try {
+      await apiRequest("POST", "/api/newsletter/subscribe", { email });
+
+      toast({
+        title: "Iscrizione completata!",
+        description: "Grazie per esserti iscritto alla newsletter BeSa",
+      });
+      setEmail("");
+    } catch (error: any) {
+      const errorMessage = error.message?.includes("409") 
+        ? "Email già registrata" 
+        : "Errore durante l'iscrizione";
+      toast({
+        title: "Errore",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
   return (
     <footer className="bg-foreground text-white py-12 lg:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,6 +63,31 @@ export default function Footer() {
             <p className="text-white/70 mb-4 text-sm leading-relaxed">
               Il marketplace italiano che connette fornitori e professionisti per far crescere il business.
             </p>
+            
+            {/* Newsletter Form */}
+            <div className="mt-6">
+              <h4 className="text-white font-semibold mb-3 text-sm">Newsletter</h4>
+              <form onSubmit={handleNewsletterSubmit} className="space-y-2">
+                <Input
+                  type="email"
+                  placeholder="La tua email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                  data-testid="newsletter-input"
+                  disabled={isSubscribing}
+                />
+                <Button 
+                  type="submit" 
+                  className="w-full bg-primary hover:bg-accent"
+                  disabled={isSubscribing}
+                  data-testid="newsletter-submit"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  {isSubscribing ? "Iscrizione..." : "Iscriviti"}
+                </Button>
+              </form>
+            </div>
             <div className="flex space-x-4">
               <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer" data-testid="social-twitter">
                 <Twitter className="w-5 h-5" />
