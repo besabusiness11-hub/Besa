@@ -12,14 +12,24 @@ import type { Category, ProductWithDetails } from "@shared/schema";
 import logoPath from "@assets/ChatGPT Image 25 set 2025, 13_13_58_1759676591455.png";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [logoVisible, setLogoVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      
+      if (scrollY > 50) {
+        setLogoVisible(false);
+      } else {
+        setLogoVisible(true);
+      }
+    };
 
-    return () => clearTimeout(timer);
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const { data: categories, isLoading: categoriesLoading } = useQuery<Category[]>({
@@ -64,25 +74,27 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Loading Screen */}
+      {/* Logo Screen */}
       <div 
-        className={`fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-1000 ${
-          isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        className={`fixed inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-200 z-50 flex flex-col items-center justify-center transition-all duration-800 ease-out ${
+          logoVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
         }`}
+        style={{ pointerEvents: logoVisible ? 'auto' : 'none' }}
       >
-        <div className={`transition-all duration-700 ${isLoading ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-          <img 
-            src={logoPath} 
-            alt="BeSa Logo" 
-            className="w-72 h-auto drop-shadow-2xl"
-          />
+        <img 
+          src={logoPath} 
+          alt="BeSa Logo" 
+          className="w-80 h-auto drop-shadow-2xl"
+        />
+        
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 text-primary text-sm font-medium animate-bounce" data-testid="scroll-indicator">
+          ↓ Scorri per continuare
         </div>
       </div>
 
       {/* Main Content */}
-      <div className={`transition-opacity duration-1000 ${
-        !isLoading ? 'opacity-100' : 'opacity-0'
-      }`}>
+      <div>
         <Header />
 
         {/* Hero Section */}
