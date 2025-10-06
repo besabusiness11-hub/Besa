@@ -270,14 +270,12 @@ export default function ProductDetail() {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                {product.externalUrl && (
-                  <Button asChild className="btn-primary px-8 py-4 flex-1" data-testid="external-buy-button">
-                    <a href={product.externalUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Acquista Ora
-                    </a>
-                  </Button>
-                )}
+                <Button asChild className="btn-primary px-8 py-4 flex-1" data-testid="buy-now-button">
+                  <a href="https://tally.so/r/n0NPNZ" target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Acquista Ora
+                  </a>
+                </Button>
                 <Button variant="outline" className="px-8 py-4 flex-1" data-testid="contact-supplier-button">
                   Contatta Fornitore
                 </Button>
