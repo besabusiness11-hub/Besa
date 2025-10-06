@@ -57,7 +57,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
       <img 
         src={logoPath} 
         alt="BeSa Logo" 
-        className="w-80 h-auto drop-shadow-2xl"
+        className="w-80 h-auto"
         data-testid="splash-logo"
       />
     </div>
