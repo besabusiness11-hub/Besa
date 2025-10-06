@@ -21,23 +21,23 @@ export default function Home() {
   const testimonials = [
     {
       rating: 5,
-      text: "BeSa mi ha permesso di trovare fornitori affidabili per il mio ristorante. La qualità dei prodotti è eccellente e i prezzi competitivi.",
-      author: "Marco Rossi",
-      role: "Proprietario Ristorante",
+      text: "Utilizziamo BeSa da 6 mesi per trovare fornitori di attrezzature per il nostro ristorante. Abbiamo ridotto i costi del 15% mantenendo alta la qualità.",
+      author: "Alessandro Conti",
+      role: "Trattoria Da Nino, Milano",
       avatar: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
     },
     {
       rating: 5,
-      text: "Come dentista, ho trovato su BeSa attrezzature professionali di altissimo livello. Il servizio clienti è impeccabile.",
-      author: "Dott.ssa Laura Bianchi",
-      role: "Odontoiatra",
+      text: "La piattaforma mi ha permesso di confrontare diverse soluzioni per il mio studio. Ho trovato il miglior rapporto qualità-prezzo per l'attrezzatura radiologica.",
+      author: "Dott.ssa Elena Moretti",
+      role: "Studio Dentistico, Roma",
       avatar: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
     },
     {
       rating: 5,
-      text: "Piattaforma intuitiva e completa. Ho trovato tutto ciò di cui avevo bisogno per rinnovare il mio negozio in un unico posto.",
-      author: "Giuseppe Verdi",
-      role: "Titolare Negozio",
+      text: "Interfaccia semplice e fornitori verificati. In una settimana abbiamo completato l'acquisto di tutto il necessario per il nuovo punto vendita.",
+      author: "Marco Ferrara",
+      role: "Fashion Store, Torino",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
     },
   ];
@@ -83,16 +83,16 @@ export default function Home() {
               {/* Stats */}
               <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-border">
                 <div data-testid="stat-providers">
-                  <div className="text-3xl font-bold text-primary">500+</div>
-                  <div className="text-sm text-muted-foreground mt-1">Fornitori Attivi</div>
+                  <div className="text-3xl font-bold text-primary">120+</div>
+                  <div className="text-sm text-muted-foreground mt-1">Fornitori Verificati</div>
                 </div>
                 <div data-testid="stat-categories">
-                  <div className="text-3xl font-bold text-primary">12</div>
-                  <div className="text-sm text-muted-foreground mt-1">Categorie</div>
+                  <div className="text-3xl font-bold text-primary">8</div>
+                  <div className="text-sm text-muted-foreground mt-1">Settori Principali</div>
                 </div>
                 <div data-testid="stat-products">
-                  <div className="text-3xl font-bold text-primary">2000+</div>
-                  <div className="text-sm text-muted-foreground mt-1">Prodotti/Servizi</div>
+                  <div className="text-3xl font-bold text-primary">850+</div>
+                  <div className="text-sm text-muted-foreground mt-1">Prodotti Disponibili</div>
                 </div>
               </div>
             </div>

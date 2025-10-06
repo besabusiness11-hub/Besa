@@ -47,7 +47,7 @@ export class MemStorage implements IStorage {
         slug: "ristorazione",
         description: "Attrezzature, ingredienti premium, servizi per ristoranti e bar",
         imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-        productCount: 320
+        productCount: 145
       },
       {
         id: "cat-2",
@@ -55,7 +55,7 @@ export class MemStorage implements IStorage {
         slug: "dentisti",
         description: "Strumenti professionali, materiali dentali e tecnologie all'avanguardia",
         imageUrl: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-        productCount: 180
+        productCount: 82
       },
       {
         id: "cat-3",
@@ -63,7 +63,7 @@ export class MemStorage implements IStorage {
         slug: "salute-benessere",
         description: "Prodotti per spa, centri estetici e servizi di wellness",
         imageUrl: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-        productCount: 250
+        productCount: 98
       },
       {
         id: "cat-4",
@@ -71,7 +71,7 @@ export class MemStorage implements IStorage {
         slug: "retail",
         description: "Soluzioni per negozi, arredi, sistemi POS e gestione magazzino",
         imageUrl: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-        productCount: 420
+        productCount: 156
       },
       {
         id: "cat-5",
@@ -79,7 +79,7 @@ export class MemStorage implements IStorage {
         slug: "servizi-professionali",
         description: "Consulenze, formazione, servizi legali e amministrativi",
         imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-        productCount: 290
+        productCount: 67
       },
       {
         id: "cat-6",
@@ -87,7 +87,7 @@ export class MemStorage implements IStorage {
         slug: "tecnologia",
         description: "Software, hardware, soluzioni IT e automazione per aziende",
         imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-        productCount: 340
+        productCount: 124
       },
       {
         id: "cat-7",
@@ -95,7 +95,7 @@ export class MemStorage implements IStorage {
         slug: "hospitality",
         description: "Forniture per hotel, B&B, biancheria e servizi di accoglienza",
         imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-        productCount: 200
+        productCount: 89
       },
       {
         id: "cat-8",
@@ -103,7 +103,7 @@ export class MemStorage implements IStorage {
         slug: "altre-categorie",
         description: "Scopri altre soluzioni per settori specializzati",
         imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-        productCount: 150
+        productCount: 89
       }
     ];
 
@@ -111,9 +111,9 @@ export class MemStorage implements IStorage {
 
     // Seed suppliers
     const suppliersData = [
-      { id: "supplier-1", username: "coffeepro", password: "pass123", email: "info@coffeepro.it", isSupplier: true, companyName: "CoffeePro Italia" },
-      { id: "supplier-2", username: "dentaltech", password: "pass123", email: "sales@dentaltech.it", isSupplier: true, companyName: "DentalTech Solutions" },
-      { id: "supplier-3", username: "retailsys", password: "pass123", email: "info@retailsys.it", isSupplier: true, companyName: "RetailSys Technology" },
+      { id: "supplier-1", username: "horeca_italia", password: "pass123", email: "commerciale@horecaitalia.it", isSupplier: true, companyName: "Horeca Italia S.r.l." },
+      { id: "supplier-2", username: "medtech_dental", password: "pass123", email: "vendite@medtechdental.it", isSupplier: true, companyName: "MedTech Dental Equipment" },
+      { id: "supplier-3", username: "techretail", password: "pass123", email: "info@techretail.it", isSupplier: true, companyName: "Tech Retail Solutions" },
     ];
 
     suppliersData.forEach(supplier => this.users.set(supplier.id, supplier));
@@ -122,85 +122,85 @@ export class MemStorage implements IStorage {
     const productsData = [
       {
         id: "prod-1",
-        name: "Macchina Caffè Professionale",
-        description: "Macchina per espresso commerciale a 2 gruppi, ideale per bar e ristoranti. Realizzata in acciaio inox di alta qualità con sistema di riscaldamento rapido e controllo temperatura preciso.",
-        shortDescription: "Macchina per espresso commerciale, 2 gruppi, ideale per bar e ristoranti",
-        price: "2450.00",
+        name: "Macchina Caffè Espresso 2 Gruppi La Marzocco",
+        description: "Macchina per espresso professionale a 2 gruppi con caldaia da 11 litri. Costruzione in acciaio inox AISI 304, sistema di riscaldamento rapido e controllo elettronico della temperatura. Include macinacaffè professionale integrato. Ideale per bar e ristoranti con alto volume di produzione.",
+        shortDescription: "Macchina espresso professionale 2 gruppi, caldaia 11L, acciaio inox",
+        price: "3850.00",
         imageUrl: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
         categoryId: "cat-1",
         supplierId: "supplier-1",
-        rating: "4.8",
-        reviewCount: 48,
+        rating: "4.7",
+        reviewCount: 23,
         externalUrl: "https://example.com/coffee-machine",
         featured: true
       },
       {
         id: "prod-2",
-        name: "Poltrona Odontoiatrica Premium",
-        description: "Poltrona ergonomica con sistema di regolazione elettrica e illuminazione LED integrata. Design moderno con materiali antimicrobici e facilità di sterilizzazione.",
-        shortDescription: "Poltrona ergonomica con sistema di regolazione elettrica e lighting LED",
-        price: "8900.00",
+        name: "Poltrona Odontoiatrica Diplomat DM20",
+        description: "Unit odontoiatrico completo con poltrona ergonomica a regolazione elettropneumatica, riunito con 5 strumenti, lampada scialitica LED da 30.000 lux e tavoletta porta-strumenti rotante. Rivestimento antimicrobico certificato e pedale multifunzione wireless. Garanzia 3 anni.",
+        shortDescription: "Unit odontoiatrico completo, regolazione elettropneumatica, LED 30.000 lux",
+        price: "12500.00",
         imageUrl: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
         categoryId: "cat-2",
         supplierId: "supplier-2",
-        rating: "4.9",
-        reviewCount: 32,
+        rating: "4.8",
+        reviewCount: 18,
         externalUrl: "https://example.com/dental-chair",
         featured: true
       },
       {
         id: "prod-3",
-        name: "Sistema POS All-in-One",
-        description: "Software gestionale completo con hardware incluso: tablet, stampante termica, lettore di codici a barre e terminale per carte. Ideale per negozi e ristoranti.",
-        shortDescription: "Software gestionale + hardware completo con stampante e lettore carte",
-        price: "1290.00",
+        name: "Sistema POS TouchRetail Premium",
+        description: "Soluzione POS completa con software gestionale cloud-based, tablet touchscreen 15', stampante termica 80mm, lettore barcode 2D e POS per carte contactless. Include modulo magazzino, fidelity card e reportistica avanzata. Canone annuale licenza software incluso nel prezzo.",
+        shortDescription: "POS completo cloud: tablet 15', stampante, lettore carte contactless",
+        price: "1680.00",
         imageUrl: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
         categoryId: "cat-6",
         supplierId: "supplier-3",
-        rating: "4.5",
-        reviewCount: 89,
+        rating: "4.6",
+        reviewCount: 42,
         externalUrl: "https://example.com/pos-system",
         featured: true
       },
       {
         id: "prod-4",
-        name: "Frigorifero Professionale 600L",
-        description: "Refrigeratore verticale in acciaio inox, classe energetica A++, con sistema di sbrinamento automatico e controllo digitale della temperatura.",
-        shortDescription: "Refrigeratore verticale in acciaio inox, classe energetica A++",
-        price: "1850.00",
+        name: "Armadio Refrigerato Verticale GN 600L",
+        description: "Frigorifero professionale a 2 porte in acciaio AISI 304, capacità 600 litri netti. Classe energetica D, temperatura +2°/+8°C, gas refrigerante R290 ecologico. Sistema No Frost, controllo digitale touch e allarme temperatura. 4 guide GN 2/1 per porta.",
+        shortDescription: "Frigo professionale 600L, AISI 304, classe D, gas R290",
+        price: "1950.00",
         imageUrl: "https://images.unsplash.com/photo-1584308972272-9e4e7685e80f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
         categoryId: "cat-1",
         supplierId: "supplier-1",
-        rating: "4.7",
-        reviewCount: 67,
+        rating: "4.5",
+        reviewCount: 31,
         externalUrl: "https://example.com/professional-fridge",
         featured: false
       },
       {
         id: "prod-5",
-        name: "Poltrona Parrucchiere Design",
-        description: "Poltrona ergonomica idraulica con base cromata e rivestimento in ecopelle di alta qualità. Design moderno e funzionale per saloni professionali.",
-        shortDescription: "Poltrona ergonomica idraulica con base cromata e rivestimento ecopelle",
-        price: "680.00",
+        name: "Poltrona Barbiere Hydraulic Premium",
+        description: "Poltrona professionale per parrucchieri e barbieri con pompa idraulica rinforzata (portata 180kg), base cromata 5 razze e poggiapiedi regolabile. Rivestimento in similpelle antibatterica disponibile in 6 colori. Schienale reclinabile fino a 150°. Garanzia 2 anni.",
+        shortDescription: "Poltrona idraulica 180kg, cromata, similpelle antibatterica, schienale reclinabile",
+        price: "890.00",
         imageUrl: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
         categoryId: "cat-3",
         supplierId: "supplier-1",
-        rating: "4.3",
-        reviewCount: 41,
+        rating: "4.4",
+        reviewCount: 27,
         externalUrl: "https://example.com/salon-chair",
         featured: false
       },
       {
         id: "prod-6",
-        name: "Radiografo Digitale 3D",
-        description: "Sistema radiografico panoramico e 3D con software di diagnostica incluso. Tecnologia all'avanguardia per studi odontoiatrici moderni.",
-        shortDescription: "Sistema radiografico panoramico e 3D con software incluso",
-        price: "24500.00",
+        name: "Ortopantomografo Digitale 3D CBCT",
+        description: "Sistema radiografico digitale panoramico con tecnologia Cone Beam CT. FOV 8x8 cm, sensore CMOS ad alta risoluzione, software di acquisizione e diagnostica incluso. Dose radiogena ridotta del 40% rispetto ai sistemi tradizionali. Certificazione CE Medical e installazione compresa.",
+        shortDescription: "CBCT digitale panoramico FOV 8x8, CMOS, software incluso",
+        price: "28900.00",
         imageUrl: "https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
         categoryId: "cat-2",
         supplierId: "supplier-2",
         rating: "4.9",
-        reviewCount: 28,
+        reviewCount: 12,
         externalUrl: "https://example.com/digital-xray",
         featured: false
       }
