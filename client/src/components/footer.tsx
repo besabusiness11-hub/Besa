@@ -56,38 +56,14 @@ export default function Footer() {
           <div>
             <img 
               src={logoPath} 
-              alt="BeSa Logo" 
+              alt="Besa Logo" 
               className="h-14 w-auto mb-4 brightness-0 invert" 
               data-testid="footer-logo"
             />
-            <p className="text-white/70 mb-4 text-sm leading-relaxed">
-              Il marketplace italiano che connette fornitori e professionisti per far crescere il business.
+            <p className="text-white/70 mb-6 text-sm leading-relaxed">
+              Besa crea siti web professionali per attività locali. Dalla progettazione alla pubblicazione, ci occupiamo di tutto per la tua presenza digitale.
             </p>
             
-            {/* Newsletter Form */}
-            <div className="mt-6">
-              <h4 className="text-white font-semibold mb-3 text-sm">Newsletter</h4>
-              <form onSubmit={handleNewsletterSubmit} className="space-y-2">
-                <Input
-                  type="email"
-                  placeholder="La tua email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
-                  data-testid="newsletter-input"
-                  disabled={isSubscribing}
-                />
-                <Button 
-                  type="submit" 
-                  className="w-full bg-primary hover:bg-accent"
-                  disabled={isSubscribing}
-                  data-testid="newsletter-submit"
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  {isSubscribing ? "Iscrizione..." : "Iscriviti"}
-                </Button>
-              </form>
-            </div>
             <div className="flex space-x-4">
               <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer" data-testid="social-twitter">
                 <Twitter className="w-5 h-5" />
@@ -106,24 +82,29 @@ export default function Footer() {
             <h3 className="text-white font-bold mb-4">Link Rapidi</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="text-white/70 hover:text-white transition-colors" data-testid="footer-link-home">
+                <a href="/" className="text-white/70 hover:text-white transition-colors" data-testid="footer-link-home">
                   Home
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/marketplace" className="text-white/70 hover:text-white transition-colors" data-testid="footer-link-marketplace">
-                  Marketplace
-                </Link>
+                <a href="#esempi" className="text-white/70 hover:text-white transition-colors" data-testid="footer-link-examples">
+                  Esempi
+                </a>
               </li>
               <li>
-                <Link href="/categories" className="text-white/70 hover:text-white transition-colors" data-testid="footer-link-categories">
-                  Categorie
-                </Link>
+                <a href="#come-funziona" className="text-white/70 hover:text-white transition-colors" data-testid="footer-link-how-it-works">
+                  Come funziona
+                </a>
               </li>
               <li>
-                <Link href="/suppliers" className="text-white/70 hover:text-white transition-colors" data-testid="footer-link-suppliers">
-                  Area Fornitori
-                </Link>
+                <a href="#chi-siamo" className="text-white/70 hover:text-white transition-colors" data-testid="footer-link-team">
+                  Chi siamo
+                </a>
+              </li>
+              <li>
+                <a href="#prezzi" className="text-white/70 hover:text-white transition-colors" data-testid="footer-link-pricing">
+                  Prezzi
+                </a>
               </li>
             </ul>
           </div>
@@ -182,7 +163,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-sm text-white/60">
-          <p data-testid="copyright">&copy; 2024 BeSa. Tutti i diritti riservati.</p>
+          <p data-testid="copyright">&copy; 2025 Besa. Tutti i diritti riservati.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="hover:text-white transition-colors" data-testid="footer-bottom-privacy">Privacy</a>
             <a href="#" className="hover:text-white transition-colors" data-testid="footer-bottom-terms">Termini</a>
