@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { Sparkles, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -7,20 +7,19 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
   const portfolioScrollRef = useRef<HTMLDivElement>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
 
   const scrollPortfolio = (direction: 'left' | 'right') => {
     if (portfolioScrollRef.current) {
+      const currentScroll = portfolioScrollRef.current.scrollLeft;
       const scrollAmount = 350;
       const newPosition = direction === 'left' 
-        ? scrollPosition - scrollAmount 
-        : scrollPosition + scrollAmount;
+        ? Math.max(0, currentScroll - scrollAmount)
+        : currentScroll + scrollAmount;
       
       portfolioScrollRef.current.scrollTo({
         left: newPosition,
         behavior: 'smooth'
       });
-      setScrollPosition(newPosition);
     }
   };
 
@@ -118,6 +117,7 @@ export default function Home() {
               size="icon"
               className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg hover:bg-secondary hidden md:flex"
               onClick={() => scrollPortfolio('left')}
+              aria-label="Scorri portfolio a sinistra"
               data-testid="portfolio-scroll-left"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -128,6 +128,7 @@ export default function Home() {
               size="icon"
               className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg hover:bg-secondary hidden md:flex"
               onClick={() => scrollPortfolio('right')}
+              aria-label="Scorri portfolio a destra"
               data-testid="portfolio-scroll-right"
             >
               <ChevronRight className="w-6 h-6" />
