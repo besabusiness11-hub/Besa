@@ -1,13 +1,31 @@
-import { Sparkles, CheckCircle } from "lucide-react";
+import { useState, useRef } from "react";
+import { Sparkles, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
+  const portfolioScrollRef = useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const scrollPortfolio = (direction: 'left' | 'right') => {
+    if (portfolioScrollRef.current) {
+      const scrollAmount = 350;
+      const newPosition = direction === 'left' 
+        ? scrollPosition - scrollAmount 
+        : scrollPosition + scrollAmount;
+      
+      portfolioScrollRef.current.scrollTo({
+        left: newPosition,
+        behavior: 'smooth'
+      });
+      setScrollPosition(newPosition);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div id="top" className="min-h-screen bg-background">
         <Header />
 
         {/* Hero Section */}
@@ -94,7 +112,32 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="flex overflow-x-auto gap-6 pb-8 scroll-smooth snap-x snap-mandatory scrollbar-hide" data-testid="portfolio-slider">
+          <div className="relative">
+            <Button 
+              variant="outline" 
+              size="icon"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg hover:bg-secondary hidden md:flex"
+              onClick={() => scrollPortfolio('left')}
+              data-testid="portfolio-scroll-left"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </Button>
+
+            <Button 
+              variant="outline" 
+              size="icon"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg hover:bg-secondary hidden md:flex"
+              onClick={() => scrollPortfolio('right')}
+              data-testid="portfolio-scroll-right"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </Button>
+
+            <div 
+              ref={portfolioScrollRef}
+              className="flex overflow-x-auto gap-6 pb-8 scroll-smooth snap-x snap-mandatory scrollbar-hide px-12" 
+              data-testid="portfolio-slider"
+            >
             {[
               {
                 id: "restaurant",
@@ -147,6 +190,7 @@ export default function Home() {
                 </CardContent>
               </Card>
             ))}
+            </div>
           </div>
         </div>
       </section>
@@ -269,60 +313,62 @@ export default function Home() {
       </section>
 
         {/* Pricing Section */}
-        <section id="prezzi" className="py-16 lg:py-24 bg-background">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="prezzi" className="py-16 lg:py-24 bg-gradient-to-br from-primary via-primary to-accent">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="pricing-title">Prezzi e servizi inclusi</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto" data-testid="pricing-description">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4" data-testid="pricing-title">Prezzi e servizi inclusi</h2>
+            <p className="text-lg text-white/90 max-w-2xl mx-auto" data-testid="pricing-description">
               Tutto ciò di cui hai bisogno per la tua presenza online, ad un prezzo trasparente
             </p>
           </div>
 
-          <Card className="border-2 border-primary shadow-2xl">
-            <CardContent className="p-8 lg:p-12">
-              <div className="text-center mb-8">
-                <div className="inline-block bg-primary/10 px-6 py-2 rounded-full mb-4">
-                  <span className="text-primary font-semibold">Offerta Lancio</span>
-                </div>
-                <div className="mb-4">
-                  <span className="text-5xl font-bold text-foreground" data-testid="pricing-amount">€59</span>
-                  <span className="text-xl text-muted-foreground">/mese</span>
-                </div>
-                <p className="text-muted-foreground text-lg mb-2" data-testid="pricing-subtitle">
-                  Creazione del sito gratuita
-                </p>
-                <p className="text-sm text-muted-foreground italic">
-                  (meno di €2 al giorno)
-                </p>
-              </div>
-
-              <div className="space-y-4 mb-8" data-testid="services-list">
-                {[
-                  "Sito web personalizzato (1 pagina)",
-                  "Dominio con nome personalizzato",
-                  "Hosting",
-                  "Email professionale",
-                  "Ottimizzazione su Google Maps",
-                  "Aggiornamenti del sito",
-                  "Assistenza 7/7 via email e telefono",
-                  "Servizio fotografico business professionale"
-                ].map((service, index) => (
-                  <div key={index} className="flex items-start" data-testid={`service-${index}`}>
-                    <CheckCircle className="w-6 h-6 text-success mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-base">{service}</span>
+          <div className="flex justify-center">
+            <Card className="border-0 shadow-2xl max-w-lg w-full bg-white">
+              <CardContent className="p-8 lg:p-10">
+                <div className="text-center mb-8">
+                  <div className="inline-block bg-primary/10 px-6 py-2 rounded-full mb-4">
+                    <span className="text-primary font-semibold">Offerta Lancio</span>
                   </div>
-                ))}
-              </div>
+                  <div className="mb-4">
+                    <span className="text-5xl font-bold text-foreground" data-testid="pricing-amount">€59</span>
+                    <span className="text-xl text-muted-foreground">/mese</span>
+                  </div>
+                  <p className="text-muted-foreground text-lg mb-2" data-testid="pricing-subtitle">
+                    Creazione del sito gratuita
+                  </p>
+                  <p className="text-sm text-muted-foreground italic">
+                    (meno di €2 al giorno)
+                  </p>
+                </div>
 
-              <div className="text-center">
-                <Button asChild className="btn-primary px-12 py-4 rounded-lg font-semibold text-lg shadow-lg" data-testid="pricing-cta-button">
-                  <a href="https://tally.so/r/n0NPNZ" target="_blank" rel="noopener noreferrer">
-                    Inizia Ora
-                  </a>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="space-y-4 mb-8" data-testid="services-list">
+                  {[
+                    "Sito web personalizzato (1 pagina)",
+                    "Dominio con nome personalizzato",
+                    "Hosting",
+                    "Email professionale",
+                    "Ottimizzazione su Google Maps",
+                    "Aggiornamenti del sito",
+                    "Assistenza 7/7 via email e telefono",
+                    "Servizio fotografico business professionale"
+                  ].map((service, index) => (
+                    <div key={index} className="flex items-start" data-testid={`service-${index}`}>
+                      <CheckCircle className="w-6 h-6 text-success mr-3 flex-shrink-0 mt-0.5" />
+                      <span className="text-foreground text-base">{service}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="text-center">
+                  <Button asChild className="btn-primary w-full px-12 py-4 rounded-lg font-semibold text-lg shadow-lg" data-testid="pricing-cta-button">
+                    <a href="https://tally.so/r/n0NPNZ" target="_blank" rel="noopener noreferrer">
+                      Inizia Ora
+                    </a>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 

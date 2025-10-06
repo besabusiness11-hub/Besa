@@ -1,22 +1,20 @@
-import { useState } from "react";
-import { Link, useLocation } from "wouter";
-import { Search, Menu, X, User, Briefcase } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logoPath from "@assets/ChatGPT Image 25 set 2025, 13_13_58_1759676591455.png";
 
 export default function Header() {
-  const [search, setSearch] = useState("");
-  const [location] = useLocation();
-
   const navigation = [
-    { name: "Home", href: "/" },
+    { name: "Home", href: "#top" },
     { name: "Esempi", href: "#esempi" },
     { name: "Nel pratico", href: "#come-funziona" },
     { name: "Chi siamo", href: "#chi-siamo" },
     { name: "Prezzi", href: "#prezzi" },
   ];
+
+  const handleLogoClick = () => {
+    window.location.reload();
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
@@ -25,14 +23,13 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/">
-              <img 
-                src={logoPath} 
-                alt="Besa Logo" 
-                className="h-14 w-auto cursor-pointer" 
-                data-testid="logo-link"
-              />
-            </Link>
+            <img 
+              src={logoPath} 
+              alt="Besa Logo" 
+              className="h-20 w-auto cursor-pointer" 
+              onClick={handleLogoClick}
+              data-testid="logo-link"
+            />
           </div>
 
           {/* Navigation Links - Desktop */}
