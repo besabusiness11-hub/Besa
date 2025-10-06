@@ -23,6 +23,7 @@ Preferred communication style: Simple, everyday language.
 - Tailwind CSS for utility-first styling with custom design tokens
 - CSS variables for theming support (light/dark modes)
 - New York style variant selected for component aesthetics
+- Custom splash screen component with animated transitions (fade-in, hold, fade-out with slide-up)
 
 **State Management**
 - TanStack Query (React Query) for server state management, caching, and data synchronization
@@ -34,6 +35,7 @@ Preferred communication style: Simple, everyday language.
 - Separation of concerns: UI components in `/components/ui`, feature components in `/components`
 - Page-based routing structure in `/pages` directory
 - Italian language as primary interface language for target market
+- Splash screen animation on initial app load with "BESA" branding (fades in, displays for ~2s, then reveals main content)
 
 ### Backend Architecture
 

@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Sparkles, CheckCircle, TrendingUp, Users, Package, Star } from "lucide-react";
@@ -9,29 +8,8 @@ import ProductCard from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Category, ProductWithDetails } from "@shared/schema";
-import logoPath from "@assets/ChatGPT Image 25 set 2025, 13_13_58_1759676591455.png";
 
 export default function Home() {
-  const [logoVisible, setLogoVisible] = useState(true);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      
-      if (scrollY > 50) {
-        setLogoVisible(false);
-      } else {
-        setLogoVisible(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   const { data: categories, isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
   });
@@ -74,27 +52,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Logo Screen */}
-      <div 
-        className={`fixed inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-200 z-50 flex flex-col items-center justify-center transition-all duration-800 ease-out ${
-          logoVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
-        }`}
-        style={{ pointerEvents: logoVisible ? 'auto' : 'none' }}
-      >
-        <img 
-          src={logoPath} 
-          alt="BeSa Logo" 
-          className="w-80 h-auto drop-shadow-2xl"
-        />
-        
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 text-primary text-sm font-medium animate-bounce" data-testid="scroll-indicator">
-          ↓ Scorri per continuare
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div>
         <Header />
 
         {/* Hero Section */}
@@ -342,7 +299,6 @@ export default function Home() {
       </section>
 
         <Footer />
-      </div>
     </div>
   );
 }
