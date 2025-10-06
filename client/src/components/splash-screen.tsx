@@ -45,11 +45,10 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-screen h-screen flex justify-center items-center z-[1000] ${
+      className={`fixed top-0 left-0 w-screen h-screen flex justify-center items-center z-[1000] bg-white ${
         isVisible ? "opacity-100" : "opacity-0"
       } ${isHidden ? "-translate-y-20 pointer-events-none" : ""}`}
       style={{
-        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
         transition: "opacity 1.2s ease-in-out, transform 0.8s ease-in-out",
       }}
       data-testid="splash-screen"
