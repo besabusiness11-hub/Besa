@@ -15,17 +15,9 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const hasSeenAnimation = sessionStorage.getItem('besa-logo-animation');
-    
-    if (hasSeenAnimation) {
-      setIsLoading(false);
-      return;
-    }
-
     const timer = setTimeout(() => {
       setIsLoading(false);
-      sessionStorage.setItem('besa-logo-animation', 'true');
-    }, 2000);
+    }, 2500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -74,15 +66,17 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Loading Screen */}
       <div 
-        className={`fixed inset-0 bg-gradient-to-br from-primary to-accent z-50 flex items-center justify-center transition-opacity duration-1500 ${
+        className={`fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-1000 ${
           isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <img 
-          src={logoPath} 
-          alt="BeSa Logo" 
-          className="w-64 h-auto animate-pulse"
-        />
+        <div className={`transition-all duration-700 ${isLoading ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+          <img 
+            src={logoPath} 
+            alt="BeSa Logo" 
+            className="w-72 h-auto drop-shadow-2xl"
+          />
+        </div>
       </div>
 
       {/* Main Content */}
