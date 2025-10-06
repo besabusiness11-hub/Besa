@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import logoPath from "@assets/ChatGPT Image 25 set 2025, 13_13_58_1759676591455.png";
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -53,17 +54,12 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
       }}
       data-testid="splash-screen"
     >
-      <div
-        className="text-[8rem] font-bold tracking-[0.1em]"
-        style={{
-          fontFamily: "Arial, sans-serif",
-          color: "#4a69bd",
-          textShadow: "0 4px 8px rgba(0,0,0,0.08)",
-        }}
-        data-testid="text-logo"
-      >
-        BESA
-      </div>
+      <img 
+        src={logoPath} 
+        alt="BeSa Logo" 
+        className="w-80 h-auto drop-shadow-2xl"
+        data-testid="splash-logo"
+      />
     </div>
   );
 }
