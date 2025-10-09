@@ -1,3 +1,4 @@
+import WebsiteShowcase from './WebsiteShowcase.jsx';
 import { useState, useCallback } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
