@@ -1,350 +1,271 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+                 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+                 @tailwind base;
+                 @tailwind components;
+                 @tailwind utilities;
 
-:root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(222 47% 11%);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(222 47% 11%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(222 47% 11%);
-  --primary: hsl(229 65% 45%);
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(232 100% 96%);
-  --secondary-foreground: hsl(229 65% 45%);
-  --muted: hsl(220 14% 96%);
-  --muted-foreground: hsl(220 9% 46%);
-  --accent: hsl(229 84% 32%);
-  --accent-foreground: hsl(0 0% 100%);
-  --destructive: hsl(0 84% 60%);
-  --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(220 13% 91%);
-  --input: hsl(220 13% 91%);
-  --ring: hsl(229 65% 45%);
-  --success: hsl(142 71% 45%);
-  --radius: 0.75rem;
-  --font-sans: 'Inter', sans-serif;
-}
+                 :root {
+                   --background: hsl(0 0% 100%);
+                   --foreground: hsl(222 47% 11%);
+                   --card: hsl(0 0% 100%);
+                   --card-foreground: hsl(222 47% 11%);
+                   --popover: hsl(0 0% 100%);
+                   --popover-foreground: hsl(222 47% 11%);
+                   --primary: hsl(229 65% 45%);
+                   --primary-foreground: hsl(0 0% 100%);
+                   --secondary: hsl(232 100% 96%);
+                   --secondary-foreground: hsl(229 65% 45%);
+                   --muted: hsl(220 14% 96%);
+                   --muted-foreground: hsl(220 9% 46%);
+                   --accent: hsl(229 84% 32%);
+                   --accent-foreground: hsl(0 0% 100%);
+                   --destructive: hsl(0 84% 60%);
+                   --destructive-foreground: hsl(0 0% 100%);
+                   --border: hsl(220 13% 91%);
+                   --input: hsl(220 13% 91%);
+                   --ring: hsl(229 65% 45%);
+                   --success: hsl(142 71% 45%);
+                   --radius: 0.75rem;
+                   --font-sans: 'Inter', sans-serif;
+                 }
 
-.dark {
-  --background: hsl(222 47% 11%);
-  --foreground: hsl(0 0% 100%);
-  --card: hsl(220 13% 18%);
-  --card-foreground: hsl(0 0% 100%);
-  --popover: hsl(220 13% 18%);
-  --popover-foreground: hsl(0 0% 100%);
-  --primary: hsl(229 65% 45%);
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(220 13% 18%);
-  --secondary-foreground: hsl(0 0% 100%);
-  --muted: hsl(220 13% 18%);
-  --muted-foreground: hsl(220 9% 46%);
-  --accent: hsl(229 84% 32%);
-  --accent-foreground: hsl(0 0% 100%);
-  --destructive: hsl(0 84% 60%);
-  --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(220 13% 28%);
-  --input: hsl(220 13% 28%);
-  --ring: hsl(229 65% 45%);
-  --success: hsl(142 71% 45%);
-}
+                 .dark {
+                   --background: hsl(222 47% 11%);
+                   --foreground: hsl(0 0% 100%);
+                   --card: hsl(220 13% 18%);
+                   --card-foreground: hsl(0 0% 100%);
+                   --popover: hsl(220 13% 18%);
+                   --popover-foreground: hsl(0 0% 100%);
+                   --primary: hsl(229 65% 45%);
+                   --primary-foreground: hsl(0 0% 100%);
+                   --secondary: hsl(220 13% 18%);
+                   --secondary-foreground: hsl(0 0% 100%);
+                   --muted: hsl(220 13% 18%);
+                   --muted-foreground: hsl(220 9% 46%);
+                   --accent: hsl(229 84% 32%);
+                   --accent-foreground: hsl(0 0% 100%);
+                   --destructive: hsl(0 84% 60%);
+                   --destructive-foreground: hsl(0 0% 100%);
+                   --border: hsl(220 13% 28%);
+                   --input: hsl(220 13% 28%);
+                   --ring: hsl(229 65% 45%);
+                   --success: hsl(142 71% 45%);
+                 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+                 @layer base {
+                   * {
+                     @apply border-border;
+                   }
 
-  html {
-    scroll-behavior: smooth;
-  }
+                   html {
+                     scroll-behavior: smooth;
+                   }
 
-  body {
-    @apply font-sans antialiased bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
-  }
-}
+                   body {
+                     @apply font-sans antialiased bg-background text-foreground;
+                     font-family: 'Inter', sans-serif;
+                   }
+                 }
 
-@layer components {
-  .logo-text {
-    font-family: 'Inter', sans-serif;
-    font-weight: 800;
-    font-style: italic;
-    letter-spacing: -0.02em;
-    color: hsl(229 65% 45%);
-    font-size: 2rem;
-    line-height: 1;
-    transform: skewX(-8deg);
-  }
+                 @layer components {
+                   .logo-text {
+                     font-family: 'Inter', sans-serif;
+                     font-weight: 800;
+                     font-style: italic;
+                     letter-spacing: -0.02em;
+                     color: hsl(229 65% 45%);
+                     font-size: 2rem;
+                     line-height: 1;
+                     transform: skewX(-8deg);
+                   }
 
-  .category-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+                   .category-card {
+                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                   }
 
-  .category-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  }
+                   .category-card:hover {
+                     transform: translateY(-4px);
+                     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                   }
 
-  .product-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+                   .product-card {
+                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                   }
 
-  .product-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
+                   .product-card:hover {
+                     transform: translateY(-2px);
+                     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                   }
 
-  .search-input:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(45, 75, 181, 0.1);
-  }
+                   .search-input:focus {
+                     outline: none;
+                     box-shadow: 0 0 0 3px rgba(45, 75, 181, 0.1);
+                   }
 
-  .btn-primary {
-    background-color: hsl(229 65% 45%);
-    color: white;
-    transition: all 0.2s;
-  }
+                   .btn-primary {
+                     background-color: hsl(229 65% 45%);
+                     color: white;
+                     transition: all 0.2s;
+                   }
 
-  .btn-primary:hover {
-    background-color: hsl(229 84% 32%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
+                   .btn-primary:hover {
+                     background-color: hsl(229 84% 32%);
+                     transform: translateY(-1px);
+                     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                   }
 
-  .nav-link {
-    position: relative;
-    transition: color 0.2s;
-  }
+                   .nav-link {
+                     position: relative;
+                     transition: color 0.2s;
+                   }
 
-  .nav-link:hover {
-    color: hsl(229 65% 45%);
-  }
+                   .nav-link:hover {
+                     color: hsl(229 65% 45%);
+                   }
 
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: -4px;
-    left: 0;
-    background-color: hsl(229 65% 45%);
-    transition: width 0.3s ease;
-  }
+                   .nav-link::after {
+                     content: '';
+                     position: absolute;
+                     width: 0;
+                     height: 2px;
+                     bottom: -4px;
+                     left: 0;
+                     background-color: hsl(229 65% 45%);
+                     transition: width 0.3s ease;
+                   }
 
-  .nav-link:hover::after {
-    width: 100%;
-  }
+                   .nav-link:hover::after {
+                     width: 100%;
+                   }
 
-  .stat-card {
-    border-left: 4px solid hsl(229 65% 45%);
-  }
+                   .stat-card {
+                     border-left: 4px solid hsl(229 65% 45%);
+                   }
 
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+                   @keyframes fadeInUp {
+                     from {
+                       opacity: 0;
+                       transform: translateY(20px);
+                     }
+                     to {
+                       opacity: 1;
+                       transform: translateY(0);
+                     }
+                   }
 
-  .fade-in-up {
-    animation: fadeInUp 0.6s ease-out;
-  }
+                   .fade-in-up {
+                     animation: fadeInUp 0.6s ease-out;
+                   }
 
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+                   .scrollbar-hide {
+                     -ms-overflow-style: none;
+                     scrollbar-width: none;
+                   }
 
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-}
-import React, { useState } from 'react';
-import { ExternalLink } from 'lucide-react';
+                   .scrollbar-hide::-webkit-scrollbar {
+                     display: none;
+                   }
 
-const WebsiteShowcase = () => {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+                   /* Nuove animazioni tecnologiche per l'Hero */
+                   @keyframes gradientShift {
+                     0%, 100% {
+                       background-position: 0% 50%;
+                     }
+                     50% {
+                       background-position: 100% 50%;
+                     }
+                   }
 
-  const websites = [
-    {
-      id: 1,
-      title: "Restaurant",
-      description: "Showcase your menu, ambiance, and culinary excellence with a modern website that drives reservations and hungry customers.",
-      image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=800&fit=crop",
-      color: "from-orange-500 to-red-600",
-      url: "#restaurant"
-    },
-    {
-      id: 2,
-      title: "Dental Clinic",
-      description: "Build trust with potential patients through a professional website highlighting your services, expertise, and patient care.",
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1200&h=800&fit=crop",
-      color: "from-blue-500 to-cyan-600",
-      url: "#dental"
-    },
-    {
-      id: 3,
-      title: "Fitness Center",
-      description: "Inspire fitness journeys with an energetic website featuring classes, trainers, and membership options that convert visitors.",
-      image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&h=800&fit=crop",
-      color: "from-green-500 to-emerald-600",
-      url: "#fitness"
-    },
-    {
-      id: 4,
-      title: "Law Firm",
+                   @keyframes float {
+                     0%, 100% {
+                       transform: translateY(0px);
+                     }
+                     50% {
+                       transform: translateY(-10px);
+                     }
+                   }
 
-description: "Establish credibility and attract clients with a sophisticated website that communicates your legal expertise and results.",
-      image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=800&fit=crop",
-      color: "from-slate-700 to-gray-900",
-      url: "#law"
-    },
-    {
-      id: 5,
-      title: "Coffee Shop",
-      description: "Create a cozy digital experience that reflects your cafe's atmosphere and draws coffee lovers through your doors.",
-      image: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=1200&h=800&fit=crop",
-      color: "from-amber-600 to-yellow-700",
-      url: "#coffee"
-    },
-    {
-      id: 6,
-      title: "Real Estate",
-      description: "Display properties beautifully with an elegant website that helps buyers and sellers connect with the perfect home.",
-      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&h=800&fit=crop",
-      color: "from-indigo-500 to-purple-600",
-      url: "#realestate"
-    }
-  ];
+                   @keyframes sparkle {
+                     0%, 100% {
+                       opacity: 0;
+                       transform: scale(0);
+                     }
+                     50% {
+                       opacity: 1;
+                       transform: scale(1);
+                     }
+                   }
 
-  const handleClick = (url) => {
-    window.open(url, '_blank');
-  };
+                   .tech-gradient-text {
+                     background: linear-gradient(45deg, hsl(229 65% 45%), hsl(229 84% 32%), hsl(229 65% 45%));
+                     background-size: 200% 200%;
+                     -webkit-background-clip: text;
+                     -webkit-text-fill-color: transparent;
+                     background-clip: text;
+                     animation: gradientShift 3s ease-in-out infinite;
+                   }
 
-  return (
-    <div className="flex gap-8 overflow-x-auto py-12 px-8">
-      {websites.map((site, index) => (
-        <div
-          key={site.id}
-          className="flex-shrink-0 w-96 relative"
-          style={{
-            zIndex: hoveredIndex === index ? 50 : 1
-          }}
-        >
-          {/* Outer Rounded Rectangle Container */}
-          <div className="relative bg-slate-800 rounded-3xl p-5 shadow-2xl cursor-pointer" onClick={() => handleClick(site.url)}>
+                   .hero-particle {
+                     position: absolute;
+                     background: radial-gradient(circle, hsl(229 65% 45% / 0.1) 0%, transparent 70%);
+                     animation: float 6s ease-in-out infinite;
+                   }
 
-            {/* Screen Preview Section */}
-            <div 
-              className="relative mb-5"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-            >
-              {/* Inner Card Frame for Screen */}
-              <div className="relative bg-slate-700 rounded-2xl p-3 shadow-lg">
-                {/* Website Preview Container */}
-                <div className="relative overflow-visible rounded-xl" style={{ paddingTop: '66.67%' }}>
-                  <div 
-                    className="absolute inset-0 bg-white rounded-xl overflow-hidden shadow-xl transition-all duration-500 ease-out"
-                    style={{
-                      transform: hoveredIndex === index 
-                        ? 'scale(1.5)' 
-                        : 'scale(1)',
-                      transformOrigin: 'center center',
-                      zIndex: hoveredIndex === index ? 100 : 1,
-                      boxShadow: hoveredIndex === index 
-                        ? '0 25px 50px -12px rgba(0, 0, 0, 0.5)' 
-                        : '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-                    }}
-                  >
-                    {/* Mock Website Content */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${site.color} opacity-10`}></div>
+                   .tech-sparkle {
+                     position: absolute;
+                     width: 4px;
+                     height: 4px;
+                     background: hsl(229 65% 45%);
+                     border-radius: 50%;
+                     animation: sparkle 2s ease-in-out infinite;
+                   }
 
-                    {/* Hero Section */}
-                    <div className="relative h-2/5 overflow-hidden">
-                      <img 
-                        src={site.image} 
-                        alt={site.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                    </div>
+                   .typing-cursor {
+                     animation: blink 1s step-end infinite;
+                   }
 
-                    {/* Content Section */}
-                    <div className="p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${site.color} flex-shrink-0`}></div>
-                        <div className="flex-1">
-                          <div className="h-3.5 bg-slate-300 rounded-full w-3/4 mb-2"></div>
-                          <div className="h-2.5 bg-slate-200 rounded-full w-1/2"></div>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="h-2 bg-slate-200 rounded-full w-full"></div>
-                        <div className="h-2 bg-slate-200 rounded-full w-11/12"></div>
-                        <div className="h-2 bg-slate-200 rounded-full w-4/5"></div>
-                      </div>
-                      <div className="mt-4 flex gap-2">
-                        <div className={`h-9 w-24 rounded-lg bg-gradient-to-r ${site.color}`}></div>
-                        <div className="h-9 w-24 rounded-lg bg-slate-200"></div>
-                      </div>
-                    </div>
+                   @keyframes blink {
+                     0%, 50% {
+                       opacity: 1;
+                     }
+                     51%, 100% {
+                       opacity: 0;
+                     }
+                   }
 
-                    {/* Hover Overlay */}
-                    <div 
-                      className={`absolute inset-0 bg-black flex items-center justify-center transition-all duration-300 rounded-xl ${
-                        hoveredIndex === index ? 'bg-opacity-30 opacity-100' : 'bg-opacity-0 opacity-0'
-                      }`}
-                    >
-                      <div className="text-center text-white transform transition-all duration-300"
-                        style={{
-                          transform: hoveredIndex === index ? 'scale(1) translateY(0)' : 'scale(0.8) translateY(10px)',
-                          opacity: hoveredIndex === index ? 1 : 0
-                        }}
-                      >
-                        <ExternalLink className="w-12 h-12 mx-auto mb-2" />
-                        <p className="text-sm font-semibold">View Full Website</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                   /* ANIMAZIONI PER SFONDO HERO ORIGINALE MA ANIMATO */
+                   @keyframes move-gradient {
+                     0% { background-position: 0% 50%; }
+                     50% { background-position: 100% 50%; }
+                     100% { background-position: 0% 50%; }
+                   }
 
-            {/* Title Section */}
-            <h3 className="text-2xl font-bold text-white mb-2">
-              {site.title}
-            </h3>
+                   @keyframes float-gentle {
+                     0%, 100% { transform: translateY(0px) rotate(0deg); }
+                     50% { transform: translateY(-15px) rotate(5deg); }
+                   }
 
-            {/* Description */}
-            <p className="text-slate-300 text-sm leading-relaxed mb-4">
-              {site.description}
-            </p>
+                   @keyframes pulse-subtle {
+                     0%, 100% { opacity: 0.3; transform: scale(1); }
+                     50% { opacity: 0.5; transform: scale(1.05); }
+                   }
 
-            {/* Discover Button */}
-            <button 
-              className={`px-4 py-2 rounded-lg bg-gradient-to-r ${site.color} text-white text-sm font-semibold transition-all duration-300 hover:shadow-lg hover:scale-105`}
-            >
-              Discover
-            </button>
+                   .animated-bg {
+                     background: linear-gradient(-45deg, #ffffff, #eff6ff, #e0e7ff, #ffffff);
+                     background-size: 400% 400%;
+                     animation: move-gradient 20s ease infinite;
+                   }
 
-            {/* Glow Effect */}
-            <div 
-              className={`absolute -inset-4 bg-gradient-to-r ${site.color} rounded-3xl blur-2xl transition-opacity duration-500 -z-10 ${
-                hoveredIndex === index ? 'opacity-30' : 'opacity-0'
-              }`}
-            ></div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
+                   .floating-shape {
+                     animation: float-gentle 8s ease-in-out infinite;
+                   }
 
-export default WebsiteShowcase;
+                   .pulse-glow {
+                     animation: pulse-subtle 6s ease-in-out infinite;
+                   }
+
+                   .glass-effect {
+                     background: rgba(255, 255, 255, 0.8);
+                     backdrop-filter: blur(10px);
+                     border: 1px solid rgba(255, 255, 255, 0.3);
+                   }
+                 }

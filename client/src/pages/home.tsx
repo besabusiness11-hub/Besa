@@ -1,379 +1,849 @@
-import { useRef } from "react";
-import { Sparkles, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+                                    import { useRef, useState, useEffect } from "react";
+                                    import {
+                                      Sparkles,
+                                      CheckCircle,
+                                      ChevronLeft,
+                                      ChevronRight,
+                                      CircleDashed,
+                                      X,
+                                    } from "lucide-react";
+                                    import Header from "@/components/header";
+                                    import Footer from "@/components/footer";
+                                    import { Button } from "@/components/ui/button";
+                                    import { Card, CardContent } from "@/components/ui/card";
+                                    import WebsiteShowcase from "@/components/WebsiteShowcase";
+                                    import benitoPath from "@assets/benito_sqr.jpg";
+                                    import leoPath from "@assets/leo_sqr.jpg";
+                                    import ludoPath from "@assets/ludo_sqr.jpg";
 
-export default function Home() {
-  const portfolioScrollRef = useRef<HTMLDivElement>(null);
+                                    export default function Home() {
+                                      const portfolioScrollRef = useRef<HTMLDivElement>(null);
+                                      const esempiRef = useRef<HTMLDivElement>(null);
+                                      const prezziRef = useRef<HTMLDivElement>(null);
+                                      const [showForm, setShowForm] = useState(false);
+                                      const [typedText, setTypedText] = useState("");
+                                      const [typingComplete, setTypingComplete] = useState(false);
+                                      const [hoveredStat, setHoveredStat] = useState<number | null>(null);
+                                      const fullText = "siti web personalizzati";
 
-  const scrollPortfolio = (direction: 'left' | 'right') => {
-    if (portfolioScrollRef.current) {
-      const currentScroll = portfolioScrollRef.current.scrollLeft;
-      const scrollAmount = 350;
-      const newPosition = direction === 'left' 
-        ? Math.max(0, currentScroll - scrollAmount)
-        : currentScroll + scrollAmount;
-      
-      portfolioScrollRef.current.scrollTo({
-        left: newPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
+                                      // Typing effect che si completa durante la transizione iniziale
+                                      useEffect(() => {
+                                        let currentIndex = 0;
+                                        const typingInterval = setInterval(() => {
+                                          if (currentIndex <= fullText.length) {
+                                            setTypedText(fullText.slice(0, currentIndex));
+                                            currentIndex++;
+                                          } else {
+                                            clearInterval(typingInterval);
+                                            setTypingComplete(true);
+                                          }
+                                        }, 80);
 
-  return (
-    <div id="top" className="min-h-screen bg-background">
-        <Header />
+                                        return () => {
+                                          clearInterval(typingInterval);
+                                        };
+                                      }, []);
 
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-secondary via-white to-secondary overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div className="fade-in-up">
-              <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full mb-6">
-                <Sparkles className="w-4 h-4 text-primary mr-2" />
-                <span className="text-primary text-sm font-semibold" data-testid="hero-badge">Siti web professionali per realtà locali</span>
-              </div>
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight mb-6" data-testid="hero-title">
-                Il Tuo <span className="text-primary">Sito Web</span> Professionale, Fatto su Misura per Te
-              </h1>
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed" data-testid="hero-description">
-                Besa crea siti web personalizzati per attività locali. Dalla progettazione alla pubblicazione online, 
-                ci occupiamo di tutto per rendere la tua presenza digitale professionale ed efficace.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild className="btn-primary px-8 py-4 rounded-lg font-semibold text-base shadow-lg" data-testid="hero-explore-button">
-                  <a href="#esempi">Vedi Esempi</a>
-                </Button>
-                <Button asChild variant="outline" className="px-8 py-4 border-2 border-primary text-primary rounded-lg font-semibold text-base hover:bg-secondary transition-colors" data-testid="hero-contact-button">
-                  <a href="#prezzi">Scopri i Prezzi</a>
-                </Button>
-              </div>
-              
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-border">
-                <div data-testid="stat-sites">
-                  <div className="text-3xl font-bold text-primary">50+</div>
-                  <div className="text-sm text-muted-foreground mt-1">Siti Realizzati</div>
-                </div>
-                <div data-testid="stat-categories">
-                  <div className="text-3xl font-bold text-primary">5</div>
-                  <div className="text-sm text-muted-foreground mt-1">Settori Coperti</div>
-                </div>
-                <div data-testid="stat-satisfaction">
-                  <div className="text-3xl font-bold text-primary">100%</div>
-                  <div className="text-sm text-muted-foreground mt-1">Clienti Soddisfatti</div>
-                </div>
-              </div>
-            </div>
+                                      // NUOVO: Gestisce lo scroll quando la pagina viene caricata con un hash nell'URL
+                                      useEffect(() => {
+                                        const hash = window.location.hash;
+                                        if (hash) {
+                                          // Aspetta che la pagina sia completamente caricata
+                                          setTimeout(() => {
+                                            const sectionId = hash.replace('#', '');
+                                            const targetElement = document.getElementById(sectionId);
+                                            if (targetElement) {
+                                              const offset = 80;
+                                              const elementPosition = targetElement.getBoundingClientRect().top;
+                                              const offsetPosition = elementPosition + window.pageYOffset - offset;
 
-            {/* Right Image */}
-            <div className="relative lg:block">
-              <img 
-                src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=900" 
-                alt="Professional workspace" 
-                className="rounded-2xl shadow-2xl w-full object-cover"
-                data-testid="hero-image"
-              />
-              {/* Floating Card */}
-              <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl max-w-xs hidden lg:block">
-                <div className="flex items-center space-x-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-6 h-6 text-success" />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold text-foreground" data-testid="hero-card-title">Verifica Qualità</div>
-                    <div className="text-xs text-muted-foreground" data-testid="hero-card-subtitle">Tutti i fornitori certificati</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                                              window.scrollTo({
+                                                top: offsetPosition,
+                                                behavior: "smooth",
+                                              });
+                                            }
+                                          }, 300);
+                                        }
+                                      }, []);
 
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 -mt-24 -mr-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
-      </section>
+                                      const scrollPortfolio = (direction: "left" | "right") => {
+                                        if (portfolioScrollRef.current) {
+                                          const currentScroll = portfolioScrollRef.current.scrollLeft;
+                                          const scrollAmount = 350;
+                                          const newPosition =
+                                            direction === "left"
+                                              ? Math.max(0, currentScroll - scrollAmount)
+                                              : currentScroll + scrollAmount;
 
-        {/* Portfolio Section */}
-        <section id="esempi" className="py-16 lg:py-24 bg-muted">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="portfolio-title">Esempi di Siti per Aziende Locali</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto" data-testid="portfolio-description">
-              Scopri i siti web che abbiamo creato per attività come la tua
-            </p>
-          </div>
+                                          portfolioScrollRef.current.scrollTo({
+                                            left: newPosition,
+                                            behavior: "smooth",
+                                          });
+                                        }
+                                      };
 
-          <div className="relative">
-            <Button 
-              variant="outline" 
-              size="icon"
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg hover:bg-secondary hidden md:flex"
-              onClick={() => scrollPortfolio('left')}
-              aria-label="Scorri portfolio a sinistra"
-              data-testid="portfolio-scroll-left"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </Button>
+                                      const scrollToEsempi = () => {
+                                        esempiRef.current?.scrollIntoView({ behavior: "smooth" });
+                                      };
 
-            <Button 
-              variant="outline" 
-              size="icon"
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg hover:bg-secondary hidden md:flex"
-              onClick={() => scrollPortfolio('right')}
-              aria-label="Scorri portfolio a destra"
-              data-testid="portfolio-scroll-right"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </Button>
+                                      const scrollToPrezzi = () => {
+                                        prezziRef.current?.scrollIntoView({ behavior: "smooth" });
+                                      };
 
-            <div 
-              ref={portfolioScrollRef}
-              className="flex overflow-x-auto gap-6 pb-8 scroll-smooth snap-x snap-mandatory scrollbar-hide px-12" 
-              data-testid="portfolio-slider"
-            >
-            {[
-              {
-                id: "restaurant",
-                title: "Ristoranti",
-                description: "Siti web accattivanti per ristoranti, pizzerie, trattorie e bar",
-                image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-                exampleUrl: "#"
-              },
-              {
-                id: "beauty",
-                title: "Bellezza e Cura Personale",
-                description: "Siti eleganti per saloni, barbieri e centri estetici",
-                image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-                exampleUrl: "#"
-              },
-              {
-                id: "health",
-                title: "Salute e Fitness",
-                description: "Piattaforme professionali per palestre, studi medici e wellness center",
-                image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-                exampleUrl: "#"
-              },
-              {
-                id: "hotel",
-                title: "Hotel",
-                description: "Siti web di impatto per hotel, B&B e strutture ricettive",
-                image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-                exampleUrl: "#"
-              },
-              {
-                id: "auto",
-                title: "Autofficine e Concessionari",
-                description: "Siti web professionali per officine meccaniche e vendita auto",
-                image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400",
-                exampleUrl: "#"
-              }
-            ].map((portfolio) => (
-              <Card key={portfolio.id} className="flex-shrink-0 w-80 snap-center border border-border" data-testid={`portfolio-card-${portfolio.id}`}>
-                <img
-                  src={portfolio.image}
-                  alt={portfolio.title}
-                  className="w-full h-48 object-cover rounded-t-xl"
-                />
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-foreground mb-2">{portfolio.title}</h3>
-                  <p className="text-muted-foreground mb-4 text-sm">{portfolio.description}</p>
-                  <Button asChild variant="outline" className="w-full" data-testid={`portfolio-example-button-${portfolio.id}`}>
-                    <a href={portfolio.exampleUrl}>Vedi Esempio</a>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-            </div>
-          </div>
-        </div>
-      </section>
+                                      // Load Tally script when form is shown
+                                      useEffect(() => {
+                                        if (showForm) {
+                                          const script = document.createElement("script");
+                                          script.src = "https://tally.so/widgets/embed.js";
+                                          script.async = true;
+                                          document.body.appendChild(script);
 
-        {/* How It Works Section */}
-        <section id="come-funziona" className="py-16 lg:py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="how-it-works-title">Come funziona Besa</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto" data-testid="how-it-works-description">
-              Un processo semplice e chiaro per creare il tuo sito web professionale
-            </p>
-          </div>
+                                          return () => {
+                                            if (document.body.contains(script)) {
+                                              document.body.removeChild(script);
+                                            }
+                                          };
+                                        }
+                                      }, [showForm]);
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-            {/* Step 1 */}
-            <div className="text-center" data-testid="step-1">
-              <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-3xl font-bold text-primary-foreground">1</span>
-              </div>
-              <h3 className="text-2xl font-bold text-foreground mb-3">Conosciamoci</h3>
-              <p className="text-muted-foreground text-base leading-relaxed">
-                Ci racconti della tua attività, dei tuoi obiettivi e di cosa ti serve. Noi ascoltiamo e capiamo le tue esigenze.
-              </p>
-            </div>
+                                      const handleButtonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
+                                        const button = e.currentTarget;
+                                        button.style.transform = "translateY(-2px)";
+                                        button.style.boxShadow = "0 10px 25px rgba(37, 99, 235, 0.3)";
 
-            {/* Step 2 */}
-            <div className="text-center" data-testid="step-2">
-              <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-3xl font-bold text-primary-foreground">2</span>
-              </div>
-              <h3 className="text-2xl font-bold text-foreground mb-3">Creazione del sito</h3>
-              <p className="text-muted-foreground text-base leading-relaxed">
-                Progettiamo e realizziamo il tuo sito web su misura, curandone ogni dettaglio con professionalità.
-              </p>
-            </div>
+                                        // Create sparkle effect
+                                        const sparkle = document.createElement("div");
+                                        sparkle.className = "tech-sparkle";
+                                        sparkle.style.left = `${Math.random() * 100}%`;
+                                        sparkle.style.top = `${Math.random() * 100}%`;
+                                        button.appendChild(sparkle);
 
-            {/* Step 3 */}
-            <div className="text-center" data-testid="step-3">
-              <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-3xl font-bold text-primary-foreground">3</span>
-              </div>
-              <h3 className="text-2xl font-bold text-foreground mb-3">Sito online</h3>
-              <p className="text-muted-foreground text-base leading-relaxed">
-                Il tuo sito va online e tu puoi concentrarti sul tuo lavoro. Noi ci occupiamo di tutto il resto.
-              </p>
-            </div>
-          </div>
+                                        setTimeout(() => {
+                                          if (sparkle.parentNode) {
+                                            sparkle.parentNode.removeChild(sparkle);
+                                          }
+                                        }, 2000);
+                                      };
 
-          {/* CTA Section */}
-          <div className="mt-20 text-center">
-            <div className="bg-gradient-to-r from-primary to-accent p-8 lg:p-12 rounded-2xl shadow-2xl max-w-4xl mx-auto">
-              <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4" data-testid="cta-title">
-                Pronto a iniziare?
-              </h3>
-              <p className="text-white/90 text-lg mb-6 max-w-2xl mx-auto italic" data-testid="cta-description">
-                "Voi ci dite cosa volete, e noi cerchiamo di indovinare cosa intendete davvero."
-              </p>
-              <Button asChild className="px-8 py-4 bg-white text-primary rounded-lg font-semibold text-base hover:bg-gray-100 transition-colors shadow-xl" data-testid="cta-contact-button">
-                <a href="https://tally.so/r/n0NPNZ" target="_blank" rel="noopener noreferrer">
-                  Richiedi Informazioni
-                </a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+                                      const handleButtonLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+                                        const button = e.currentTarget;
+                                        button.style.transform = "translateY(0)";
+                                        button.style.boxShadow = "";
+                                      };
 
-        {/* Team Section */}
-        <section id="chi-siamo" className="py-16 lg:py-24 bg-muted">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" data-testid="team-title">Il nostro team</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto" data-testid="team-description">
-              Le persone che lavorano ogni giorno per creare siti web di successo
-            </p>
-          </div>
+                                      const handleStatHover = (index: number) => {
+                                        setHoveredStat(index);
+                                      };
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8" data-testid="team-grid">
-            {[
-              {
-                name: "Marco Bianchi",
-                role: "CEO & Founder",
-                description: "Gestisce la strategia aziendale e coordina tutti i progetti. Con 10 anni di esperienza nel web design.",
-                image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400"
-              },
-              {
-                name: "Laura Ferretti",
-                role: "Lead Designer",
-                description: "Si occupa di progettare l'aspetto visivo dei siti, curando ogni dettaglio estetico e di usabilità.",
-                image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400"
-              },
-              {
-                name: "Andrea Rossi",
-                role: "Technical Lead",
-                description: "Responsabile dello sviluppo tecnico, hosting e manutenzione di tutti i siti web realizzati.",
-                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400"
-              }
-            ].map((member, index) => (
-              <Card key={index} className="border border-border shadow-md hover:shadow-xl transition-shadow" data-testid={`team-member-${index}`}>
-                <CardContent className="p-6 text-center">
-                  <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200">
-                    <img 
-                      src={member.image} 
-                      alt={member.name} 
-                      className="w-full h-full object-cover"
-                      data-testid={`team-photo-${index}`}
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground mb-1" data-testid={`team-name-${index}`}>{member.name}</h3>
-                  <p className="text-primary font-semibold mb-3" data-testid={`team-role-${index}`}>{member.role}</p>
-                  <p className="text-muted-foreground text-sm leading-relaxed" data-testid={`team-description-${index}`}>
-                    {member.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+                                      const handleStatLeave = () => {
+                                        setHoveredStat(null);
+                                      };
 
-        {/* Pricing Section */}
-        <section id="prezzi" className="py-16 lg:py-24 bg-gradient-to-br from-primary via-primary to-accent">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4" data-testid="pricing-title">Prezzi e servizi inclusi</h2>
-            <p className="text-lg text-white/90 max-w-2xl mx-auto" data-testid="pricing-description">
-              Tutto ciò di cui hai bisogno per la tua presenza online, ad un prezzo trasparente
-            </p>
-          </div>
+                                      // Team members data
+                                      const teamMembers = [
+                                        {
+                                          name: "Ludovico Canclini",
+                                          role: "Head of Marketing & Client Relations",
+                                          description:
+                                            "Gestisce la strategia aziendale e coordina tutti i progetti. Con 10 anni di esperienza nel web design.",
+                                          image: "/team/ludo-min.jpg",
+                                          color: "bg-blue-100 text-blue-600",
+                                        },
+                                        {
+                                          name: "Benito Valentino",
+                                          role: "Lead Designer",
+                                          description:
+                                            "Si occupa di progettare l'aspetto visivo dei siti, curando ogni dettaglio estetico e di usabilità.",
+                                          image: "/team/benito.jpg",
+                                          color: "bg-green-100 text-green-600",
+                                        },
+                                        {
+                                          name: "Leonardo Margiotta",
+                                          role: "Technical Lead",
+                                          description:
+                                            "Responsabile dello sviluppo tecnico, hosting e manutenzione di tutti i siti web realizzati.",
+                                          image: "/team/leo.jpg",
+                                          color: "bg-purple-100 text-purple-600",
+                                        },
+                                      ];
 
-          <div className="flex justify-center">
-            <Card className="border-0 shadow-2xl max-w-lg w-full bg-white">
-              <CardContent className="p-8 lg:p-10">
-                <div className="text-center mb-8">
-                  <div className="inline-block bg-primary/10 px-6 py-2 rounded-full mb-4">
-                    <span className="text-primary font-semibold">Offerta Lancio</span>
-                  </div>
-                  <div className="mb-4">
-                    <span className="text-5xl font-bold text-foreground" data-testid="pricing-amount">€59</span>
-                    <span className="text-xl text-muted-foreground">/mese</span>
-                  </div>
-                  <p className="text-muted-foreground text-lg mb-2" data-testid="pricing-subtitle">
-                    Creazione del sito gratuita
-                  </p>
-                  <p className="text-sm text-muted-foreground italic">
-                    (meno di €2 al giorno)
-                  </p>
-                </div>
+                                      // If form is shown, render only the form
+                                      if (showForm) {
+                                        return (
+                                          <div
+                                            style={{
+                                              position: "fixed",
+                                              top: 0,
+                                              left: 0,
+                                              right: 0,
+                                              bottom: 0,
+                                              margin: 0,
+                                              padding: 0,
+                                              overflow: "hidden",
+                                              zIndex: 9999,
+                                            }}
+                                          >
+                                            {/* Close button */}
+                                            <button
+                                              onClick={() => setShowForm(false)}
+                                              className="fixed top-4 right-4 z-50 bg-white hover:bg-gray-100 text-gray-800 rounded-full p-3 shadow-lg transition-colors"
+                                              aria-label="Chiudi"
+                                            >
+                                              <X className="w-6 h-6" />
+                                            </button>
 
-                <div className="space-y-4 mb-8" data-testid="services-list">
-                  {[
-                    "Sito web personalizzato (1 pagina)",
-                    "Dominio con nome personalizzato",
-                    "Hosting",
-                    "Email professionale",
-                    "Ottimizzazione su Google Maps",
-                    "Aggiornamenti del sito",
-                    "Assistenza 7/7 via email e telefono",
-                    "Servizio fotografico business professionale"
-                  ].map((service, index) => (
-                    <div key={index} className="flex items-start" data-testid={`service-${index}`}>
-                      <CheckCircle className="w-6 h-6 text-success mr-3 flex-shrink-0 mt-0.5" />
-                      <span className="text-foreground text-base">{service}</span>
-                    </div>
-                  ))}
-                </div>
+                                            <iframe
+                                              data-tally-src="https://tally.so/r/n0NPNZ?transparentBackground=1"
+                                              width="100%"
+                                              height="100%"
+                                              frameBorder="0"
+                                              marginHeight={0}
+                                              marginWidth={0}
+                                              title="Crea il tuo Sito Web (gratis!)"
+                                              style={{
+                                                border: 0,
+                                                position: "absolute",
+                                                top: 0,
+                                                left: 0,
+                                              }}
+                                            />
+                                          </div>
+                                        );
+                                      }
 
-                <div className="text-center">
-                  <Button asChild className="btn-primary w-full px-12 py-4 rounded-lg font-semibold text-lg shadow-lg" data-testid="pricing-cta-button">
-                    <a href="https://tally.so/r/n0NPNZ" target="_blank" rel="noopener noreferrer">
-                      Inizia Ora
-                    </a>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+                                      // Otherwise, render the home page
+                                      return (
+                                        <div id="top" className="min-h-screen bg-background">
+                                          <Header />
 
-        <Footer />
-    </div>
-  );
-}
+                                          {/* HERO SECTION CORRETTA */}
+                                          <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-white via-blue-50/70 to-indigo-100/50 overflow-hidden">
+                                            {/* Background Particles */}
+                                            <div className="absolute inset-0">
+                                              <div
+                                                className="hero-particle"
+                                                style={{
+                                                  top: "20%",
+                                                  left: "10%",
+                                                  width: "200px",
+                                                  height: "200px",
+                                                  animationDelay: "0s",
+                                                }}
+                                              ></div>
+                                              <div
+                                                className="hero-particle"
+                                                style={{
+                                                  top: "60%",
+                                                  left: "80%",
+                                                  width: "150px",
+                                                  height: "150px",
+                                                  animationDelay: "2s",
+                                                }}
+                                              ></div>
+                                              <div
+                                                className="hero-particle"
+                                                style={{
+                                                  top: "30%",
+                                                  left: "70%",
+                                                  width: "100px",
+                                                  height: "100px",
+                                                  animationDelay: "4s",
+                                                }}
+                                              ></div>
+                                            </div>
+
+                                            <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
+                                              {/* Badge con Sparkle */}
+                                              <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full mb-6 fade-in-up">
+                                                <Sparkles className="w-4 h-4 text-primary mr-2" />
+                                                <span className="text-primary text-sm font-semibold">
+                                                  Siti web professionali per realtà locali
+                                                </span>
+                                              </div>
+
+                                              {/* Main Title with Gradient Animation */}
+                                              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight mb-6 fade-in-up">
+                                                Il Tuo <span className="tech-gradient-text">Sito Web</span>{" "}
+                                                Professionale,
+                                                <br />
+                                                Fatto su Misura per Te
+                                              </h1>
+
+                                              {/* Subtitle with Typing Effect */}
+                                              <p
+                                                className="text-lg lg:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto fade-in-up"
+                                                style={{ animationDelay: "0.3s" }}
+                                              >
+                                                Besa crea <strong className="text-foreground">gratuitamente</strong>{" "}
+                                                siti web personalizzati per attività locali.
+                                                <br />
+                                                Dalla progettazione alla pubblicazione online, ci occupiamo di tutto
+                                                per rendere la tua presenza digitale{" "}
+                                                <strong className="text-foreground">
+                                                  professionale ed efficace
+                                                </strong>
+                                                .
+                                              </p>
+
+                                              {/* CTA Buttons with z-index to stay on top - SINGOLO BOTTONE */}
+                                              <div
+                                                className="relative z-50 flex justify-center items-center fade-in-up"
+                                                style={{ animationDelay: "0.6s" }}
+                                              >
+                                                <button
+                                                  className="bg-primary text-white px-12 py-4 rounded-lg text-lg font-semibold transition-all duration-300 relative overflow-hidden hover:bg-accent shadow-2xl hover:shadow-3xl"
+                                                  style={{
+                                                    position: "relative",
+                                                    zIndex: 100,
+                                                    boxShadow: "0 10px 40px rgba(37, 99, 235, 0.4)",
+                                                  }}
+                                                  onMouseEnter={handleButtonHover}
+                                                  onMouseLeave={handleButtonLeave}
+                                                  onClick={scrollToPrezzi}
+                                                >
+                                                  Scopri i Prezzi
+                                                </button>
+                                              </div>
+
+                                              {/* Stats Section */}
+                                              <div
+                                                className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-border/30 fade-in-up"
+                                                style={{ animationDelay: "0.9s" }}
+                                              >
+                                                {/* Aggiungi qui il contenuto delle stats se necessario */}
+                                              </div>
+
+                                              {/* Decorative Elements */}
+                                              <div
+                                                className="absolute top-0 right-0 -mt-24 -mr-24 w-96 h-96 bg-primary/3 rounded-full blur-3xl"
+                                                style={{ zIndex: 1 }}
+                                              ></div>
+                                              <div
+                                                className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-accent/3 rounded-full blur-3xl"
+                                                style={{ zIndex: 1 }}
+                                              ></div>
+                                            </div>
+                                          </section>
+
+                                          {/* How It Works Section */}
+                                          <section id="come-funziona" className="py-16 lg:py-24 bg-background">
+                                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                              <div className="text-center mb-16">
+                                                <h2
+                                                  className="text-3xl lg:text-4xl font-bold text-foreground mb-4"
+                                                  data-testid="how-it-works-title"
+                                                >
+                                                  Come funziona Besa
+                                                </h2>
+                                                <p
+                                                  className="text-lg text-muted-foreground max-w-2xl mx-auto"
+                                                  data-testid="how-it-works-description"
+                                                >
+                                                  Un processo semplice e chiaro per creare il tuo sito web
+                                                  professionale
+                                                </p>
+                                              </div>
+
+                                              <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+                                                {/* Step 1 */}
+                                                <div className="text-center" data-testid="step-1">
+                                                  <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                                    <span className="text-3xl font-bold text-primary-foreground">
+                                                      1
+                                                    </span>
+                                                  </div>
+                                                  <h3 className="text-2xl font-bold text-foreground mb-3">
+                                                    Conosciamoci
+                                                  </h3>
+                                                  <p className="text-muted-foreground text-base leading-relaxed">
+                                                    Ci racconti della tua attività, dei tuoi obiettivi e di cosa ti
+                                                    serve. Noi ascoltiamo e capiamo le tue esigenze.
+                                                  </p>
+                                                </div>
+
+                                                {/* Step 2 */}
+                                                <div className="text-center md:-mt-8" data-testid="step-2">
+                                                  <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                                    <span className="text-3xl font-bold text-primary-foreground">
+                                                      2
+                                                    </span>
+                                                  </div>
+
+                                                  {/* Title with "Gratis" badge below */}
+                                                  <div className="mb-3">
+                                                    <h3 className="text-2xl font-bold text-foreground mb-2">
+                                                      Creazione del sito
+                                                    </h3>
+                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-success/10 text-success border-2 border-success animate-pulse">
+                                                      GRATIS
+                                                    </span>
+                                                  </div>
+
+                                                  <p className="text-muted-foreground text-base leading-relaxed">
+                                                    Progettiamo e realizziamo il tuo sito web su misura, curandone
+                                                    ogni dettaglio con professionalità.
+                                                  </p>
+                                                </div>
+
+                                                {/* Step 3 */}
+                                                <div className="text-center" data-testid="step-3">
+                                                  <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                                    <span className="text-3xl font-bold text-primary-foreground">
+                                                      3
+                                                    </span>
+                                                  </div>
+                                                  <h3 className="text-2xl font-bold text-foreground mb-3">
+                                                    Sito online
+                                                  </h3>
+                                                  <p className="text-muted-foreground text-base leading-relaxed">
+                                                    Il tuo sito va online e tu puoi concentrarti sul tuo lavoro. Noi
+                                                    ci occupiamo di tutto il resto.
+                                                  </p>
+                                                </div>
+                                              </div>
+
+                                              {/* CTA Section */}
+                                              <div className="mt-20 text-center">
+                                                <div className="bg-gradient-to-r from-primary to-accent p-8 lg:p-12 rounded-2xl shadow-2xl max-w-4xl mx-auto">
+                                                  <h3
+                                                    className="text-2xl lg:text-3xl font-bold text-white mb-4"
+                                                    data-testid="cta-title"
+                                                  >
+                                                    Pronto a iniziare?
+                                                  </h3>
+                                                  <p
+                                                    className="text-white/90 text-lg mb-6 max-w-2xl mx-auto italic"
+                                                    data-testid="cta-description"
+                                                  >
+                                                    "Voi ci dite cosa volete, e noi cerchiamo di indovinare cosa
+                                                    intendete davvero."
+                                                  </p>
+                                                  <Button
+                                                    onClick={() => setShowForm(true)}
+                                                    className="px-8 py-4 bg-white text-primary rounded-lg font-semibold text-base hover:bg-gray-100 transition-colors shadow-xl"
+                                                    data-testid="cta-contact-button"
+                                                  >
+                                                    Richiedi Informazioni
+                                                  </Button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </section>
+
+                                          {/* Pricing Section */}
+                                          <section
+                                            ref={prezziRef}
+                                            id="prezzi"
+                                            className="py-16 lg:py-24 bg-gradient-to-br from-primary via-primary to-accent"
+                                          >
+                                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                              <div className="text-center mb-12">
+                                                <h2
+                                                  className="text-3xl lg:text-4xl font-bold text-white mb-4"
+                                                  data-testid="pricing-title"
+                                                >
+                                                  Prezzi e servizi inclusi
+                                                </h2>
+                                                <p
+                                                  className="text-lg text-white/90 max-w-2xl mx-auto"
+                                                  data-testid="pricing-description"
+                                                >
+                                                  Tutto ciò di cui hai bisogno per la tua presenza online, ad un
+                                                  prezzo trasparente
+                                                </p>
+                                              </div>
+                                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
+                                                {/* Basic Plan */}
+                                                <Card className="border-2 border-white/20 shadow-xl bg-white/95 hover:shadow-2xl transition-all">
+                                                  <CardContent className="p-6 lg:p-8">
+                                                    <div className="text-center mb-6">
+                                                      <h3 className="text-2xl font-bold text-foreground mb-4">Basic</h3>
+                                                      <div className="mb-4">
+                                                        <span className="text-4xl font-bold text-foreground">€39</span>
+                                                        <span className="text-lg text-muted-foreground">/mese</span>
+                                                      </div>
+                                                      <p className="text-sm text-muted-foreground italic mb-4">
+                                                        Ideale per iniziare
+                                                      </p>
+                                                      <span className="inline-flex items-center px-3 py-1 mb-4 rounded-full text-sm font-bold bg-success/10 text-success border-2 border-success">
+                                                        Creazione GRATIS
+                                                      </span>
+                                                    </div>
+                                                    <div className="space-y-1 mb-6">
+                                                      {/* Pages */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">1 pagina (scroll layout)</span>
+                                                      </div>
+
+                                                      {/* Domain */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Dominio incluso (.it /.com)</span>
+                                                      </div>
+
+                                                      {/* Mobile Optimization */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Ottimizzazione mobile</span>
+                                                      </div>
+
+                                                      {/* Design */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Design personalizzato</span>
+                                                      </div>
+
+                                                      {/* Booking */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Prenotazioni (numero di telefono)</span>
+                                                      </div>
+
+                                                      {/* Modifications */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">3 modifiche/mese</span>
+                                                      </div>
+
+                                                      {/* Support */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Supporto email (2 giorni)</span>
+                                                      </div>
+
+                                                      {/* Photo Service */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CircleDashed className="w-5 h-5 text-dark mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Servizio fotografico opzionale (€149)</span>
+                                                      </div>
+
+                                                      {/* Languages */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <X className="w-5 h-5 text-destructive mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-muted-foreground text-sm line-through">Multi lingue (IT)</span>
+                                                      </div>
+
+                                                      {/* Google Business */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <X className="w-5 h-5 text-destructive mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-muted-foreground text-sm line-through">Google Business Setup</span>
+                                                      </div>
+
+                                                      {/* QR Menu */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <X className="w-5 h-5 text-destructive mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-muted-foreground text-sm line-through">Menu con QR code</span>
+                                                      </div>
+
+                                                      {/* Professional Email */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <X className="w-5 h-5 text-destructive mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-muted-foreground text-sm line-through">Email professionale</span>
+                                                      </div>
+                                                    </div>
+                                                    <Button
+                                                      onClick={() => setShowForm(true)}
+                                                      variant="outline"
+                                                      className="w-full px-6 py-3 rounded-lg font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-white"
+                                                    >
+                                                      Inizia Ora
+                                                    </Button>
+                                                  </CardContent>
+                                                </Card>
+
+                                                {/* Standard Plan - Highlighted */}
+                                                <Card className="border-0 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] bg-white relative transform md:scale-105 z-10">
+                                                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                                                    <span className="inline-flex items-center px-6 py-2 rounded-full text-sm font-bold bg-accent text-white shadow-lg">
+                                                      PIÙ POPOLARE
+                                                    </span>
+                                                  </div>
+                                                  <CardContent className="p-6 lg:p-8 pt-8">
+                                                    <div className="text-center mb-6">
+                                                      <h3 className="text-2xl font-bold text-foreground mb-4">Standard</h3>
+                                                      <div className="mb-2">
+                                                        <span className="text-5xl font-bold text-foreground">€59</span>
+                                                        <span className="text-xl text-muted-foreground">/mese</span>
+                                                      </div>
+                                                      <p className="text-sm text-muted-foreground italic mb-4">
+                                                        (meno di €2 al giorno)
+                                                      </p>
+                                                      <span className="inline-flex items-center px-3 py-1 mb-4 rounded-full text-sm font-bold bg-success/10 text-success border-2 border-success">
+                                                        Creazione GRATIS
+                                                      </span>
+                                                    </div>
+                                                    <div className="space-y-1 mb-6">
+                                                      {/* Pages */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">5 pagine</span>
+                                                      </div>
+
+                                                      {/* Domain */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Dominio incluso (.it /.com)</span>
+                                                      </div>
+
+                                                      {/* Mobile Optimization */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Ottimizzazione mobile</span>
+                                                      </div>
+
+                                                      {/* Design */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Design personalizzato</span>
+                                                      </div>
+
+                                                      {/* Booking */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Prenotazioni (numero di telefono)</span>
+                                                      </div>
+
+                                                      {/* Modifications */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Modifiche illimitate (info)</span>
+                                                      </div>
+
+                                                      {/* Support */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Supporto email/whatsapp (1 giorno)</span>
+                                                      </div>
+
+                                                      {/* Photo Service */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CircleDashed className="w-5 h-5 text-dark mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Servizio fotografico opzionale (€99)</span>
+                                                      </div>
+
+                                                      {/* Languages */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Multilingue (EN-IT)</span>
+                                                      </div>
+
+                                                      {/* Google Business */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Google Business Setup</span>
+                                                      </div>
+
+                                                      {/* QR Menu */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Menu con QR code (pdf)</span>
+                                                      </div>
+
+                                                      {/* Professional Email */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Email professionale</span>
+                                                      </div>
+                                                    </div>
+                                                    <Button
+                                                      onClick={() => setShowForm(true)}
+                                                      className="btn-primary w-full px-8 py-4 rounded-lg font-semibold text-lg shadow-xl hover:shadow-2xl"
+                                                    >
+                                                      Inizia Ora
+                                                    </Button>
+                                                  </CardContent>
+                                                </Card>
+
+                                                {/* Pro Plan */}
+                                                <Card className="border-2 border-white/20 shadow-xl bg-white/95 hover:shadow-2xl transition-all">
+                                                  <CardContent className="p-6 lg:p-8">
+                                                    <div className="text-center mb-6">
+                                                      <h3 className="text-2xl font-bold text-foreground mb-4">Pro</h3>
+                                                      <div className="mb-4">
+                                                        <span className="text-4xl font-bold text-foreground">€109</span>
+                                                        <span className="text-lg text-muted-foreground">/mese</span>
+                                                      </div>
+                                                      <p className="text-sm text-muted-foreground italic mb-4">
+                                                        Soluzione completa premium
+                                                      </p>
+                                                      <span className="inline-flex items-center px-3 py-1 mb-4 rounded-full text-sm font-bold bg-success/10 text-success border-2 border-success">
+                                                        Creazione GRATIS
+                                                      </span>
+                                                      <div className="h-[2px]"></div>
+                                                    </div>
+                                                    <div className="space-y-1 mb-6">
+                                                      {/* Pages */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">7+ pagine complete</span>
+                                                      </div>
+
+                                                      {/* Domain */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Dominio incluso (.it /.com)</span>
+                                                      </div>
+
+                                                      {/* Mobile Optimization */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm">Ottimizzazione mobile</span>
+                                                      </div>
+
+                                                      {/* Design */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">Design premium personalizzato</span>
+                                                      </div>
+
+                                                      {/* Booking */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">Prenotazioni online integrate</span>
+                                                      </div>
+
+                                                      {/* Modifications */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">Modifiche illimitate (info + design)</span>
+                                                      </div>
+
+                                                      {/* Support */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">Supporto stesso giorno prioritario</span>
+                                                      </div>
+
+                                                      {/* Photo Service */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">Servizio fotografico (incluso)</span>
+                                                      </div>
+
+                                                      {/* Languages */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">Multilingue (EN-IT-FR-ES)</span>
+                                                      </div>
+
+                                                      {/* Google Business */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">Google Business Setup</span>
+                                                      </div>
+
+                                                      {/* QR Menu */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">Menu con QR code interattivo</span>
+                                                      </div>
+
+                                                      {/* Professional Email */}
+                                                      <div className="flex items-start min-h-[40px]">
+                                                        <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-foreground text-sm font-semibold">Email professionale</span>
+                                                      </div>
+                                                    </div>
+                                                    <Button
+                                                      onClick={() => setShowForm(true)}
+                                                      variant="outline"
+                                                      className="w-full px-6 py-3 rounded-lg font-semibold border-2 border-accent text-accent hover:bg-accent hover:text-white"
+                                                    >
+                                                      Inizia Ora
+                                                    </Button>
+                                                  </CardContent>
+                                                </Card>
+                                              </div>
+                                            </div>
+                                          </section>
+
+                                          {/* Team Section */}
+                                          <section id="chi-siamo" className="py-16 lg:py-24 bg-muted">
+                                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                              <div className="text-center mb-12">
+                                                <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+                                                  Strategia, Design e Tecnologia
+                                                </h2>
+                                                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                                                  La nostra Besa: il vostro successo online.
+                                                </p>
+                                              </div>
+
+                                              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                                {/* Ludovico Canclini */}
+                                                <Card className="border border-border shadow-md hover:shadow-xl transition-shadow">
+                                                  <CardContent className="p-6 text-center">
+                                                    <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                                                      <img
+                                                        src={ludoPath}
+                                                        alt="Ludovico Canclini"
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => console.error("Failed to load Ludovico image")}
+                                                      />
+                                                    </div>
+                                                    <h3 className="text-xl font-bold text-foreground mb-1">
+                                                      Ludovico Canclini
+                                                    </h3>
+                                                    <p className="text-primary font-semibold mb-3">
+                                                      Head of Marketing & Client Relations
+                                                    </p>
+                                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                                      Stratega della relazione e della visione d'insieme. Collega le esigenze del cliente con il talento del team, guidando ogni progetto verso il successo condiviso.
+                                                    </p>
+                                                  </CardContent>
+                                                </Card>
+
+                                                {/* Benito Valentino */}
+                                                <Card className="border border-border shadow-md hover:shadow-xl transition-shadow">
+                                                  <CardContent className="p-6 text-center">
+                                                    <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                                                      <img
+                                                        src={benitoPath}
+                                                        alt="Benito Valentino"
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => console.error("Failed to load Benito image")}
+                                                      />
+                                                    </div>
+                                                    <h3 className="text-xl font-bold text-foreground mb-1">
+                                                      Benito Valentino
+                                                    </h3>
+                                                    <p className="text-primary font-semibold mb-3">
+                                                      Lead Designer
+                                                    </p>
+                                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                                      Perfezionista nell'arte e nella scienza del web. Cura ogni aspetto, dal pixel al codice, per consegnare un prodotto che superi le aspettative.
+                                                    </p>
+                                                  </CardContent>
+                                                </Card>
+
+                                                {/* Leonardo Margiotta */}
+                                                <Card className="border border-border shadow-md hover:shadow-xl transition-shadow">
+                                                  <CardContent className="p-6 text-center">
+                                                    <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                                                      <img
+                                                        src={leoPath}
+                                                        alt="Leonardo Margiotta"
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => console.error("Failed to load Leonardo image")}
+                                                      />
+                                                    </div>
+                                                    <h3 className="text-xl font-bold text-foreground mb-1">
+                                                      Leonardo Margiotta
+                                                    </h3>
+                                                    <p className="text-primary font-semibold mb-3">
+                                                      Technical Lead
+                                                    </p>
+                                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                                      Architetto della stabilità e dell'efficienza. Coordina l'infrastruttura tecnica con precisione, garantendo che ogni progetto sia solido, sicuro e performante.
+                                                    </p>
+                                                  </CardContent>
+                                                </Card>
+                                              </div>
+                                            </div>
+                                          </section>
+
+                                          <Footer />
+                                        </div>
+                                      );
+                                    }

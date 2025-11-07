@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 
@@ -61,7 +62,7 @@ description: "Establish credibility and attract clients with a sophisticated web
   };
 
   return (
-    <div className="flex gap-8 overflow-x-auto py-12 px-8">
+      <div className="flex gap-8 overflow-x-auto py-12 px-4 justify-center">
       {websites.map((site, index) => (
         <div
           key={site.id}

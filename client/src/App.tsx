@@ -1,5 +1,5 @@
 import WebsiteShowcase from './WebsiteShowcase.jsx';
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -12,11 +12,18 @@ import Categories from "@/pages/categories";
 import ProductDetail from "@/pages/product-detail";
 import Suppliers from "@/pages/suppliers";
 import NotFound from "@/pages/not-found";
+import Esempi from "@/pages/Esempi";
+
+// Importa il form (puoi tenerlo importato se ti serve in futuro)
+import ContactForm from "@/components/ui/ContactForm";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/esempi" component={Esempi} />
+      {/* AGGIUNTE: Rotta per sezioni con hash */}
+      <Route path="/:section" component={Home} />
       <Route path="/marketplace" component={Marketplace} />
       <Route path="/categories" component={Categories} />
       <Route path="/categories/:slug" component={Categories} />
@@ -26,6 +33,8 @@ function Router() {
     </Switch>
   );
 }
+
+// [MANTIENI TUTTO IL RESTO DEL CODICE COME È...]
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
