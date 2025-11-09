@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import logoPath from "@assets/ChatGPT Image 25 set 2025, 13_13_58_1759676591455.png";
+import logoPath from "@assets/besa-logo.png";
 
 interface SplashScreenProps {
   onComplete: () => void;

@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import logoPath from "@assets/besatrasparente.png";
+import logoPath from "@assets/besa-logo.png";
 
 function ReferralBanner() {
   const [isVisible, setIsVisible] = useState(true);

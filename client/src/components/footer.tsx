@@ -1,5 +1,5 @@
 import { Mail, Phone, MapPin } from "lucide-react";
-import logoPath from "@assets/besatrasparente.png";
+import logoPath from "@assets/besa-logo.png";
 export default function Footer() {
   return (
     <footer className="bg-foreground text-white py-12 lg:py-16">
