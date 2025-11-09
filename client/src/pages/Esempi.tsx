@@ -7,7 +7,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import comingPath from "@assets/coming_soon.webp"
 
-const categories = ["tutti", "ristoranti", "dentisti", "palestre", "centri estetici", "sium"];
+const categories = ["tutti", "ristoranti", "dentisti", "palestre", "hotel"];
 
 // Dati degli esempi di siti
 const websiteExamples = [
