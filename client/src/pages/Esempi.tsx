@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import comingPath from "@assets/coming_soon.webp"
+
+const categories = ["tutti", "ristoranti", "dentisti", "palestre", "centri estetici", "sium"];
 
 // Dati degli esempi di siti
 const websiteExamples = [
@@ -14,7 +17,7 @@ const websiteExamples = [
     description: "Sito elegante per ristorante con prenotazioni online, menu digitale e galleria foto professionali.",
     category: "Ristoranti",
     image: "/examples/restaurant.jpg",
-    liveUrl: "#",
+    demoPath: "/demo/ristorante-xv", // Add this field
     features: ["Prenotazioni online", "Menu digitale", "Galleria foto", "Recensioni clienti"],
     rating: 4.8
   },
@@ -24,7 +27,7 @@ const websiteExamples = [
     description: "Portale completo per salone di bellezza con booking appuntamenti, portfolio servizi e promozioni.",
     category: "Beauty",
     image: "/examples/beauty-salon.jpg",
-    liveUrl: "#",
+    demoPath: "/demo/beauty-studio-elegance", // Add this field
     features: ["Booking appuntamenti", "Portfolio servizi", "Promozioni", "Gift card"],
     rating: 4.9
   },
@@ -34,7 +37,7 @@ const websiteExamples = [
     description: "Sito dinamico per palestra con orari corsi, iscrizioni online e area community.",
     category: "Fitness",
     image: "/examples/gym.jpg",
-    liveUrl: "#",
+    demoPath: "/demo/power-gym-fitness", // Add this field
     features: ["Orari corsi", "Iscrizioni online", "Area membri", "Blog fitness"],
     rating: 4.7
   },
@@ -44,7 +47,7 @@ const websiteExamples = [
     description: "E-commerce moderno per boutique con catalogo prodotti, carrello e checkout sicuro.",
     category: "Retail",
     image: "/examples/fashion-store.jpg",
-    liveUrl: "#",
+    demoPath: "/demo/boutique-moderna", // Add this field
     features: ["Catalogo prodotti", "Carrello acquisti", "Checkout sicuro", "Tracking ordini"],
     rating: 4.8
   },
@@ -54,7 +57,7 @@ const websiteExamples = [
     description: "Sito professionale per studio medico con informazioni servizi, team e form contatti.",
     category: "Medico",
     image: "/examples/dental-clinic.jpg",
-    liveUrl: "#",
+    demoPath: "/demo/studio-dentistico-sorriso", // Add this field
     features: ["Informazioni servizi", "Form contatti", "Team medico", "FAQ"],
     rating: 5.0
   },
@@ -64,7 +67,7 @@ const websiteExamples = [
     description: "Portale luxury per hotel con prenotazioni, gallery immersiva e informazioni struttura.",
     category: "Turismo",
     image: "/examples/hotel.jpg",
-    liveUrl: "#",
+    demoPath: "/demo/grand-hotel-luxury", // Add this field
     features: ["Prenotazioni camere", "Gallery immersiva", "Servizi hotel", "Recensioni"],
     rating: 4.9
   }
@@ -100,13 +103,18 @@ export default function Esempi() {
     }
   }, [showForm]);
 
-  // Filtra gli esempi per categoria
-  const filteredExamples = selectedCategory === "Tutti" 
-    ? websiteExamples 
-    : websiteExamples.filter(example => example.category === selectedCategory);
-
-  // Categorie uniche
-  const categories = ["Tutti", ...new Set(websiteExamples.map(example => example.category))];
+  // Update filtering logic to be case insensitive and handle Italian categories
+  const filteredExamples = selectedCategory.toLowerCase() === "tutti"
+    ? websiteExamples
+    : websiteExamples.filter(example => {
+        const categoryMap: { [key: string]: string } = {
+          "ristoranti": "Ristoranti",
+          "dentisti": "Medico",
+          "palestre": "Fitness",
+          "centri estetici": "Beauty"
+        };
+        return example.category === categoryMap[selectedCategory.toLowerCase()];
+      });
 
   const handleBackClick = () => {
     setLocation("/");
@@ -116,6 +124,11 @@ export default function Esempi() {
         behavior: "smooth",
       });
     }, 50);
+  };
+
+  // Update the card click handler
+  const handleDemoClick = (path: string) => {
+    setLocation(path);
   };
 
   // If form is shown, render only the form
@@ -183,108 +196,126 @@ export default function Esempi() {
               I Nostri <span className="text-primary">Esempi</span>
             </h1>
 
-            <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               Scopri i siti web che abbiamo creato per attività come la tua. 
               Ogni progetto è unico e realizzato su misura per le esigenze del cliente.
             </p>
+
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory.toLowerCase() === category ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`capitalize ${
+                    selectedCategory.toLowerCase() === category
+                      ? "bg-primary text-white"
+                      : "hover:bg-primary/10"
+                  }`}
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
           </div>
 
-          {/* Filtri Categorie */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className={`transition-all duration-300 ${
-                  selectedCategory === category 
-                    ? "bg-primary text-white shadow-lg" 
-                    : "hover:bg-primary/10"
-                }`}
-              >
-                <Filter className="w-4 h-4 mr-2" />
-                {category}
-              </Button>
-            ))}
-          </div>
 
           {/* Grid Esempi */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredExamples.map((example) => (
-              <Card 
-                key={example.id}
-                className="group cursor-pointer border-2 border-transparent hover:border-primary/20 hover:shadow-2xl transition-all duration-500 overflow-hidden"
-                onMouseEnter={() => setHoveredCard(example.id)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <CardContent className="p-0">
-                  {/* Immagine con overlay */}
-                  <div className="relative overflow-hidden">
-                    <div className="w-full h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                      <div className="text-center">
-                        <Monitor className="w-12 h-12 text-primary mb-2 mx-auto" />
-                        <span className="text-sm text-muted-foreground">Anteprima {example.category}</span>
+            {filteredExamples.length > 0 ? (
+              filteredExamples.map((example) => (
+                <Card 
+                  key={example.id}
+                  className="group cursor-pointer border-2 border-transparent hover:border-primary/20 hover:shadow-2xl transition-all duration-500 overflow-hidden"
+                  onMouseEnter={() => setHoveredCard(example.id)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
+                  <CardContent className="p-0">
+                    {/* Immagine con overlay */}
+                    <div className="relative overflow-hidden">
+                      <div className="w-full h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                        <div className="text-center">
+                          <Monitor className="w-12 h-12 text-primary mb-2 mx-auto" />
+                          <span className="text-sm text-muted-foreground">Anteprima {example.category}</span>
+                        </div>
+                      </div>
+
+                      {/* Overlay hover */}
+                      <div className={`absolute inset-0 bg-primary/90 flex items-center justify-center transition-opacity duration-300 ${
+                        hoveredCard === example.id ? 'opacity-100' : 'opacity-0'
+                      }`}>
+                        <Button 
+                          onClick={() => handleDemoClick(example.demoPath)}
+                          className="bg-white text-primary hover:bg-white/90"
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Vedi Demo
+                        </Button>
                       </div>
                     </div>
 
-                    {/* Overlay hover */}
-                    <div className={`absolute inset-0 bg-primary/90 flex items-center justify-center transition-opacity duration-300 ${
-                      hoveredCard === example.id ? 'opacity-100' : 'opacity-0'
-                    }`}>
-                      <Button className="bg-white text-primary hover:bg-white/90">
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Vedi Demo
-                      </Button>
-                    </div>
-                  </div>
+                    {/* Contenuto */}
+                    <div className="p-6">
+                      {/* Header con rating */}
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                          {example.title}
+                        </h3>
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <span className="text-sm font-medium">{example.rating}</span>
+                        </div>
+                      </div>
 
-                  {/* Contenuto */}
-                  <div className="p-6">
-                    {/* Header con rating */}
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-                        {example.title}
-                      </h3>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium">{example.rating}</span>
+                      <p className="text-muted-foreground mb-4 line-clamp-2">
+                        {example.description}
+                      </p>
+
+                      {/* Features */}
+                      <div className="space-y-2 mb-4">
+                        {example.features.slice(0, 3).map((feature, index) => (
+                          <div key={index} className="flex items-center text-sm">
+                            <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                            {feature}
+                          </div>
+                        ))}
+                        {example.features.length > 3 && (
+                          <div className="text-sm text-muted-foreground">
+                            +{example.features.length - 3} altre funzionalità
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Badge Categoria */}
+                      <div className="flex justify-between items-center">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                          {example.category}
+                        </span>
+
+                        <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
+                          <Smartphone className="w-4 h-4 mr-1" />
+                          Mobile
+                        </Button>
                       </div>
                     </div>
-
-                    <p className="text-muted-foreground mb-4 line-clamp-2">
-                      {example.description}
-                    </p>
-
-                    {/* Features */}
-                    <div className="space-y-2 mb-4">
-                      {example.features.slice(0, 3).map((feature, index) => (
-                        <div key={index} className="flex items-center text-sm">
-                          <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                          {feature}
-                        </div>
-                      ))}
-                      {example.features.length > 3 && (
-                        <div className="text-sm text-muted-foreground">
-                          +{example.features.length - 3} altre funzionalità
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Badge Categoria */}
-                    <div className="flex justify-between items-center">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
-                        {example.category}
-                      </span>
-
-                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
-                        <Smartphone className="w-4 h-4 mr-1" />
-                        Mobile
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-0">
+                <img 
+                  src={comingPath}
+                  alt="Coming Soon" 
+                  className="w-27 h-27 mx-auto mb-5 object-contain"
+                />
+                <p className="text-muted-foreground">
+                  Al momento non ci sono esempi disponibili per questa categoria.
+                  <br />
+                  Controlla più tardi!
+                </p>
+              </div>
+            )}
           </div>
 
           {/* CTA Section */}

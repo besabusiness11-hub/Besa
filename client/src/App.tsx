@@ -1,4 +1,3 @@
-import WebsiteShowcase from './WebsiteShowcase.jsx';
 import { useState, useCallback, useEffect } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
@@ -7,15 +6,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SplashScreen } from "@/components/splash-screen";
 import Home from "@/pages/home";
-import Marketplace from "@/pages/marketplace";
 import Categories from "@/pages/categories";
-import ProductDetail from "@/pages/product-detail";
-import Suppliers from "@/pages/suppliers";
 import NotFound from "@/pages/not-found";
 import Esempi from "@/pages/Esempi";
-
-// Importa il form (puoi tenerlo importato se ti serve in futuro)
-import ContactForm from "@/components/ui/ContactForm";
 
 function Router() {
   return (
@@ -24,11 +17,8 @@ function Router() {
       <Route path="/esempi" component={Esempi} />
       {/* AGGIUNTE: Rotta per sezioni con hash */}
       <Route path="/:section" component={Home} />
-      <Route path="/marketplace" component={Marketplace} />
       <Route path="/categories" component={Categories} />
       <Route path="/categories/:slug" component={Categories} />
-      <Route path="/product/:id" component={ProductDetail} />
-      <Route path="/suppliers" component={Suppliers} />
       <Route component={NotFound} />
     </Switch>
   );
