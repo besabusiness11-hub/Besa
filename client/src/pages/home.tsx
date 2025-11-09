@@ -794,7 +794,7 @@ export default function Home() {
                   />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-1">
-                  Leonardo Rossi
+                  Leonardo Margiotta
                 </h3>
                 <p className="text-primary font-semibold mb-3">
                   Technical Lead
