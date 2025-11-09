@@ -788,13 +788,13 @@ export default function Home() {
                 <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
                   <img
                     src={leoPath}
-                    alt="Leonardo Margiottttaaa"
+                    alt="Leonardo Margiotta"
                     className="w-full h-full object-cover"
                     onError={(e) => console.error("Failed to load Leonardo image")}
                   />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-1">
-                  Leonardo Margiotttaata
+                  Leonardo Margiotta
                 </h3>
                 <p className="text-primary font-semibold mb-3">
                   Technical Lead
