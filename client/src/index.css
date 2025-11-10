@@ -1,271 +1,296 @@
-                 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-                 @tailwind base;
-                 @tailwind components;
-                 @tailwind utilities;
+            @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+            @tailwind base;
+            @tailwind components;
+            @tailwind utilities;
 
-                 :root {
-                   --background: hsl(0 0% 100%);
-                   --foreground: hsl(222 47% 11%);
-                   --card: hsl(0 0% 100%);
-                   --card-foreground: hsl(222 47% 11%);
-                   --popover: hsl(0 0% 100%);
-                   --popover-foreground: hsl(222 47% 11%);
-                   --primary: hsl(229 65% 45%);
-                   --primary-foreground: hsl(0 0% 100%);
-                   --secondary: hsl(232 100% 96%);
-                   --secondary-foreground: hsl(229 65% 45%);
-                   --muted: hsl(220 14% 96%);
-                   --muted-foreground: hsl(220 9% 46%);
-                   --accent: hsl(229 84% 32%);
-                   --accent-foreground: hsl(0 0% 100%);
-                   --destructive: hsl(0 84% 60%);
-                   --destructive-foreground: hsl(0 0% 100%);
-                   --border: hsl(220 13% 91%);
-                   --input: hsl(220 13% 91%);
-                   --ring: hsl(229 65% 45%);
-                   --success: hsl(142 71% 45%);
-                   --radius: 0.75rem;
-                   --font-sans: 'Inter', sans-serif;
-                 }
+            /* X|V Restaurant Specific Styles */
+            .text-gold {
+              color: #C6A87D;
+            }
+            
+            .bg-gold {
+              background-color: #C6A87D;
+            }
+            
+            .border-gold {
+              border-color: #C6A87D;
+            }
+            
+            .hover\:text-gold:hover {
+              color: #C6A87D;
+            }
+            
+            .hover\:bg-gold:hover {
+              background-color: #C6A87D;
+            }
+            
+            .hover\:border-gold:hover {
+              border-color: #C6A87D;
+            }
 
-                 .dark {
-                   --background: hsl(222 47% 11%);
-                   --foreground: hsl(0 0% 100%);
-                   --card: hsl(220 13% 18%);
-                   --card-foreground: hsl(0 0% 100%);
-                   --popover: hsl(220 13% 18%);
-                   --popover-foreground: hsl(0 0% 100%);
-                   --primary: hsl(229 65% 45%);
-                   --primary-foreground: hsl(0 0% 100%);
-                   --secondary: hsl(220 13% 18%);
-                   --secondary-foreground: hsl(0 0% 100%);
-                   --muted: hsl(220 13% 18%);
-                   --muted-foreground: hsl(220 9% 46%);
-                   --accent: hsl(229 84% 32%);
-                   --accent-foreground: hsl(0 0% 100%);
-                   --destructive: hsl(0 84% 60%);
-                   --destructive-foreground: hsl(0 0% 100%);
-                   --border: hsl(220 13% 28%);
-                   --input: hsl(220 13% 28%);
-                   --ring: hsl(229 65% 45%);
-                   --success: hsl(142 71% 45%);
-                 }
+            :root {
+              --background: hsl(0 0% 100%);
+              --foreground: hsl(222 47% 11%);
+              --card: hsl(0 0% 100%);
+              --card-foreground: hsl(222 47% 11%);
+              --popover: hsl(0 0% 100%);
+              --popover-foreground: hsl(222 47% 11%);
+              --primary: hsl(229 65% 45%);
+              --primary-foreground: hsl(0 0% 100%);
+              --secondary: hsl(232 100% 96%);
+              --secondary-foreground: hsl(229 65% 45%);
+              --muted: hsl(220 14% 96%);
+              --muted-foreground: hsl(220 9% 46%);
+              --accent: hsl(229 84% 32%);
+              --accent-foreground: hsl(0 0% 100%);
+              --destructive: hsl(0 84% 60%);
+              --destructive-foreground: hsl(0 0% 100%);
+              --border: hsl(220 13% 91%);
+              --input: hsl(220 13% 91%);
+              --ring: hsl(229 65% 45%);
+              --success: hsl(142 71% 45%);
+              --radius: 0.75rem;
+              --font-sans: 'Inter', sans-serif;
+            }
 
-                 @layer base {
-                   * {
-                     @apply border-border;
-                   }
+            .dark {
+              --background: hsl(222 47% 11%);
+              --foreground: hsl(0 0% 100%);
+              --card: hsl(220 13% 18%);
+              --card-foreground: hsl(0 0% 100%);
+              --popover: hsl(220 13% 18%);
+              --popover-foreground: hsl(0 0% 100%);
+              --primary: hsl(229 65% 45%);
+              --primary-foreground: hsl(0 0% 100%);
+              --secondary: hsl(220 13% 18%);
+              --secondary-foreground: hsl(0 0% 100%);
+              --muted: hsl(220 13% 18%);
+              --muted-foreground: hsl(220 9% 46%);
+              --accent: hsl(229 84% 32%);
+              --accent-foreground: hsl(0 0% 100%);
+              --destructive: hsl(0 84% 60%);
+              --destructive-foreground: hsl(0 0% 100%);
+              --border: hsl(220 13% 28%);
+              --input: hsl(220 13% 28%);
+              --ring: hsl(229 65% 45%);
+              --success: hsl(142 71% 45%);
+            }
 
-                   html {
-                     scroll-behavior: smooth;
-                   }
+            @layer base {
+              * {
+                @apply border-border;
+              }
 
-                   body {
-                     @apply font-sans antialiased bg-background text-foreground;
-                     font-family: 'Inter', sans-serif;
-                   }
-                 }
+              html {
+                scroll-behavior: smooth;
+              }
 
-                 @layer components {
-                   .logo-text {
-                     font-family: 'Inter', sans-serif;
-                     font-weight: 800;
-                     font-style: italic;
-                     letter-spacing: -0.02em;
-                     color: hsl(229 65% 45%);
-                     font-size: 2rem;
-                     line-height: 1;
-                     transform: skewX(-8deg);
-                   }
+              body {
+                @apply font-sans antialiased bg-background text-foreground;
+                font-family: 'Inter', sans-serif;
+              }
+            }
 
-                   .category-card {
-                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                   }
+            @layer components {
+              .logo-text {
+                font-family: 'Inter', sans-serif;
+                font-weight: 800;
+                font-style: italic;
+                letter-spacing: -0.02em;
+                color: hsl(229 65% 45%);
+                font-size: 2rem;
+                line-height: 1;
+                transform: skewX(-8deg);
+              }
 
-                   .category-card:hover {
-                     transform: translateY(-4px);
-                     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-                   }
+              .category-card {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+              }
 
-                   .product-card {
-                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                   }
+              .category-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+              }
 
-                   .product-card:hover {
-                     transform: translateY(-2px);
-                     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-                   }
+              .product-card {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+              }
 
-                   .search-input:focus {
-                     outline: none;
-                     box-shadow: 0 0 0 3px rgba(45, 75, 181, 0.1);
-                   }
+              .product-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+              }
 
-                   .btn-primary {
-                     background-color: hsl(229 65% 45%);
-                     color: white;
-                     transition: all 0.2s;
-                   }
+              .search-input:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(45, 75, 181, 0.1);
+              }
 
-                   .btn-primary:hover {
-                     background-color: hsl(229 84% 32%);
-                     transform: translateY(-1px);
-                     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-                   }
+              .btn-primary {
+                background-color: hsl(229 65% 45%);
+                color: white;
+                transition: all 0.2s;
+              }
 
-                   .nav-link {
-                     position: relative;
-                     transition: color 0.2s;
-                   }
+              .btn-primary:hover {
+                background-color: hsl(229 84% 32%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+              }
 
-                   .nav-link:hover {
-                     color: hsl(229 65% 45%);
-                   }
+              .nav-link {
+                position: relative;
+                transition: color 0.2s;
+              }
 
-                   .nav-link::after {
-                     content: '';
-                     position: absolute;
-                     width: 0;
-                     height: 2px;
-                     bottom: -4px;
-                     left: 0;
-                     background-color: hsl(229 65% 45%);
-                     transition: width 0.3s ease;
-                   }
+              .nav-link:hover {
+                color: hsl(229 65% 45%);
+              }
 
-                   .nav-link:hover::after {
-                     width: 100%;
-                   }
+              .nav-link::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -4px;
+                left: 0;
+                background-color: hsl(229 65% 45%);
+                transition: width 0.3s ease;
+              }
 
-                   .stat-card {
-                     border-left: 4px solid hsl(229 65% 45%);
-                   }
+              .nav-link:hover::after {
+                width: 100%;
+              }
 
-                   @keyframes fadeInUp {
-                     from {
-                       opacity: 0;
-                       transform: translateY(20px);
-                     }
-                     to {
-                       opacity: 1;
-                       transform: translateY(0);
-                     }
-                   }
+              .stat-card {
+                border-left: 4px solid hsl(229 65% 45%);
+              }
 
-                   .fade-in-up {
-                     animation: fadeInUp 0.6s ease-out;
-                   }
+              @keyframes fadeInUp {
+                from {
+                  opacity: 0;
+                  transform: translateY(20px);
+                }
+                to {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+              }
 
-                   .scrollbar-hide {
-                     -ms-overflow-style: none;
-                     scrollbar-width: none;
-                   }
+              .fade-in-up {
+                animation: fadeInUp 0.6s ease-out;
+              }
 
-                   .scrollbar-hide::-webkit-scrollbar {
-                     display: none;
-                   }
+              .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
 
-                   /* Nuove animazioni tecnologiche per l'Hero */
-                   @keyframes gradientShift {
-                     0%, 100% {
-                       background-position: 0% 50%;
-                     }
-                     50% {
-                       background-position: 100% 50%;
-                     }
-                   }
+              .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
 
-                   @keyframes float {
-                     0%, 100% {
-                       transform: translateY(0px);
-                     }
-                     50% {
-                       transform: translateY(-10px);
-                     }
-                   }
+              /* Nuove animazioni tecnologiche per l'Hero */
+              @keyframes gradientShift {
+                0%, 100% {
+                  background-position: 0% 50%;
+                }
+                50% {
+                  background-position: 100% 50%;
+                }
+              }
 
-                   @keyframes sparkle {
-                     0%, 100% {
-                       opacity: 0;
-                       transform: scale(0);
-                     }
-                     50% {
-                       opacity: 1;
-                       transform: scale(1);
-                     }
-                   }
+              @keyframes float {
+                0%, 100% {
+                  transform: translateY(0px);
+                }
+                50% {
+                  transform: translateY(-10px);
+                }
+              }
 
-                   .tech-gradient-text {
-                     background: linear-gradient(45deg, hsl(229 65% 45%), hsl(229 84% 32%), hsl(229 65% 45%));
-                     background-size: 200% 200%;
-                     -webkit-background-clip: text;
-                     -webkit-text-fill-color: transparent;
-                     background-clip: text;
-                     animation: gradientShift 3s ease-in-out infinite;
-                   }
+              @keyframes sparkle {
+                0%, 100% {
+                  opacity: 0;
+                  transform: scale(0);
+                }
+                50% {
+                  opacity: 1;
+                  transform: scale(1);
+                }
+              }
 
-                   .hero-particle {
-                     position: absolute;
-                     background: radial-gradient(circle, hsl(229 65% 45% / 0.1) 0%, transparent 70%);
-                     animation: float 6s ease-in-out infinite;
-                   }
+              .tech-gradient-text {
+                background: linear-gradient(45deg, hsl(229 65% 45%), hsl(229 84% 32%), hsl(229 65% 45%));
+                background-size: 200% 200%;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                animation: gradientShift 3s ease-in-out infinite;
+              }
 
-                   .tech-sparkle {
-                     position: absolute;
-                     width: 4px;
-                     height: 4px;
-                     background: hsl(229 65% 45%);
-                     border-radius: 50%;
-                     animation: sparkle 2s ease-in-out infinite;
-                   }
+              .hero-particle {
+                position: absolute;
+                background: radial-gradient(circle, hsl(229 65% 45% / 0.1) 0%, transparent 70%);
+                animation: float 6s ease-in-out infinite;
+              }
 
-                   .typing-cursor {
-                     animation: blink 1s step-end infinite;
-                   }
+              .tech-sparkle {
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: hsl(229 65% 45%);
+                border-radius: 50%;
+                animation: sparkle 2s ease-in-out infinite;
+              }
 
-                   @keyframes blink {
-                     0%, 50% {
-                       opacity: 1;
-                     }
-                     51%, 100% {
-                       opacity: 0;
-                     }
-                   }
+              .typing-cursor {
+                animation: blink 1s step-end infinite;
+              }
 
-                   /* ANIMAZIONI PER SFONDO HERO ORIGINALE MA ANIMATO */
-                   @keyframes move-gradient {
-                     0% { background-position: 0% 50%; }
-                     50% { background-position: 100% 50%; }
-                     100% { background-position: 0% 50%; }
-                   }
+              @keyframes blink {
+                0%, 50% {
+                  opacity: 1;
+                }
+                51%, 100% {
+                  opacity: 0;
+                }
+              }
 
-                   @keyframes float-gentle {
-                     0%, 100% { transform: translateY(0px) rotate(0deg); }
-                     50% { transform: translateY(-15px) rotate(5deg); }
-                   }
+              /* ANIMAZIONI PER SFONDO HERO ORIGINALE MA ANIMATO */
+              @keyframes move-gradient {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+              }
 
-                   @keyframes pulse-subtle {
-                     0%, 100% { opacity: 0.3; transform: scale(1); }
-                     50% { opacity: 0.5; transform: scale(1.05); }
-                   }
+              @keyframes float-gentle {
+                0%, 100% { transform: translateY(0px) rotate(0deg); }
+                50% { transform: translateY(-15px) rotate(5deg); }
+              }
 
-                   .animated-bg {
-                     background: linear-gradient(-45deg, #ffffff, #eff6ff, #e0e7ff, #ffffff);
-                     background-size: 400% 400%;
-                     animation: move-gradient 20s ease infinite;
-                   }
+              @keyframes pulse-subtle {
+                0%, 100% { opacity: 0.3; transform: scale(1); }
+                50% { opacity: 0.5; transform: scale(1.05); }
+              }
 
-                   .floating-shape {
-                     animation: float-gentle 8s ease-in-out infinite;
-                   }
+              .animated-bg {
+                background: linear-gradient(-45deg, #ffffff, #eff6ff, #e0e7ff, #ffffff);
+                background-size: 400% 400%;
+                animation: move-gradient 20s ease infinite;
+              }
 
-                   .pulse-glow {
-                     animation: pulse-subtle 6s ease-in-out infinite;
-                   }
+              .floating-shape {
+                animation: float-gentle 8s ease-in-out infinite;
+              }
 
-                   .glass-effect {
-                     background: rgba(255, 255, 255, 0.8);
-                     backdrop-filter: blur(10px);
-                     border: 1px solid rgba(255, 255, 255, 0.3);
-                   }
-                 }
+              .pulse-glow {
+                animation: pulse-subtle 6s ease-in-out infinite;
+              }
+
+              .glass-effect {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+              }
+            }

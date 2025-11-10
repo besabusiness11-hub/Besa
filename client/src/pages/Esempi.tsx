@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { ArrowLeft, ExternalLink, Smartphone, Monitor, Star, Filter, X } from "lucide-react";
+import { ArrowLeft, ExternalLink, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import comingPath from "@assets/coming_soon.webp"
+import xvImage from "../../../attached_assets/XV.jpg"
 
 const categories = ["tutti", "ristoranti", "dentisti", "palestre", "hotel", "sum"];
 
@@ -16,10 +17,10 @@ const websiteExamples = [
     title: "Ristorante X|V",
     description: "Sito elegante per ristorante con prenotazioni online, menu digitale e galleria foto professionali.",
     category: "Ristoranti",
-    image: "/examples/restaurant.jpg",
-    demoPath: "/demo/ristorante-xv", // Add this field
-    features: ["Prenotazioni online", "Menu digitale", "Galleria foto", "Recensioni clienti"],
-    rating: 4.8
+    image: xvImage,
+    demoPath: "/demo/ristorante-xv",
+    plan: "pro",
+    tag: "Premium"
   },
   {
     id: 2,
@@ -27,9 +28,9 @@ const websiteExamples = [
     description: "Portale completo per salone di bellezza con booking appuntamenti, portfolio servizi e promozioni.",
     category: "Beauty",
     image: "/examples/beauty-salon.jpg",
-    demoPath: "/demo/beauty-studio-elegance", // Add this field
-    features: ["Booking appuntamenti", "Portfolio servizi", "Promozioni", "Gift card"],
-    rating: 4.9
+    demoPath: "/demo/beauty-studio-elegance",
+    plan: "standard",
+    tag: "Featured"
   },
   {
     id: 3,
@@ -37,9 +38,9 @@ const websiteExamples = [
     description: "Sito dinamico per palestra con orari corsi, iscrizioni online e area community.",
     category: "Fitness",
     image: "/examples/gym.jpg",
-    demoPath: "/demo/power-gym-fitness", // Add this field
-    features: ["Orari corsi", "Iscrizioni online", "Area membri", "Blog fitness"],
-    rating: 4.7
+    demoPath: "/demo/power-gym-fitness",
+    plan: "pro",
+    tag: "Popular"
   },
   {
     id: 4,
@@ -47,9 +48,9 @@ const websiteExamples = [
     description: "E-commerce moderno per boutique con catalogo prodotti, carrello e checkout sicuro.",
     category: "Retail",
     image: "/examples/fashion-store.jpg",
-    demoPath: "/demo/boutique-moderna", // Add this field
-    features: ["Catalogo prodotti", "Carrello acquisti", "Checkout sicuro", "Tracking ordini"],
-    rating: 4.8
+    demoPath: "/demo/boutique-moderna",
+    plan: "basic",
+    tag: "New"
   },
   {
     id: 5,
@@ -57,9 +58,9 @@ const websiteExamples = [
     description: "Sito professionale per studio medico con informazioni servizi, team e form contatti.",
     category: "Medico",
     image: "/examples/dental-clinic.jpg",
-    demoPath: "/demo/studio-dentistico-sorriso", // Add this field
-    features: ["Informazioni servizi", "Form contatti", "Team medico", "FAQ"],
-    rating: 5.0
+    demoPath: "/demo/studio-dentistico-sorriso",
+    plan: "standard",
+    tag: "Professional"
   },
   {
     id: 6,
@@ -67,9 +68,9 @@ const websiteExamples = [
     description: "Portale luxury per hotel con prenotazioni, gallery immersiva e informazioni struttura.",
     category: "Turismo",
     image: "/examples/hotel.jpg",
-    demoPath: "/demo/grand-hotel-luxury", // Add this field
-    features: ["Prenotazioni camere", "Gallery immersiva", "Servizi hotel", "Recensioni"],
-    rating: 4.9
+    demoPath: "/demo/grand-hotel-luxury",
+    plan: "pro",
+    tag: "Luxury"
   }
 ];
 
@@ -234,11 +235,12 @@ export default function Esempi() {
                   <CardContent className="p-0">
                     {/* Immagine con overlay */}
                     <div className="relative overflow-hidden">
-                      <div className="w-full h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                        <div className="text-center">
-                          <Monitor className="w-12 h-12 text-primary mb-2 mx-auto" />
-                          <span className="text-sm text-muted-foreground">Anteprima {example.category}</span>
-                        </div>
+                      <div className="w-full h-48 bg-gradient-to-br from-primary/20 to-accent/20">
+                        <img 
+                          src={example.image}
+                          alt={example.title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
 
                       {/* Overlay hover */}
@@ -257,46 +259,35 @@ export default function Esempi() {
 
                     {/* Contenuto */}
                     <div className="p-6">
-                      {/* Header con rating */}
-                      <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                      {/* Title and Description */}
+                      <div className="mb-4">
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-2">
                           {example.title}
                         </h3>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium">{example.rating}</span>
+                        <p className="text-muted-foreground line-clamp-2">
+                          {example.description}
+                        </p>
+                      </div>
+
+                      {/* Plan and Tags */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-2">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                            example.plan === 'pro' 
+                              ? 'bg-purple-100 text-purple-800' 
+                              : example.plan === 'standard'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-green-100 text-green-800'
+                          }`}>
+                            {example.plan.charAt(0).toUpperCase() + example.plan.slice(1)}
+                          </span>
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                            {example.category}
+                          </span>
                         </div>
-                      </div>
-
-                      <p className="text-muted-foreground mb-4 line-clamp-2">
-                        {example.description}
-                      </p>
-
-                      {/* Features */}
-                      <div className="space-y-2 mb-4">
-                        {example.features.slice(0, 3).map((feature, index) => (
-                          <div key={index} className="flex items-center text-sm">
-                            <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                            {feature}
-                          </div>
-                        ))}
-                        {example.features.length > 3 && (
-                          <div className="text-sm text-muted-foreground">
-                            +{example.features.length - 3} altre funzionalità
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Badge Categoria */}
-                      <div className="flex justify-between items-center">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
-                          {example.category}
+                        <span className="text-xs font-medium text-muted-foreground">
+                          {example.tag}
                         </span>
-
-                        <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
-                          <Smartphone className="w-4 h-4 mr-1" />
-                          Mobile
-                        </Button>
                       </div>
                     </div>
                   </CardContent>

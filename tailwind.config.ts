@@ -64,9 +64,11 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["var(--font-sans)"],
-        serif: ["var(--font-serif)"],
+        sans: ['DM Serif Text', 'sans'],
+        serif: ['DM Serif Text', 'serif'],
         mono: ["var(--font-mono)"],
+        playfair: ["Playfair Display", "serif"],
+        inter: ["Inter", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

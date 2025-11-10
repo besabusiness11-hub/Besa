@@ -37,4 +37,25 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
+  preview: {
+    port: 8080
+  },
+  preview: {
+    port: 8080,
+    strictPort: true,
+    // Add middleware to handle client-side routing
+    middlewares: [
+      {
+        name: 'handle-client-routing',
+        configureServer(server) {
+          server.middlewares.use((req, res, next) => {
+            if (!req.url?.includes('.')) {
+              req.url = '/';
+            }
+            next();
+          });
+        },
+      },
+    ],
+  },
 });
