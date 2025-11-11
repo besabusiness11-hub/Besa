@@ -8,7 +8,7 @@ import Footer from "@/components/footer";
 import comingPath from "@assets/coming_soon.webp"
 import xvImage from "../../../attached_assets/XV.jpg"
 
-const categories = ["tutti", "ristoranti", "dentisti", "palestre", "hotel", "sum"];
+const categories = ["tutti", "ristoranti", "dentisti", "palestre", "hotel"];
 
 // Dati degli esempi di siti
 const websiteExamples = [
@@ -18,59 +18,8 @@ const websiteExamples = [
     description: "Sito elegante per ristorante con prenotazioni online, menu digitale e galleria foto professionali.",
     category: "Ristoranti",
     image: xvImage,
-    demoPath: "/demo/ristorante-xv",
-    plan: "pro",
-    tag: "Premium"
-  },
-  {
-    id: 2,
-    title: "Beauty Studio Elegance",
-    description: "Portale completo per salone di bellezza con booking appuntamenti, portfolio servizi e promozioni.",
-    category: "Beauty",
-    image: "/examples/beauty-salon.jpg",
-    demoPath: "/demo/beauty-studio-elegance",
-    plan: "standard",
-    tag: "Featured"
-  },
-  {
-    id: 3,
-    title: "Power Gym & Fitness",
-    description: "Sito dinamico per palestra con orari corsi, iscrizioni online e area community.",
-    category: "Fitness",
-    image: "/examples/gym.jpg",
-    demoPath: "/demo/power-gym-fitness",
-    plan: "pro",
-    tag: "Popular"
-  },
-  {
-    id: 4,
-    title: "Boutique Moderna",
-    description: "E-commerce moderno per boutique con catalogo prodotti, carrello e checkout sicuro.",
-    category: "Retail",
-    image: "/examples/fashion-store.jpg",
-    demoPath: "/demo/boutique-moderna",
-    plan: "basic",
-    tag: "New"
-  },
-  {
-    id: 5,
-    title: "Studio Dentistico Sorriso",
-    description: "Sito professionale per studio medico con informazioni servizi, team e form contatti.",
-    category: "Medico",
-    image: "/examples/dental-clinic.jpg",
-    demoPath: "/demo/studio-dentistico-sorriso",
-    plan: "standard",
-    tag: "Professional"
-  },
-  {
-    id: 6,
-    title: "Grand Hotel Luxury",
-    description: "Portale luxury per hotel con prenotazioni, gallery immersiva e informazioni struttura.",
-    category: "Turismo",
-    image: "/examples/hotel.jpg",
-    demoPath: "/demo/grand-hotel-luxury",
-    plan: "pro",
-    tag: "Luxury"
+    demoPath: "/examples/X|V",
+    plan: "pro"
   }
 ];
 
@@ -285,9 +234,6 @@ export default function Esempi() {
                             {example.category}
                           </span>
                         </div>
-                        <span className="text-xs font-medium text-muted-foreground">
-                          {example.tag}
-                        </span>
                       </div>
                     </div>
                   </CardContent>
