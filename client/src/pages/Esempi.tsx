@@ -8,7 +8,7 @@ import Footer from "@/components/footer";
 import comingPath from "@assets/coming_soon.webp"
 import xvImage from "../../../attached_assets/XV.jpg"
 
-const categories = ["tutti", "ristoranti", "dentisti", "palestre", "hotel"];
+const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre"];
 
 // Dati degli esempi di siti
 const websiteExamples = [
