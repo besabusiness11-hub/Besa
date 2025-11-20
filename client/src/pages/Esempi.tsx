@@ -6,11 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import comingPath from "@assets/coming_soon.webp"
-import xvImage from "../../../attached_assets/XV.jpg"
+import xvImage from "../../../attached_assets/XV.webp"
 import MrBarber from "../../../attached_assets/MrBarber.webp"
 import NoirOrStudio from "../../../attached_assets/NoirOrStudio.webp"
+import MilanoScomparsa from "../../../attached_assets/MilanoScomparsa.webp"
 
-const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre"];
+const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre", "Altro"];
 
 // Dati degli esempi di siti
 const websiteExamples = [
@@ -20,7 +21,7 @@ const websiteExamples = [
     description: "Sito elegante per ristorante con prenotazioni online, menu digitale e galleria foto professionali.",
     category: "Ristoranti",
     image: xvImage,
-    demoPath: "/examples/X|V",
+    demoPath: "https://xv.besaweb.com",
     plan: "pro"
   }, 
   {
@@ -40,6 +41,15 @@ const websiteExamples = [
     image: NoirOrStudio,
     demoPath: "https://noirorstudio.besaweb.com/",
     plan: "pro"
+  },
+  {
+    id: 4,
+    title: "MilanoScomparsa",
+    description: "Sito web con design retro creato per la pagina Instagram MilanoScomparsa",
+    category: "Altro",
+    image: MilanoScomparsa,
+    demoPath: "https://milanoscomparsa.besaweb.com/",
+    plan: "basic"
   }
 ];
 
@@ -83,7 +93,8 @@ export default function Esempi() {
           "tattoo": "Tattoo",
           "palestre": "Palestre",
           "dentisti": "Medico",
-          "centri estetici": "Beauty"
+          "centri estetici": "Beauty",
+          "altro": "Altro"
         };
         return example.category === categoryMap[selectedCategory.toLowerCase()];
       });
@@ -248,9 +259,9 @@ export default function Esempi() {
                       <div className="flex items-center justify-between">
                         <div className="flex gap-2">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                            example.plan === 'pro' 
+                            example.plan.toLowerCase() === 'pro' 
                               ? 'bg-purple-100 text-purple-800' 
-                              : example.plan === 'standard'
+                              : example.plan.toLowerCase() === 'standard'
                               ? 'bg-blue-100 text-blue-800'
                               : 'bg-green-100 text-green-800'
                           }`}>
