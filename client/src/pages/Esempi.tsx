@@ -8,6 +8,7 @@ import Footer from "@/components/footer";
 import comingPath from "@assets/coming_soon.webp"
 import xvImage from "../../../attached_assets/XV.jpg"
 import MrBarber from "../../../attached_assets/MrBarber.webp"
+import NoirOrStudio from "../../../attached_assets/NoirOrStudio.webp"
 
 const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre"];
 
@@ -31,6 +32,15 @@ const websiteExamples = [
     demoPath: "https://mrbarber.besaweb.com/",
     plan: "Standard"
   }, 
+  {
+    id: 3,
+    title: "NoirOrStudio",
+    description: "Sito web elegante e luxury per tattoo shops con inspirazione per design",
+    category: "Tattoo",
+    image: NoirOrStudio,
+    demoPath: "https://noirorstudio.besaweb.com/",
+    plan: "pro"
+  }
 ];
 
 export default function Esempi() {
