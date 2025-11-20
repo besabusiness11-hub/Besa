@@ -25,7 +25,7 @@ const websiteExamples = [
   {
     id: 2,
     title: "MrBarber",
-    description: "Sito elegante e moderno per barber",
+    description: "Sito web elegante e funzionale per un barbiere in zona di Treviso, che mette in mostra servizi, prezzi e prenotazioni via telefono in modo chiaro e immediato.",
     category: "Barbieri",
     image: MrBarber,
     demoPath: "https://mrbarber.besaweb.com/",
@@ -176,8 +176,8 @@ export default function Esempi() {
                   onClick={() => setSelectedCategory(category)}
                   className={`capitalize ${
                     selectedCategory === category
-                      ? "bg-primary text-white"
-                      : "hover:bg-primary/10"
+                      ? "bg-primary text-white hover:bg-primary/90"
+                      : "hover:bg-primary/10 hover:text-primary"
                   }`}
                 >
                   {category}
