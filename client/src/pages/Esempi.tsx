@@ -69,8 +69,10 @@ export default function Esempi() {
     : websiteExamples.filter(example => {
         const categoryMap: { [key: string]: string } = {
           "ristoranti": "Ristoranti",
+          "barbieri": "Barbieri",
+          "tattoo": "Tattoo",
+          "palestre": "Palestre",
           "dentisti": "Medico",
-          "palestre": "Fitness",
           "centri estetici": "Beauty"
         };
         return example.category === categoryMap[selectedCategory.toLowerCase()];
@@ -170,10 +172,10 @@ export default function Esempi() {
               {categories.map((category) => (
                 <Button
                   key={category}
-                  variant={selectedCategory.toLowerCase() === category ? "default" : "outline"}
+                  variant={selectedCategory === category ? "default" : "outline"}
                   onClick={() => setSelectedCategory(category)}
                   className={`capitalize ${
-                    selectedCategory.toLowerCase() === category
+                    selectedCategory === category
                       ? "bg-primary text-white"
                       : "hover:bg-primary/10"
                   }`}
