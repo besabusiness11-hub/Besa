@@ -7,6 +7,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import comingPath from "@assets/coming_soon.webp"
 import xvImage from "../../../attached_assets/XV.jpg"
+import MrBarber from "../../../attached_assets/MrBarber.webp"
 
 const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre"];
 
@@ -20,7 +21,16 @@ const websiteExamples = [
     image: xvImage,
     demoPath: "/examples/X|V",
     plan: "pro"
-  }
+  }, 
+  {
+    id: 2,
+    title: "MrBarber",
+    description: "Sito elegante e moderno per barber",
+    category: "Barbieri",
+    image: MrBarber,
+    demoPath: "https://mrbarber.besaweb.com/",
+    plan: "Standard"
+  }, 
 ];
 
 export default function Esempi() {
@@ -78,7 +88,11 @@ export default function Esempi() {
 
   // Update the card click handler
   const handleDemoClick = (path: string) => {
-    setLocation(path);
+    if (/^https?:\/\//i.test(path)) {
+      window.open(path, '_blank', 'noopener,noreferrer');
+    } else {
+      setLocation(path);
+    }
   };
 
   // If form is shown, render only the form
