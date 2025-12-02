@@ -10,6 +10,7 @@ import xvImage from "../../../attached_assets/XV.webp"
 import MrBarber from "../../../attached_assets/MrBarber.webp"
 import NoirOrStudio from "../../../attached_assets/NoirOrStudio.webp"
 import MilanoScomparsa from "../../../attached_assets/MilanoScomparsa.webp"
+import PepperInFlame from "../../../attached_assets/PepperInFlame.webp"
 
 const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre", "Liberi Professionisti"];
 
@@ -50,6 +51,15 @@ const websiteExamples = [
     image: MilanoScomparsa,
     demoPath: "https://milanoscomparsa.besaweb.com/",
     plan: "basic"
+  }, 
+  {
+    id: 5,
+    title: "PepperInFlame",
+    description: "5 siti web in uno, design luxury per un tattoo shop a Treviso",
+    category: "Tattoo",
+    image: PepperInFlame,
+    demoPath: "https://pepperinflame.besaweb.com/",
+    plan: "pro"
   }
 ];
 
