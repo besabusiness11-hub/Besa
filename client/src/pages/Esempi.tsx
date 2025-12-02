@@ -11,7 +11,7 @@ import MrBarber from "../../../attached_assets/MrBarber.webp"
 import NoirOrStudio from "../../../attached_assets/NoirOrStudio.webp"
 import MilanoScomparsa from "../../../attached_assets/MilanoScomparsa.webp"
 
-const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre", "Altro"];
+const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre", "Liberi Professionisti"];
 
 // Dati degli esempi di siti
 const websiteExamples = [
@@ -46,7 +46,7 @@ const websiteExamples = [
     id: 4,
     title: "MilanoScomparsa",
     description: "Sito web con design retro creato per la pagina Instagram MilanoScomparsa",
-    category: "Altro",
+    category: "Liberi Professionisti",
     image: MilanoScomparsa,
     demoPath: "https://milanoscomparsa.besaweb.com/",
     plan: "basic"
@@ -94,7 +94,7 @@ export default function Esempi() {
           "palestre": "Palestre",
           "dentisti": "Medico",
           "centri estetici": "Beauty",
-          "altro": "Altro"
+          "liberi professionisti": "Liberi Professionisti"
         };
         return example.category === categoryMap[selectedCategory.toLowerCase()];
       });
