@@ -11,6 +11,7 @@ import MrBarber from "../../../attached_assets/MrBarber.webp"
 import NoirOrStudio from "../../../attached_assets/NoirOrStudio.webp"
 import MilanoScomparsa from "../../../attached_assets/MilanoScomparsa.webp"
 import PepperInFlame from "../../../attached_assets/PepperInFlame.webp"
+import TheGentlemanHouse from "../../../attached_assets/TheGentlemanHouse.webp"
 
 const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre", "Liberi Professionisti"];
 
@@ -19,7 +20,6 @@ const websiteExamples = [
   {
     id: 1,
     title: "Ristorante X|V",
-    description: "Sito elegante per ristorante con prenotazioni online, menu digitale e galleria foto professionali.",
     category: "Ristoranti",
     image: xvImage,
     demoPath: "https://xv.besaweb.com",
@@ -28,7 +28,6 @@ const websiteExamples = [
   {
     id: 2,
     title: "MrBarber",
-    description: "Sito web elegante e funzionale per un barbiere in zona di Treviso, che mette in mostra servizi, prezzi e prenotazioni via telefono in modo chiaro e immediato.",
     category: "Barbieri",
     image: MrBarber,
     demoPath: "https://mrbarber.besaweb.com/",
@@ -36,29 +35,26 @@ const websiteExamples = [
   }, 
   {
     id: 3,
-    title: "NoirOrStudio",
-    description: "Sito web elegante e luxury per tattoo shops con inspirazione per design",
-    category: "Tattoo",
-    image: NoirOrStudio,
-    demoPath: "https://noirorstudio.besaweb.com/",
-    plan: "pro"
-  },
-  {
-    id: 4,
     title: "MilanoScomparsa",
-    description: "Sito web con design retro creato per la pagina Instagram MilanoScomparsa",
     category: "Liberi Professionisti",
     image: MilanoScomparsa,
     demoPath: "https://milanoscomparsa.besaweb.com/",
     plan: "basic"
   }, 
   {
-    id: 5,
+    id: 4,
     title: "PepperInFlame",
-    description: "5 siti web in uno, design luxury per un tattoo shop a Treviso",
     category: "Tattoo",
     image: PepperInFlame,
     demoPath: "https://pepperinflame.besaweb.com/",
+    plan: "pro"
+  }, 
+  {
+    id: 5,
+    title: "TheGentleman's House",
+    category: "Barbieri",
+    image: TheGentlemanHouse,
+    demoPath: "https://thegentlemanhouse.besaweb.com/",
     plan: "pro"
   }
 ];
@@ -260,9 +256,6 @@ export default function Esempi() {
                         <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-2">
                           {example.title}
                         </h3>
-                        <p className="text-muted-foreground line-clamp-2">
-                          {example.description}
-                        </p>
                       </div>
 
                       {/* Plan and Tags */}
