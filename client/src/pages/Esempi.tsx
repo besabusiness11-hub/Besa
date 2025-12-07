@@ -63,7 +63,7 @@ const websiteExamples = [
     title: "The Gilded Glass",
     category: "Ristoranti",
     image: TheGildedHouse,
-    demoPath: "https://thegildedhouse.besaweb.com/",
+    demoPath: "https://thegildedglass.besaweb.com/",
     plan: "pro"
   }
 ];
