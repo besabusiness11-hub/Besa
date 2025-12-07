@@ -12,6 +12,7 @@ import NoirOrStudio from "../../../attached_assets/NoirOrStudio.webp"
 import MilanoScomparsa from "../../../attached_assets/MilanoScomparsa.webp"
 import PepperInFlame from "../../../attached_assets/PepperInFlame.webp"
 import TheGentlemanHouse from "../../../attached_assets/TheGentlemanHouse.webp"
+import TheGildedHouse from "../../../attached_assets/TheGildedHouse.webp"
 
 const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre", "Liberi Professionisti"];
 
@@ -55,6 +56,14 @@ const websiteExamples = [
     category: "Barbieri",
     image: TheGentlemanHouse,
     demoPath: "https://thegentlemanhouse.besaweb.com/",
+    plan: "pro"
+  },
+   {
+    id: 6,
+    title: "The Gilded Glass",
+    category: "Ristoranti",
+    image: TheGildedHouse,
+    demoPath: "https://thegildedhouse.besaweb.com/",
     plan: "pro"
   }
 ];
