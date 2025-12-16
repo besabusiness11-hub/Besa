@@ -8,13 +8,13 @@ import Footer from "@/components/footer";
 import comingPath from "@assets/coming_soon.webp"
 import xvImage from "../../../attached_assets/XV.webp"
 import MrBarber from "../../../attached_assets/MrBarber.webp"
-import NoirOrStudio from "../../../attached_assets/NoirOrStudio.webp"
 import MilanoScomparsa from "../../../attached_assets/MilanoScomparsa.webp"
 import PepperInFlame from "../../../attached_assets/PepperInFlame.webp"
 import TheGentlemanHouse from "../../../attached_assets/TheGentlemanHouse.webp"
 import TheGildedHouse from "../../../attached_assets/TheGildedHouse.webp"
+import Tempta from "../../../attached_assets/Tempta.webp"
 
-const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Palestre", "Liberi Professionisti"];
+const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Bar & Cocktail", "Liberi Professionisti"];
 
 // Dati degli esempi di siti
 const websiteExamples = [
@@ -61,9 +61,17 @@ const websiteExamples = [
    {
     id: 6,
     title: "The Gilded Glass",
-    category: "Ristoranti",
+    category: "Bar & Cocktail",
     image: TheGildedHouse,
     demoPath: "https://thegildedglass.besaweb.com/",
+    plan: "pro"
+  },
+  {
+    id: 7,
+    title: "Tempa",
+    category: "Bar & Cocktail",
+    image: Tempta,
+    demoPath: "https://tempta.besaweb.com/",
     plan: "pro"
   }
 ];
@@ -106,7 +114,7 @@ export default function Esempi() {
           "ristoranti": "Ristoranti",
           "barbieri": "Barbieri",
           "tattoo": "Tattoo",
-          "palestre": "Palestre",
+          "bar & cocktail": "Bar & Cocktail",
           "dentisti": "Medico",
           "centri estetici": "Beauty",
           "liberi professionisti": "Liberi Professionisti"

@@ -297,4 +297,33 @@
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(255, 255, 255, 0.3);
               }
+
+              /* Scrolling Marquee Animation */
+              @keyframes scroll-left {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(-50%);
+                }
+              }
+
+              .marquee-container {
+                overflow: hidden;
+                position: relative;
+                width: 100%;
+              }
+
+              .marquee-track {
+                display: flex;
+                animation: scroll-left 30s linear infinite;
+                width: max-content;
+              }
+
+              .marquee-item {
+                display: flex;
+                align-items: center;
+                padding: 0 1rem;
+                white-space: nowrap;
+              }
             }

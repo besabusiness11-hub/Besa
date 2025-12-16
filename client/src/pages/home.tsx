@@ -4,6 +4,14 @@ import {
   CheckCircle,
   CircleDashed,
   X,
+  FileText,
+  MapPin,
+  Calendar,
+  Headphones,
+  Edit3,
+  Globe,
+  Mail,
+  Camera,
 } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -12,6 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import benitoPath from "@assets/benito_sqr.jpg";
 import leoPath from "@assets/leo_sqr.jpg";
 import ludoPath from "@assets/ludo_sqr.jpg";
+import { useLocation } from "wouter";
 
 export default function Home() {
   const portfolioScrollRef = useRef<HTMLDivElement>(null);
@@ -22,6 +31,7 @@ export default function Home() {
   const [typingComplete, setTypingComplete] = useState(false);
   const [hoveredStat, setHoveredStat] = useState<number | null>(null);
   const fullText = "siti web personalizzati";
+  const [, setLocation] = useLocation();
 
   useEffect(() => {
     let currentIndex = 0;
@@ -239,15 +249,10 @@ export default function Home() {
             className="text-lg lg:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto fade-in-up"
             style={{ animationDelay: "0.3s" }}
           >
-            Besa crea <strong className="text-foreground">gratuitamente</strong>{" "}
-            siti web personalizzati per attività locali.
+            Besa crea <strong className="text-foreground">siti web professionali</strong>{" "}
+            per attività locali.{" "}
             <br />
-            Dalla progettazione alla pubblicazione online, ci occupiamo di tutto
-            per rendere la tua presenza digitale{" "}
-            <strong className="text-foreground">
-              professionale ed efficace
-            </strong>
-            .
+            <strong className="text-foreground">Pensiamo a tutto noi</strong>: design, sviluppo e gestione online, per aiutarti a <strong className="text-foreground">migliorare visibilità</strong>, credibilità e contatti.
           </p>
 
           {/* CTA Buttons with z-index to stay on top - SINGOLO BOTTONE */}
@@ -324,24 +329,30 @@ export default function Home() {
                 Ci racconti della tua attività, dei tuoi obiettivi e di cosa ti
                 serve. Noi ascoltiamo e capiamo le tue esigenze.
               </p>
+              <Button
+                className="mt-4 px-6 py-2 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
+                onClick={() => {
+                  window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: "smooth",
+                  });
+                }}
+              >
+                I nostri contatti
+              </Button>
             </div>
 
             {/* Step 2 */}
-            <div className="text-center md:-mt-8" data-testid="step-2">
+            <div className="text-center" data-testid="step-2">
               <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <span className="text-3xl font-bold text-primary-foreground">
                   2
                 </span>
               </div>
-
-              {/* Title with "Gratis" badge below */}
               <div className="mb-3">
                 <h3 className="text-2xl font-bold text-foreground mb-2">
                   Creazione del sito
                 </h3>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-success/10 text-success border-2 border-success animate-pulse">
-                  GRATIS
-                </span>
               </div>
 
               <p className="text-muted-foreground text-base leading-relaxed">
@@ -364,6 +375,12 @@ export default function Home() {
                 Il tuo sito va online e tu puoi concentrarti sul tuo lavoro. Noi
                 ci occupiamo di tutto il resto.
               </p>
+              <Button
+                className="mt-4 px-6 py-2 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
+                onClick={() => setLocation("/esempi")}
+              >
+                I nostri esempi
+              </Button>
             </div>
           </div>
 
@@ -407,316 +424,221 @@ export default function Home() {
               className="text-3xl lg:text-4xl font-bold text-white mb-4"
               data-testid="pricing-title"
             >
-              Prezzi e servizi inclusi
+              Prezzi Trasparenti e Semplici
             </h2>
             <p
               className="text-lg text-white/90 max-w-2xl mx-auto"
               data-testid="pricing-description"
             >
-              Tutto ciò di cui hai bisogno per la tua presenza online, ad un
-              prezzo trasparente
+              Un prezzo chiaro per iniziare, personalizzabile in base alle tue esigenze
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
-            {/* Basic Plan */}
-            <Card className="border-2 border-white/20 shadow-xl bg-white/95 hover:shadow-2xl transition-all">
-              <CardContent className="p-6 lg:p-8">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">Basic</h3>
-                  <div className="mb-4">
-                    <span className="text-4xl font-bold text-foreground">€39</span>
-                    <span className="text-lg text-muted-foreground">/mese</span>
+          
+          <div className="max-w-3xl mx-auto">
+            {/* Main Pricing Card */}
+            <Card className="border-0 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] bg-white relative">
+              <CardContent className="p-8 lg:p-12">
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-bold text-foreground mb-6">Pacchetto Base</h3>
+                  
+                  {/* Pricing Structure */}
+                  <div className="flex flex-col md:flex-row items-center justify-center mb-8">
+                    {/* Creation Cost */}
+                    <div className="text-center flex flex-col items-end">
+                      <div className="mb-2">
+                        <span className="text-5xl font-bold text-foreground">€299</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground font-semibold">
+                        Creazione sito
+                      </p>
+                      <p className="text-xs text-muted-foreground italic">
+                        (pagamento unico)
+                      </p>
+                    </div>
+
+                    <div className="text-3xl text-muted-foreground font-light mx-8 hidden md:block">+</div>
+
+                    {/* Monthly Maintenance */}
+                    <div className="text-center flex flex-col items-start">
+                      <div className="mb-2">
+                        <span className="text-5xl font-bold text-foreground">€9.99</span>
+                        <span className="text-xl text-muted-foreground">/mese</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground font-semibold">
+                        Mantenimento online
+                      </p>
+                      <p className="text-xs text-muted-foreground italic">
+                        (hosting e gestione)
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm text-muted-foreground italic mb-4">
-                    Ideale per iniziare
+                </div>
+
+                {/* Included Features */}
+                <div className="mb-8">
+                  <h4 className="text-xl font-bold text-foreground mb-4 text-center">Servizi Inclusi</h4>
+                  <div className="space-y-3 max-w-md mx-auto pl-14">
+                    <div className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" />
+                      <span className="text-foreground">Sito web ad 1 pagina professionale</span>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" />
+                      <span className="text-foreground">Dominio incluso (.it / .com)</span>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" />
+                      <span className="text-foreground">Ottimizzazione mobile</span>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" />
+                      <span className="text-foreground">Mantenimento e hosting online</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Scrolling Extras Banner - Inside Card */}
+                <div className="mb-13">
+                  <p className="text-center text-muted-foreground text-sm font-medium mb-6 pt-4">
+                    Personalizza il tuo sito con funzionalità aggiuntive
                   </p>
-                  <span className="inline-flex items-center px-3 py-1 mb-4 rounded-full text-sm font-bold bg-success/10 text-success border-2 border-success">
-                    Creazione GRATIS
-                  </span>
+                  <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-xl py-4 overflow-hidden">
+                    <div className="marquee-container">
+                      <div className="marquee-track">
+                        {/* First set */}
+                        <div className="marquee-item">
+                          <FileText className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Pagine aggiuntive</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <MapPin className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Google Maps</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Calendar className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Sistema appuntamenti</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Headphones className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Supporto prioritario</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Edit3 className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Modifiche mensili</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Globe className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Multilingue</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Mail className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Email professionale</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Camera className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Shooting fotografico</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        {/* Duplicate set for seamless loop */}
+                        <div className="marquee-item">
+                          <FileText className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Pagine aggiuntive</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <MapPin className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Google Maps</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Calendar className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Sistema appuntamenti</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Headphones className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Supporto prioritario</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Edit3 className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Modifiche mensili</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Globe className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Multilingue</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Mail className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Email professionale</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                        <div className="marquee-item">
+                          <Camera className="w-4 h-4 text-white mr-2" />
+                          <span className="text-white font-medium">Shooting fotografico</span>
+                        </div>
+                        <div className="marquee-item">
+                          <span className="text-white/60">•</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-1 mb-6">
-                  {/* Pages */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">1 pagina (scroll layout)</span>
-                  </div>
 
-                  {/* Domain */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Dominio incluso (.it /.com)</span>
-                  </div>
+                {/* Divider */}
+                <div className="border-t border-border my-6"></div>
 
-                  {/* Mobile Optimization */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Ottimizzazione mobile</span>
-                  </div>
-
-                  {/* Design */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Design personalizzato</span>
-                  </div>
-
-                  {/* Booking */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Prenotazioni (numero di telefono)</span>
-                  </div>
-
-                  {/* Modifications */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">3 modifiche/mese</span>
-                  </div>
-
-                  {/* Support */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Supporto email (2 giorni)</span>
-                  </div>
-
-                  {/* Photo Service */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CircleDashed className="w-5 h-5 text-dark mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Servizio fotografico opzionale (€149)</span>
-                  </div>
-
-                  {/* Languages */}
-                  <div className="flex items-start min-h-[40px]">
-                    <X className="w-5 h-5 text-destructive mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-muted-foreground text-sm line-through">Multi lingue (IT)</span>
-                  </div>
-
-                  {/* Google Business */}
-                  <div className="flex items-start min-h-[40px]">
-                    <X className="w-5 h-5 text-destructive mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-muted-foreground text-sm line-through">Google Business Setup</span>
-                  </div>
-
-                  {/* QR Menu */}
-                  <div className="flex items-start min-h-[40px]">
-                    <X className="w-5 h-5 text-destructive mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-muted-foreground text-sm line-through">Menu con QR code</span>
-                  </div>
-
-                  {/* Professional Email */}
-                  <div className="flex items-start min-h-[40px]">
-                    <X className="w-5 h-5 text-destructive mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-muted-foreground text-sm line-through">Email professionale</span>
-                  </div>
-                </div>
-                <Button
-                  onClick={() => setShowForm(true)}
-                  variant="outline"
-                  className="w-full px-6 py-3 rounded-lg font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-white"
-                >
-                  Inizia Ora
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Standard Plan - Highlighted */}
-            <Card className="border-0 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] bg-white relative transform md:scale-105 z-10">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="inline-flex items-center px-6 py-2 rounded-full text-sm font-bold bg-accent text-white shadow-lg">
-                  PIÙ POPOLARE
-                </span>
-              </div>
-              <CardContent className="p-6 lg:p-8 pt-8">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">Standard</h3>
-                  <div className="mb-2">
-                    <span className="text-5xl font-bold text-foreground">€59</span>
-                    <span className="text-xl text-muted-foreground">/mese</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground italic mb-4">
-                    (meno di €2 al giorno)
+                {/* CTA Button */}
+                <div className="text-center">
+                  <Button
+                    onClick={() => setShowForm(true)}
+                    className="btn-primary px-8 py-4 rounded-lg font-semibold text-lg shadow-xl hover:shadow-2xl"
+                  >
+                    Richiedi il Tuo Preventivo
+                  </Button>
+                  <p className="text-sm text-muted-foreground mt-4">
+                    Ti risponderemo entro 24 ore con un preventivo personalizzato
                   </p>
-                  <span className="inline-flex items-center px-3 py-1 mb-4 rounded-full text-sm font-bold bg-success/10 text-success border-2 border-success">
-                    Creazione GRATIS
-                  </span>
                 </div>
-                <div className="space-y-1 mb-6">
-                  {/* Pages */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">5 pagine</span>
-                  </div>
-
-                  {/* Domain */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Dominio incluso (.it /.com)</span>
-                  </div>
-
-                  {/* Mobile Optimization */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Ottimizzazione mobile</span>
-                  </div>
-
-                  {/* Design */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Design personalizzato</span>
-                  </div>
-
-                  {/* Booking */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Prenotazioni (numero di telefono)</span>
-                  </div>
-
-                  {/* Modifications */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Modifiche illimitate (info)</span>
-                  </div>
-
-                  {/* Support */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Supporto email/whatsapp (1 giorno)</span>
-                  </div>
-
-                  {/* Photo Service */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CircleDashed className="w-5 h-5 text-dark mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Servizio fotografico opzionale (€99)</span>
-                  </div>
-
-                  {/* Languages */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Multilingue (EN-IT)</span>
-                  </div>
-
-                  {/* Google Business */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Google Business Setup</span>
-                  </div>
-
-                  {/* QR Menu */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Menu con QR code (pdf)</span>
-                  </div>
-
-                  {/* Professional Email */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Email professionale</span>
-                  </div>
-                </div>
-                <Button
-                  onClick={() => setShowForm(true)}
-                  className="btn-primary w-full px-8 py-4 rounded-lg font-semibold text-lg shadow-xl hover:shadow-2xl"
-                >
-                  Inizia Ora
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Pro Plan */}
-            <Card className="border-2 border-white/20 shadow-xl bg-white/95 hover:shadow-2xl transition-all">
-              <CardContent className="p-6 lg:p-8">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">Pro</h3>
-                  <div className="mb-4">
-                    <span className="text-4xl font-bold text-foreground">€109</span>
-                    <span className="text-lg text-muted-foreground">/mese</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground italic mb-4">
-                    Soluzione completa premium
-                  </p>
-                  <span className="inline-flex items-center px-3 py-1 mb-4 rounded-full text-sm font-bold bg-success/10 text-success border-2 border-success">
-                    Creazione GRATIS
-                  </span>
-                  <div className="h-[2px]"></div>
-                </div>
-                <div className="space-y-1 mb-6">
-                  {/* Pages */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">7+ pagine complete</span>
-                  </div>
-
-                  {/* Domain */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Dominio incluso (.it /.com)</span>
-                  </div>
-
-                  {/* Mobile Optimization */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm">Ottimizzazione mobile</span>
-                  </div>
-
-                  {/* Design */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">Design premium personalizzato</span>
-                  </div>
-
-                  {/* Booking */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">Prenotazioni online integrate</span>
-                  </div>
-
-                  {/* Modifications */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">Modifiche illimitate (info + design)</span>
-                  </div>
-
-                  {/* Support */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">Supporto stesso giorno prioritario</span>
-                  </div>
-
-                  {/* Photo Service */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">Servizio fotografico (incluso)</span>
-                  </div>
-
-                  {/* Languages */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">Multilingue (EN-IT-FR-ES)</span>
-                  </div>
-
-                  {/* Google Business */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">Google Business Setup</span>
-                  </div>
-
-                  {/* QR Menu */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">Menu con QR code interattivo</span>
-                  </div>
-
-                  {/* Professional Email */}
-                  <div className="flex items-start min-h-[40px]">
-                    <CheckCircle className="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground text-sm font-semibold">Email professionale</span>
-                  </div>
-                </div>
-                <Button
-                  onClick={() => setShowForm(true)}
-                  variant="outline"
-                  className="w-full px-6 py-3 rounded-lg font-semibold border-2 border-accent text-accent hover:bg-accent hover:text-white"
-                >
-                  Inizia Ora
-                </Button>
               </CardContent>
             </Card>
           </div>
