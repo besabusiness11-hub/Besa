@@ -12,7 +12,7 @@ import MilanoScomparsa from "../../../attached_assets/MilanoScomparsa.webp"
 import PepperInFlame from "../../../attached_assets/PepperInFlame.webp"
 import TheGentlemanHouse from "../../../attached_assets/TheGentlemanHouse.webp"
 import TheGildedHouse from "../../../attached_assets/TheGildedHouse.webp"
-import Tempta from "../../../attached_assets/Tempta.webp"
+import Tempta from "../../../attached_assets/tempta.webp"
 
 const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Bar & Cocktail", "Liberi Professionisti"];
 
