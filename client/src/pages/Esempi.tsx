@@ -13,6 +13,7 @@ import PepperInFlame from "../../../attached_assets/PepperInFlame.webp"
 import TheGentlemanHouse from "../../../attached_assets/TheGentlemanHouse.webp"
 import TheGildedHouse from "../../../attached_assets/TheGildedHouse.webp"
 import Tempta from "../../../attached_assets/tempta.webp"
+import BarberShopYassir from "../../../attached_assets/BarberShopYassir.webp"
 
 const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Bar & Cocktail", "Liberi Professionisti"];
 
@@ -68,11 +69,19 @@ const websiteExamples = [
   },
   {
     id: 7,
-    title: "Tempa",
+    title: "Tempta",
     category: "Bar & Cocktail",
     image: Tempta,
     demoPath: "https://tempta.besaweb.com/",
     plan: "pro"
+  }, 
+  {
+    id: 8,
+    title: "Barber Shop Yassir",
+    category: "Barbieri",
+    image: BarberShopYassir,
+    demoPath: "https://barbershopyassir.besaweb.com/",
+    plan: "standard"
   }
 ];
 
