@@ -85,6 +85,18 @@ const websiteExamples = [
   }
 ];
 
+// Helper function to get badge colors based on category
+const getCategoryBadgeColor = (category: string): string => {
+  const colorMap: { [key: string]: string } = {
+    "Ristoranti": "bg-orange-100 text-orange-700",
+    "Barbieri": "bg-blue-100 text-blue-700",
+    "Tattoo": "bg-purple-100 text-purple-700",
+    "Bar & Cocktail": "bg-pink-100 text-pink-700",
+    "Liberi Professionisti": "bg-green-100 text-green-700",
+  };
+  return colorMap[category] || "bg-blue-100 text-blue-700";
+};
+
 export default function Esempi() {
   const [, setLocation] = useLocation();
   const [selectedCategory, setSelectedCategory] = useState("Tutti");
@@ -277,29 +289,14 @@ export default function Esempi() {
 
                     {/* Contenuto */}
                     <div className="p-6">
-                      {/* Title and Description */}
-                      <div className="mb-4">
-                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-2">
+                      {/* Title and Category */}
+                      <div className="flex items-start justify-between gap-3">
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors flex-1">
                           {example.title}
                         </h3>
-                      </div>
-
-                      {/* Plan and Tags */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex gap-2">
-                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                            example.plan.toLowerCase() === 'pro' 
-                              ? 'bg-purple-100 text-purple-800' 
-                              : example.plan.toLowerCase() === 'standard'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-green-100 text-green-800'
-                          }`}>
-                            {example.plan.charAt(0).toUpperCase() + example.plan.slice(1)}
-                          </span>
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
-                            {example.category}
-                          </span>
-                        </div>
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getCategoryBadgeColor(example.category)}`}>
+                          {example.category}
+                        </span>
                       </div>
                     </div>
                   </CardContent>

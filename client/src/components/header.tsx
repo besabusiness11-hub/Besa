@@ -5,35 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logoPath from "@assets/besa-logo.png";
 
-function ReferralBanner() {
-  const [isVisible, setIsVisible] = useState(true);
-
-  if (!isVisible) return null;
-
-  return (
-    <div className="w-full bg-gradient-to-r from-primary to-accent text-white">
-      <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1 text-center">
-            <p className="text-xs sm:text-sm font-medium">
-              Condividi Besa con un altro business e guadagnate il{" "}
-              <span className="font-bold">20% di sconto</span> per i prossimi{" "}
-              <span className="font-bold">6 mesi</span> entrambi
-            </p>
-          </div>
-          <button
-            onClick={() => setIsVisible(false)}
-            className="flex-shrink-0 p-1.5 hover:bg-white/10 rounded-full transition-colors"
-            aria-label="Chiudi banner"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 interface NavigationItem {
   name: string;
   href: string;
@@ -150,8 +121,6 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border/50 shadow-sm hover:bg-white/95 transition-all duration-300">
-      <ReferralBanner />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-24">
           {/* Left Navigation */}
