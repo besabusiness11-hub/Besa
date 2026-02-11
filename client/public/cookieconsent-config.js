@@ -95,8 +95,8 @@ window.initCookieConsent = async function() {
                             }
                         }
                     }
-                }
-             //   marketing: {
+                },
+                marketing: {
                     // FUTURE: Uncomment when you start using these services
                     // services: {
                     //     googleAds: {
@@ -118,7 +118,7 @@ window.initCookieConsent = async function() {
                     //         }
                     //     }
                     // }
-             //   }
+                }
             },
             language: {
                 default: "it",
@@ -168,31 +168,31 @@ window.initCookieConsent = async function() {
                                         ]
                                     }
                                 },
+                                // FUTURE: Uncomment when marketing services are active
                                 // {
                                 //     title: "Marketing Cookies",
                                 //     description: "These cookies are used to deliver personalized advertisements and track campaign performance.",
-                                //     linkedCategory: "marketing"
-                                    // FUTURE: Uncomment and add cookie table when marketing services are active
-                                    // cookieTable: {
-                                    //     headers: {
-                                    //         name: "Service",
-                                    //         domain: "Domain",
-                                    //         description: "Description"
-                                    //     },
-                                    //     body: [
-                                    //         {
-                                    //             name: "Google Ads",
-                                    //             domain: "google.com",
-                                    //             description: "Tracks ad conversions and campaign performance"
-                                    //         },
-                                    //         {
-                                    //             name: "Meta Pixel",
-                                    //             domain: "facebook.com",
-                                    //             description: "Tracks Facebook/Instagram ad performance"
-                                    //         }
-                                    //     ]
-                                    // }
-                              //  },
+                                //     linkedCategory: "marketing",
+                                //     cookieTable: {
+                                //         headers: {
+                                //             name: "Service",
+                                //             domain: "Domain",
+                                //             description: "Description"
+                                //         },
+                                //         body: [
+                                //             {
+                                //                 name: "Google Ads",
+                                //                 domain: "google.com",
+                                //                 description: "Tracks ad conversions and campaign performance"
+                                //             },
+                                //             {
+                                //                 name: "Meta Pixel",
+                                //                 domain: "facebook.com",
+                                //                 description: "Tracks Facebook/Instagram ad performance"
+                                //             }
+                                //         ]
+                                //     }
+                                // },
                                 {
                                     title: "More information",
                                     description: "For any query in relation to our policy on cookies and your choices, please <a class=\"cc__link\" href=\"#contact\">contact us</a>."
@@ -245,30 +245,30 @@ window.initCookieConsent = async function() {
                                         ]
                                     }
                                 },
+                                // FUTURE: Decommenta quando i servizi di marketing saranno attivi
                                 // {
                                 //     title: "Cookie di Marketing",
                                 //     description: "Questi cookie vengono utilizzati per fornire annunci pubblicitari personalizzati e monitorare le prestazioni delle campagne.",
-                                //     linkedCategory: "marketing"
-                                //     // FUTURE: Decommenta e aggiungi la tabella dei cookie quando i servizi di marketing saranno attivi
-                                //     // cookieTable: {
-                                //     //     headers: {
-                                //     //         name: "Servizio",
-                                //     //         domain: "Dominio",
-                                //     //         description: "Descrizione"
-                                //     //     },
-                                //     //     body: [
-                                //     //         {
-                                //     //             name: "Google Ads",
-                                //     //             domain: "google.com",
-                                //     //             description: "Traccia le conversioni degli annunci e le prestazioni delle campagne"
-                                //     //         },
-                                //     //         {
-                                //     //             name: "Meta Pixel",
-                                //     //             domain: "facebook.com",
-                                //     //             description: "Traccia le prestazioni degli annunci su Facebook/Instagram"
-                                //     //         }
-                                //     //     ]
-                                //     // }
+                                //     linkedCategory: "marketing",
+                                //     cookieTable: {
+                                //         headers: {
+                                //             name: "Servizio",
+                                //             domain: "Dominio",
+                                //             description: "Descrizione"
+                                //         },
+                                //         body: [
+                                //             {
+                                //                 name: "Google Ads",
+                                //                 domain: "google.com",
+                                //                 description: "Traccia le conversioni degli annunci e le prestazioni delle campagne"
+                                //             },
+                                //             {
+                                //                 name: "Meta Pixel",
+                                //                 domain: "facebook.com",
+                                //                 description: "Traccia le prestazioni degli annunci su Facebook/Instagram"
+                                //             }
+                                //         ]
+                                //     }
                                 // },
                                 {
                                     title: "Ulteriori informazioni",
