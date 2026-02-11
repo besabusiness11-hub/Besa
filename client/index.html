@@ -1,18 +1,6 @@
 <!doctype html>
 <html lang="it">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H39T246KGX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-H39T246KGX');
-    </script>
-    <script defer src="https://api.kiprotect.com/v1/privacy-managers/18e2307f50dea222028dc47a8ecd7074/klaro.js">
-    </script>
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>Besa | Home</title>
@@ -22,7 +10,12 @@
       content="Besa | Home"
     />
 
-  <script defer src="https://umami.besaweb.com/script.js" data-website-id="14bec9f8-0ae7-4d82-a1c5-d803f2295c7d"></script>
+    <!-- Cookie Consent Stylesheet -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css">
+
+    <!-- Umami Analytics (privacy-first, self-hosted - no consent required) -->
+    <script defer src="https://umami.besaweb.com/script.js" data-website-id="14bec9f8-0ae7-4d82-a1c5-d803f2295c7d"></script>
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
