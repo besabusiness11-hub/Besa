@@ -1,0 +1,133 @@
+{
+  "nav": {
+    "home": "Home",
+    "howItWorks": "Come Funziona",
+    "portfolio": "Portfolio",
+    "team": "Chi Siamo",
+    "contact": "Contatti"
+  },
+  "hero": {
+    "badge": "Siti web professionali per realtà locali",
+    "title_part1": "Il Tuo",
+    "title_part2": "Sito Web",
+    "title_part3": "Professionale, Fatto su Misura per Te",
+    "title": "Creiamo e gestiamo il tuo sito web.",
+    "subtitle": "Dalla progettazione alla pubblicazione, ci occupiamo di tutto. Sito Web, Hosting e Dominio.",
+    "cta": "Richiedi Informazioni",
+    "working": "Pronto a iniziare?"
+  },
+  "howItWorks": {
+    "title": "Come funziona Besa",
+    "subtitle": "Un processo semplice e chiaro per creare il tuo sito web professionale",
+    "step1": {
+      "title": "Conosciamoci",
+      "desc": "Ci racconti della tua attività, dei tuoi obiettivi e di cosa ti serve. Noi ascoltiamo e capiamo le tue esigenze.",
+      "btn": "I nostri contatti"
+    },
+    "step2": {
+      "title": "Creazione del sito",
+      "desc": "Progettiamo e realizziamo il tuo sito web su misura, curandone ogni dettaglio con professionalità."
+    },
+    "step3": {
+      "title": "Sito online",
+      "desc": "Il tuo sito va online e tu puoi concentrarti sul tuo lavoro. Noi ci occupiamo di tutto il resto.",
+      "btn": "I nostri esempi"
+    },
+    "cta": {
+      "desc": "\"Voi ci dite cosa volete, e noi cerchiamo di indovinare cosa intendete davvero.\""
+    }
+  },
+  "team": {
+    "title": "Strategia, Design e Tecnologia",
+    "subtitle": "La nostra Besa: il vostro successo online.",
+    "roles": {
+      "marketing": "Head of Marketing & Client Relations",
+      "designer": "Lead Designer",
+      "tech": "Technical Lead"
+    },
+    "descriptions": {
+      "ludo": "Stratega della relazione e della visione d'insieme. Collega le esigenze del cliente con il talento del team, guidando ogni progetto verso il successo condiviso.",
+      "benito": "Perfezionista nell'arte e nella scienza del web. Cura ogni aspetto, dal pixel al codice, per consegnare un prodotto che superi le aspettative.",
+      "leo": "Architetto della stabilità e dell'efficienza. Coordina l'infrastruttura tecnica con precisione, garantendo che ogni progetto sia solido, sicuro e performante."
+    },
+    "copy": {
+      "success": "Copiato negli appunti!",
+      "hint": "Clicca per copiare"
+    }
+  },
+  "options": {
+    "badge": "Cosa Offriamo",
+    "title": "Tutto ciò che serve per il tuo business",
+    "subtitle": "Dai moduli di contatto personalizzati alle integrazioni avanzate. Scegli gli strumenti perfetti per far crescere la tua presenza online.",
+    "features": {
+      "pages": "Pagine Illimitate",
+      "email": "Email Custom",
+      "maps": "Google Maps",
+      "booking": "Booking System"
+    },
+    "cta": "Scopri tutte le opzioni"
+  },
+  "portfolio": {
+    "back": "Torna alla Home",
+    "title": "I Nostri",
+    "subtitle": "Scopri i siti web che abbiamo creato per attività come la tua. Ogni progetto è unico e realizzato su misura per le esigenze del cliente.",
+    "viewDemo": "Visita il Sito",
+    "noResults": "Al momento non ci sono esempi disponibili per questa categoria. Controlla più tardi!",
+    "cta": {
+      "title": "Ti piacciono i nostri esempi?",
+      "desc": "Possiamo creare un sito web altrettanto bello e funzionale per la tua attività.",
+      "btn": "Richiedi informazioni"
+    },
+    "categories": {
+      "all": "Tutti",
+      "restaurants": "Ristoranti",
+      "barbers": "Barbieri",
+      "tattoo": "Tattoo",
+      "bar": "Bar & Cocktail",
+      "professionals": "Liberi Professionisti"
+    }
+  },
+  "contact": {
+    "title": "Mettiamoci in contatto",
+    "desc": "Siamo pronti ad ascoltare le tue idee e a trasformarle in un progetto di successo. Compila il modulo o contattaci direttamente.",
+    "info": {
+      "email": "Email",
+      "phone": "Telefono",
+      "address": "Sede"
+    },
+    "form": {
+      "title": "Inviaci un messaggio",
+      "name": "Nome completo *",
+      "email": "Email *",
+      "phone": "Telefono",
+      "message": "Messaggio *",
+      "placeholders": {
+        "name": "Mario Rossi",
+        "email": "mario@esempio.it",
+        "phone": "+39 333 1234567",
+        "message": "Descrivi brevemente il tuo progetto..."
+      },
+      "status": {
+        "loading": "Invio in corso...",
+        "success": "Messaggio inviato! ✓",
+        "error": "Errore nell'invio ✕"
+      },
+      "submit": "Invia messaggio"
+    }
+  },
+  "footer": {
+    "desc": "Besa crea siti web professionali per attività locali. Dalla progettazione alla pubblicazione, ci occupiamo di tutto per la tua presenza digitale.",
+    "sections": {
+      "links": "Link Rapidi",
+      "support": "Supporto",
+      "contact": "Contatti"
+    },
+    "bottom": {
+      "copyright": "Tutti i diritti riservati.",
+      "slogan": "Veloce, Pratico, Funzionale.",
+      "privacy": "Privacy",
+      "terms": "Termini",
+      "cookies": "Cookies"
+    }
+  }
+}

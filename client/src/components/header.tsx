@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useTranslation } from "react-i18next";
 import logoPath from "@assets/besa-logo.png";
 
 interface NavigationItem {
@@ -14,15 +15,19 @@ interface NavigationItem {
 
 export default function Header() {
   const [location, setLocation] = useLocation();
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
 
   const leftNavigation: NavigationItem[] = [
-    { name: "Esempi", href: "/esempi", isPage: true },
-    { name: "Nel pratico", href: "#come-funziona" },
+    { name: t("nav.portfolio", "Esempi"), href: "/esempi", isPage: true },
+    { name: t("nav.howItWorks", "Nel pratico"), href: "#come-funziona" },
   ];
 
   const rightNavigation: NavigationItem[] = [
-    { name: "Chi siamo", href: "#chi-siamo" },
-    { name: "Prezzi", href: "#prezzi", isButton: true },
+    { name: t("nav.team", "Chi siamo"), href: "#chi-siamo" },
   ];
 
   const scrollToSection = (sectionId: string) => {
@@ -152,10 +157,19 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Right Navigation */}
-          <nav className="hidden md:flex items-center space-x-8 flex-1 justify-end">
-            {rightNavigation.map((item) =>
-              item.isButton ? (
+          {/* Right Navigation & Lang Switcher */}
+          <nav className="hidden md:flex items-center flex-1 justify-end">
+            <div className="flex items-center space-x-2 mr-6 text-sm font-semibold">
+              <button onClick={() => changeLanguage('it')} className={i18n.language === 'it' ? 'text-primary' : 'text-foreground hover:text-primary transition-colors'}>IT</button>
+              <span className="text-border">|</span>
+              <button onClick={() => changeLanguage('en')} className={i18n.language.startsWith('en') ? 'text-primary' : 'text-foreground hover:text-primary transition-colors'}>EN</button>
+              <span className="text-border">|</span>
+              <button onClick={() => changeLanguage('fr')} className={i18n.language.startsWith('fr') ? 'text-primary' : 'text-foreground hover:text-primary transition-colors'}>FR</button>
+            </div>
+            
+            <div className="flex items-center space-x-8">
+              {rightNavigation.map((item) =>
+                item.isButton ? (
                 <a
                   key={item.name}
                   href={item.href}
@@ -178,6 +192,7 @@ export default function Header() {
                 </a>
               ),
             )}
+            </div>
           </nav>
 
           {/* Mobile Menu */}
@@ -195,6 +210,13 @@ export default function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-80">
                 <div className="flex flex-col space-y-4 mt-8">
+                  <div className="flex items-center space-x-4 mb-4 px-4 text-sm font-semibold border-b pb-4">
+                    <button onClick={() => changeLanguage('it')} className={i18n.language === 'it' ? 'text-primary' : 'text-foreground'}>IT</button>
+                    <span className="text-border">|</span>
+                    <button onClick={() => changeLanguage('en')} className={i18n.language.startsWith('en') ? 'text-primary' : 'text-foreground'}>EN</button>
+                    <span className="text-border">|</span>
+                    <button onClick={() => changeLanguage('fr')} className={i18n.language.startsWith('fr') ? 'text-primary' : 'text-foreground'}>FR</button>
+                  </div>
                   {[...leftNavigation, ...rightNavigation].map((item) =>
                     item.isButton ? (
                       <button

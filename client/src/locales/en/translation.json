@@ -1,0 +1,133 @@
+{
+  "nav": {
+    "home": "Home",
+    "howItWorks": "How it Works",
+    "portfolio": "Portfolio",
+    "team": "About Us",
+    "contact": "Contact"
+  },
+  "hero": {
+    "badge": "Professional websites for local businesses",
+    "title_part1": "Your",
+    "title_part2": "Website",
+    "title_part3": "Professional, Tailor-made for You",
+    "title": "We build and manage your website.",
+    "subtitle": "From design to publication, we handle everything. Website, Hosting and Domain.",
+    "cta": "Request Information",
+    "working": "Ready to start?"
+  },
+  "howItWorks": {
+    "title": "How Besa works",
+    "subtitle": "A simple and clear process to create your professional website",
+    "step1": {
+      "title": "Let's meet",
+      "desc": "Tell us about your business, your goals and what you need. We listen and understand your needs.",
+      "btn": "Our contacts"
+    },
+    "step2": {
+      "title": "Website creation",
+      "desc": "We design and create your custom website, taking care of every detail with professionalism."
+    },
+    "step3": {
+      "title": "Website online",
+      "desc": "Your site goes online and you can focus on your work. We take care of everything else.",
+      "btn": "Our examples"
+    },
+    "cta": {
+      "desc": "\"You tell us what you want, and we try to guess what you really mean.\""
+    }
+  },
+  "team": {
+    "title": "Strategy, Design and Technology",
+    "subtitle": "Our Besa: your online success.",
+    "roles": {
+      "marketing": "Head of Marketing & Client Relations",
+      "designer": "Lead Designer",
+      "tech": "Technical Lead"
+    },
+    "descriptions": {
+      "ludo": "Strategy of relationship and global vision. Connects the client's needs with the team's talent, guiding every project towards shared success.",
+      "benito": "Perfectionist in the art and science of the web. He takes care of every aspect, from pixel to code, to deliver a product that exceeds expectations.",
+      "leo": "Architect of stability and efficiency. Coordinates the technical infrastructure with precision, ensuring that each project is solid, secure and performant."
+    },
+    "copy": {
+      "success": "Copied to clipboard!",
+      "hint": "Click to copy"
+    }
+  },
+  "options": {
+    "badge": "What We Offer",
+    "title": "Everything you need for your business",
+    "subtitle": "From custom contact forms to advanced integrations. Choose the perfect tools to grow your online presence.",
+    "features": {
+      "pages": "Unlimited Pages",
+      "email": "Custom Email",
+      "maps": "Google Maps",
+      "booking": "Booking System"
+    },
+    "cta": "Discover all options"
+  },
+  "portfolio": {
+    "back": "Back to Home",
+    "title": "Our",
+    "subtitle": "Discover the websites we have created for businesses like yours. Each project is unique and custom-made for the client's needs.",
+    "viewDemo": "Visit Site",
+    "noResults": "At the moment there are no examples available for this category. Check back later!",
+    "cta": {
+      "title": "Do you like our examples?",
+      "desc": "We can create a website just as beautiful and functional for your business.",
+      "btn": "Request information"
+    },
+    "categories": {
+      "all": "All",
+      "restaurants": "Restaurants",
+      "barbers": "Barbers",
+      "tattoo": "Tattoo",
+      "bar": "Bar & Cocktail",
+      "professionals": "Freelancers"
+    }
+  },
+  "contact": {
+    "title": "Get in touch",
+    "desc": "We are ready to listen to your ideas and transform them into a successful project. Fill out the form or contact us directly.",
+    "info": {
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Office"
+    },
+    "form": {
+      "title": "Send us a message",
+      "name": "Full Name *",
+      "email": "Email *",
+      "phone": "Phone",
+      "message": "Message *",
+      "placeholders": {
+        "name": "John Doe",
+        "email": "john@example.com",
+        "phone": "+1 234 567890",
+        "message": "Describe your project briefly..."
+      },
+      "status": {
+        "loading": "Sending...",
+        "success": "Message sent! ✓",
+        "error": "Error sending ✕"
+      },
+      "submit": "Send message"
+    }
+  },
+  "footer": {
+    "desc": "Besa creates professional websites for local businesses. From design to publication, we handle everything for your digital presence.",
+    "sections": {
+      "links": "Quick Links",
+      "support": "Support",
+      "contact": "Contact"
+    },
+    "bottom": {
+      "copyright": "All rights reserved.",
+      "slogan": "Fast, Practical, Functional.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookies"
+    }
+  }
+}

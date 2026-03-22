@@ -4,6 +4,8 @@ import Home from "./pages/home";
 import Esempi from "./pages/Esempi";
 import Categories from "./pages/categories";
 import NotFound from "./pages/not-found";
+import PrivacyCookie from "./pages/PrivacyCookie";
+import Opzioni from "./pages/Opzioni";
 import { SplashScreen } from "./components/splash-screen";
 
 // Extend Window interface for TypeScript
@@ -14,7 +16,7 @@ declare global {
 }
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => window.location.pathname !== '/privacy-policy');
   const [cookieConsentLoaded, setCookieConsentLoaded] = useState(false);
 
   useEffect(() => {
@@ -44,7 +46,9 @@ function App() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/esempi" component={Esempi} />
+      <Route path="/opzioni" component={Opzioni} />
       <Route path="/categories" component={Categories} />
+      <Route path="/privacy-policy" component={PrivacyCookie} />
       <Route component={NotFound} />
     </Switch>
   );

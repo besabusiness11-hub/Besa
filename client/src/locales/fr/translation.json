@@ -1,0 +1,133 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "howItWorks": "Comment ça marche",
+    "portfolio": "Portfolio",
+    "team": "L'équipe",
+    "contact": "Contact"
+  },
+  "hero": {
+    "badge": "Sites web professionnels per les entreprises locales",
+    "title_part1": "Votre",
+    "title_part2": "Site Web",
+    "title_part3": "Professionnel, sur Mesure pour Vous",
+    "title": "Nous créons et gérons votre site web.",
+    "subtitle": "De la conception à la publication, nous nous occupons de tout. Site web, Hébergement et Domaine.",
+    "cta": "Demander des informations",
+    "working": "Prêt à commencer ?"
+  },
+  "howItWorks": {
+    "title": "Comment fonctionne Besa",
+    "subtitle": "Un processo semplice e chiaro per creare il tuo sito web professionale",
+    "step1": {
+      "title": "Rencontrons-nous",
+      "desc": "Parlez-nous de votre entreprise, de vos objectifs et de vos besoins. Nous vous écoutons et comprenons vos exigences.",
+      "btn": "Nos contacts"
+    },
+    "step2": {
+      "title": "Création du sito",
+      "desc": "Nous concevons et réalisons votre site web sur mesure, en soignant chaque détail con professionnalisme."
+    },
+    "step3": {
+      "title": "Sito en ligne",
+      "desc": "Votre site est en ligne et vous pouvez vous concentrer sur votre travail. Nous nous occupons di tout le reste.",
+      "btn": "Nos exemples"
+    },
+    "cta": {
+      "desc": "\"Vous ci dite cosa volete, e noi cerchiamo di indovinare cosa intendete davvero.\""
+    }
+  },
+  "team": {
+    "title": "Stratégie, Design et Technologie",
+    "subtitle": "Notre Besa : votre succès en ligne.",
+    "roles": {
+      "marketing": "Head of Marketing & Client Relations",
+      "designer": "Lead Designer",
+      "tech": "Technical Lead"
+    },
+    "descriptions": {
+      "ludo": "Stratège della relazione e della visione d'insieme. Collega le esigenze del cliente con il talento del team, guidando ogni progetto verso il successo condiviso.",
+      "benito": "Perfezionista nell'arte e nella scienza del web. Cura ogni aspetto, dal pixel al codice, per consegnare un prodotto che superi le aspettative.",
+      "leo": "Architetto della stabilità e dell'efficienza. Coordina l'infrastruttura tecnica con precisione, garantendo che ogni progetto sia solido, sicuro e performante."
+    },
+    "copy": {
+      "success": "Copié dans le presse-papiers !",
+      "hint": "Cliquez pour copier"
+    }
+  },
+  "options": {
+    "badge": "Ce que nous offrons",
+    "title": "Tout ce dont vous avez besoin pour votre entreprise",
+    "subtitle": "Des formulaires de contact personnalisés aux intégrations avancées. Choisissez les outils parfaits pour développer votre présence en ligne.",
+    "features": {
+      "pages": "Pages illimitées",
+      "email": "Email personnalisé",
+      "maps": "Google Maps",
+      "booking": "Système de réservation"
+    },
+    "cta": "Découvrez toutes les options"
+  },
+  "portfolio": {
+    "back": "Retour à l'accueil",
+    "title": "Nos",
+    "subtitle": "Découvrez les sites web que nous avons créés pour des entreprises comme la vôtre. Chaque projet est unique et réalisé sur mesure pour les besoins du client.",
+    "viewDemo": "Visiter le Site",
+    "noResults": "Pour le moment, il n'y a pas d'exemples disponibles pour cette catégorie. Revenez plus tard !",
+    "cta": {
+      "title": "Vous aimez nos exemples ?",
+      "desc": "Nous pouvons créer un sito web tout aussi beau et fonctionnel pour votre entreprise.",
+      "btn": "Demander des informations"
+    },
+    "categories": {
+      "all": "Tout",
+      "restaurants": "Restaurants",
+      "barbers": "Barbiers",
+      "tattoo": "Tatouage",
+      "bar": "Bars et Cocktails",
+      "professionals": "Indépendants"
+    }
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "desc": "Nous sommes prêts à écouter vos idées et à les transformer en un projet réussi. Remplissez le formulaire ou contactez-nous directement.",
+    "info": {
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Siège"
+    },
+    "form": {
+      "title": "Envoyez-nous un message",
+      "name": "Nom complet *",
+      "email": "Email *",
+      "phone": "Téléphone",
+      "message": "Message *",
+      "placeholders": {
+        "name": "Jean Dupont",
+        "email": "jean@exemple.fr",
+        "phone": "+33 1 23 45 67 89",
+        "message": "Décrivez brièvement votre projet..."
+      },
+      "status": {
+        "loading": "Envoi in corso...",
+        "success": "Message envoyé ! ✓",
+        "error": "Erreur lors de l'envoi ✕"
+      },
+      "submit": "Envoyer le message"
+    }
+  },
+  "footer": {
+    "desc": "Besa crée des sites web professionnels per des entreprises locales. De la conception à la publication, nous nous occupons de tout pour votre présence digitale.",
+    "sections": {
+      "links": "Liens Rapides",
+      "support": "Support",
+      "contact": "Contact"
+    },
+    "bottom": {
+      "copyright": "Tous droits réservés.",
+      "slogan": "Rapide, Pratique, Fonctionnel.",
+      "privacy": "Confidentialité",
+      "terms": "Conditions",
+      "cookies": "Cookies"
+    }
+  }
+}

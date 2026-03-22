@@ -1,6 +1,9 @@
 import { Mail, Phone, MapPin } from "lucide-react";
 import logoPath from "@assets/besa-logo.png";
+import { useTranslation } from "react-i18next";
+
 export default function Footer() {
+  const { t } = useTranslation();
   return (
     <footer className="bg-foreground text-white py-12 lg:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,7 +16,7 @@ export default function Footer() {
             data-testid="footer-logo"
           />
           <p className="text-white/70 max-w-2xl mx-auto text-base leading-relaxed -mt-4 pb-10">
-            Besa crea siti web professionali per attività locali. Dalla progettazione alla pubblicazione, ci occupiamo di tutto per la tua presenza digitale.
+            {t("footer.desc")}
           </p>
         </div>
 
@@ -21,29 +24,28 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-start mb-6 space-y-6 md:space-y-0">
           {/* Link Rapidi - PRIMA COLONNA allineata a sinistra */}
           <div className="md:flex-1 md:px-4">
-            <h3 className="text-white font-bold mb-2 text-base">Link Rapidi</h3>
+            <h3 className="text-white font-bold mb-2 text-base">{t("footer.sections.links")}</h3>
             <ul className="space-y-1 text-sm">
-              <li><a href="#esempi" className="text-white/70 hover:text-white transition-colors block">Esempi</a></li>
-              <li><a href="#come-funziona" className="text-white/70 hover:text-white transition-colors block">Nel pratico</a></li>
-              <li><a href="#chi-siamo" className="text-white/70 hover:text-white transition-colors block">Chi siamo</a></li>
-              <li><a href="#prezzi" className="text-white/70 hover:text-white transition-colors block">Prezzi</a></li>
+              <li><a href="#esempi" className="text-white/70 hover:text-white transition-colors block">{t("nav.portfolio")}</a></li>
+              <li><a href="#come-funziona" className="text-white/70 hover:text-white transition-colors block">{t("nav.howItWorks")}</a></li>
+              <li><a href="#chi-siamo" className="text-white/70 hover:text-white transition-colors block">{t("nav.team")}</a></li>
             </ul>
           </div>
 
           {/* Supporto - SECONDA COLONNA centrata perfettamente su desktop, allineata a sinistra su mobile */}
           <div className="md:flex-1 md:px-4 md:flex md:flex-col md:items-center">
-            <h3 className="text-white font-bold mb-2 text-base">Supporto</h3>
+            <h3 className="text-white font-bold mb-2 text-base">{t("footer.sections.support")}</h3>
             <ul className="space-y-1 text-sm md:text-center">
               <li><a href="#" className="text-white/70 hover:text-white transition-colors block">FAQ</a></li>
               <li><a href="#" className="text-white/70 hover:text-white transition-colors block">Termini di Servizio</a></li>
-              <li><a href="#" className="text-white/70 hover:text-white transition-colors block">Privacy Policy</a></li>
-              <li><a href="#" className="text-white/70 hover:text-white transition-colors block">Cookie Policy</a></li>
+              <li><a href="/privacy-policy" className="text-white/70 hover:text-white transition-colors block">Privacy Policy</a></li>
+              <li><a href="/privacy-policy" className="text-white/70 hover:text-white transition-colors block">Cookie Policy</a></li>
             </ul>
           </div>
 
           {/* Contatti - TERZA COLONNA allineata a destra */}
           <div className="md:flex-1 md:px-4 md:text-right">
-            <h3 className="text-white font-bold mb-2 text-base">Contatti</h3>
+            <h3 className="text-white font-bold mb-2 text-base">{t("footer.sections.contact")}</h3>
             <ul className="space-y-2 text-sm">
               <li className="flex md:justify-end items-start space-x-2">
                 <Mail className="w-5 h-5 text-white/70 mt-0.5 flex-shrink-0" />
@@ -63,17 +65,17 @@ export default function Footer() {
 
         {/* Bottom Bar - Modificato: slogan allineato con copyright e link */}
         <div className="pt-5 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-sm text-white/60">
-          <p>&copy; 2025 Besa. Tutti i diritti riservati.</p>
+          <p>&copy; 2025 Besa. {t("footer.bottom.copyright")}</p>
 
           {/* Slogan spostato qui e centrato */}
           <div className="text-white text-base font-semibold tracking-wider font-sans uppercase my-4 md:my-0 md:-ml-8">
-            Veloce, Pratico, Funzionale.
+            {t("footer.bottom.slogan")}
           </div>
 
           <div className="flex space-x-6 mt-3 md:mt-0">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Termini</a>
-            <a href="#" className="hover:text-white transition-colors">Cookies</a>
+            <a href="/privacy-policy" className="hover:text-white transition-colors">{t("footer.bottom.privacy")}</a>
+            <a href="#" className="hover:text-white transition-colors">{t("footer.bottom.terms")}</a>
+            <a href="/privacy-policy" className="hover:text-white transition-colors">{t("footer.bottom.cookies")}</a>
           </div>
         </div>
       </div>

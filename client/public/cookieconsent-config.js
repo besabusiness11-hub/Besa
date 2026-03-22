@@ -122,6 +122,7 @@ window.initCookieConsent = async function() {
             },
             language: {
                 default: "it",
+                
                 translations: {
                     en: {
                         consentModal: {

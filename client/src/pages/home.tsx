@@ -12,11 +12,16 @@ import {
   Globe,
   Mail,
   Camera,
+  Linkedin,
+  ArrowRight,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import ContactSection from "@/components/ContactSection";
+import SEO from "@/components/SEO";
 import benitoPath from "@assets/benito_sqr.jpg";
 import leoPath from "@assets/leo_sqr.jpg";
 import ludoPath from "@assets/ludo_sqr.jpg";
@@ -25,11 +30,12 @@ import { useLocation } from "wouter";
 export default function Home() {
   const portfolioScrollRef = useRef<HTMLDivElement>(null);
   const esempiRef = useRef<HTMLDivElement>(null);
-  const prezziRef = useRef<HTMLDivElement>(null);
-  const [showForm, setShowForm] = useState(false);
+  const contattiRef = useRef<HTMLDivElement>(null);
+  const { t, i18n } = useTranslation();
   const [typedText, setTypedText] = useState("");
   const [typingComplete, setTypingComplete] = useState(false);
   const [hoveredStat, setHoveredStat] = useState<number | null>(null);
+  const [hasCopiedEmail, setHasCopiedEmail] = useState(false);
   const fullText = "siti web personalizzati";
   const [, setLocation] = useLocation();
 
@@ -90,24 +96,9 @@ export default function Home() {
     esempiRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const scrollToPrezzi = () => {
-    prezziRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToContatti = () => {
+    contattiRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
-  useEffect(() => {
-    if (showForm) {
-      const script = document.createElement("script");
-      script.src = "https://tally.so/widgets/embed.js";
-      script.async = true;
-      document.body.appendChild(script);
-
-      return () => {
-        if (document.body.contains(script)) {
-          document.body.removeChild(script);
-        }
-      };
-    }
-  }, [showForm]);
 
   const handleButtonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.currentTarget;
@@ -142,53 +133,10 @@ export default function Home() {
     setHoveredStat(null);
   };
 
-  // If form is shown, render only the form
-  if (showForm) {
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          margin: 0,
-          padding: 0,
-          overflow: "hidden",
-          zIndex: 9999,
-        }}
-      >
-        {/* Close button */}
-        <button
-          onClick={() => setShowForm(false)}
-          className="fixed top-4 right-4 z-50 bg-white hover:bg-gray-100 text-gray-800 rounded-full p-3 shadow-lg transition-colors"
-          aria-label="Chiudi"
-        >
-          <X className="w-6 h-6" />
-        </button>
-
-        <iframe
-          data-tally-src="https://tally.so/r/n0NPNZ?transparentBackground=1"
-          width="100%"
-          height="100%"
-          frameBorder="0"
-          marginHeight={0}
-          marginWidth={0}
-          title="Crea il tuo Sito Web (gratis!)"
-          style={{
-            border: 0,
-            position: "absolute",
-            top: 0,
-            left: 0,
-          }}
-        />
-      </div>
-    );
-  }
-
   // Otherwise, render the home page
   return (
     <div id="top" className="min-h-screen bg-background">
+      <SEO lang={i18n.language} />
       <Header />
 
       {/* HERO SECTION CORRETTA */}
@@ -232,27 +180,37 @@ export default function Home() {
           <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full mb-6 fade-in-up">
             <Sparkles className="w-4 h-4 text-primary mr-2" />
             <span className="text-primary text-sm font-semibold">
-              Siti web professionali per realtà locali
+              {t("hero.badge")}
             </span>
           </div>
 
           {/* Main Title with Gradient Animation */}
           <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight mb-6 fade-in-up">
-            Il Tuo <span className="tech-gradient-text">Sito Web</span>{" "}
-            Professionale,
-            <br />
-            Fatto su Misura per Te
+            {t("hero.title_part1")} <span className="tech-gradient-text">{t("hero.title_part2")}</span>{" "}
+            {t("hero.title_part3").split(', ').map((str, idx, arr) => (
+              <span key={idx}>
+                {str}{idx < arr.length - 1 && ','}
+                {idx === 0 && <br />}
+              </span>
+            ))}
           </h1>
 
           {/* Subtitle with Typing Effect */}
           <p
-            className="text-lg lg:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto fade-in-up"
+            className="text-lg lg:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto fade-in-up flex flex-wrap justify-center gap-1"
             style={{ animationDelay: "0.3s" }}
           >
-            Besa crea <strong className="text-foreground">siti web professionali</strong>{" "}
-            per attività locali.{" "}
-            <br />
-            <strong className="text-foreground">Pensiamo a tutto noi</strong>: design, sviluppo e gestione online, per aiutarti a <strong className="text-foreground">migliorare visibilità</strong>, credibilità e contatti.
+            {t("hero.subtitle", "Dalla progettazione alla pubblicazione, ci occupiamo di tutto. Sito Web, Hosting e Dominio.")
+              .split(" ")
+              .map((word, i) => (
+                <span
+                  key={i}
+                  className="inline-block opacity-0 fade-in-up"
+                  style={{ animationDelay: `${0.6 + i * 0.1}s`, animationFillMode: "forwards" }}
+                >
+                  {word}
+                </span>
+              ))}
           </p>
 
           {/* CTA Buttons with z-index to stay on top - SINGOLO BOTTONE */}
@@ -269,9 +227,9 @@ export default function Home() {
               }}
               onMouseEnter={handleButtonHover}
               onMouseLeave={handleButtonLeave}
-              onClick={scrollToPrezzi}
+              onClick={scrollToContatti}
             >
-              Scopri i Prezzi
+              {t("hero.cta", "Richiedi Informazioni")}
             </button>
           </div>
 
@@ -303,14 +261,13 @@ export default function Home() {
               className="text-3xl lg:text-4xl font-bold text-foreground mb-4"
               data-testid="how-it-works-title"
             >
-              Come funziona Besa
+              {t("howItWorks.title")}
             </h2>
             <p
               className="text-lg text-muted-foreground max-w-2xl mx-auto"
               data-testid="how-it-works-description"
             >
-              Un processo semplice e chiaro per creare il tuo sito web
-              professionale
+              {t("howItWorks.subtitle")}
             </p>
           </div>
 
@@ -323,11 +280,10 @@ export default function Home() {
                 </span>
               </div>
               <h3 className="text-2xl font-bold text-foreground mb-3">
-                Conosciamoci
+                {t("howItWorks.step1.title")}
               </h3>
               <p className="text-muted-foreground text-base leading-relaxed">
-                Ci racconti della tua attività, dei tuoi obiettivi e di cosa ti
-                serve. Noi ascoltiamo e capiamo le tue esigenze.
+                {t("howItWorks.step1.desc")}
               </p>
               <Button
                 className="mt-4 px-6 py-2 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
@@ -338,7 +294,7 @@ export default function Home() {
                   });
                 }}
               >
-                I nostri contatti
+                {t("howItWorks.step1.btn")}
               </Button>
             </div>
 
@@ -351,13 +307,12 @@ export default function Home() {
               </div>
               <div className="mb-3">
                 <h3 className="text-2xl font-bold text-foreground mb-2">
-                  Creazione del sito
+                  {t("howItWorks.step2.title")}
                 </h3>
               </div>
 
               <p className="text-muted-foreground text-base leading-relaxed">
-                Progettiamo e realizziamo il tuo sito web su misura, curandone
-                ogni dettaglio con professionalità.
+                {t("howItWorks.step2.desc")}
               </p>
             </div>
 
@@ -369,17 +324,16 @@ export default function Home() {
                 </span>
               </div>
               <h3 className="text-2xl font-bold text-foreground mb-3">
-                Sito online
+                {t("howItWorks.step3.title")}
               </h3>
               <p className="text-muted-foreground text-base leading-relaxed">
-                Il tuo sito va online e tu puoi concentrarti sul tuo lavoro. Noi
-                ci occupiamo di tutto il resto.
+                {t("howItWorks.step3.desc")}
               </p>
               <Button
                 className="mt-4 px-6 py-2 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
                 onClick={() => setLocation("/esempi")}
               >
-                I nostri esempi
+                {t("howItWorks.step3.btn")}
               </Button>
             </div>
           </div>
@@ -391,257 +345,66 @@ export default function Home() {
                 className="text-2xl lg:text-3xl font-bold text-white mb-4"
                 data-testid="cta-title"
               >
-                Pronto a iniziare?
+                {t("hero.working", "Pronto a iniziare?")}
               </h3>
               <p
                 className="text-white/90 text-lg mb-6 max-w-2xl mx-auto italic"
                 data-testid="cta-description"
               >
-                "Voi ci dite cosa volete, e noi cerchiamo di indovinare cosa
-                intendete davvero."
+                {t("howItWorks.cta.desc")}
               </p>
               <Button
-                onClick={() => setShowForm(true)}
+                onClick={scrollToContatti}
                 className="px-8 py-4 bg-white text-primary rounded-lg font-semibold text-base hover:bg-gray-100 transition-colors shadow-xl"
                 data-testid="cta-contact-button"
               >
-                Richiedi Informazioni
+                {t("hero.cta")}
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section
-        ref={prezziRef}
-        id="prezzi"
-        className="py-16 lg:py-24 bg-gradient-to-br from-primary via-primary to-accent"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2
-              className="text-3xl lg:text-4xl font-bold text-white mb-4"
-              data-testid="pricing-title"
-            >
-              Prezzi Trasparenti e Semplici
-            </h2>
-            <p
-              className="text-lg text-white/90 max-w-2xl mx-auto"
-              data-testid="pricing-description"
-            >
-              Un prezzo chiaro per iniziare, personalizzabile in base alle tue esigenze
-            </p>
+      {/* Sneak Peek Options Section */}
+      <section className="py-16 lg:py-24 bg-gradient-to-b from-background to-muted/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full mb-6 relative">
+            <Sparkles className="w-4 h-4 text-primary mr-2" />
+            <span className="text-primary text-sm font-semibold">
+              {t("options.badge")}
+            </span>
           </div>
           
-          <div className="max-w-3xl mx-auto">
-            {/* Main Pricing Card */}
-            <Card className="border-0 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] bg-white relative">
-              <CardContent className="p-8 lg:p-12">
-                <div className="text-center mb-8">
-                  <h3 className="text-3xl font-bold text-foreground mb-6">Pacchetto Base</h3>
-                  
-                  {/* Pricing Structure */}
-                  <div className="flex flex-col md:flex-row items-center justify-center mb-8">
-                    {/* Creation Cost */}
-                    <div className="text-center flex flex-col items-end">
-                      <div className="mb-2">
-                        <span className="text-5xl font-bold text-foreground">€299</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground font-semibold">
-                        Creazione sito
-                      </p>
-                      <p className="text-xs text-muted-foreground italic">
-                        (pagamento unico)
-                      </p>
-                    </div>
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6">
+            {t("options.title")}
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
+            {t("options.subtitle")}
+          </p>
 
-                    <div className="text-3xl text-muted-foreground font-light mx-8 hidden md:block">+</div>
-
-                    {/* Monthly Maintenance */}
-                    <div className="text-center flex flex-col items-start">
-                      <div className="mb-2">
-                        <span className="text-5xl font-bold text-foreground">€9.99</span>
-                        <span className="text-xl text-muted-foreground">/mese</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground font-semibold">
-                        Mantenimento online
-                      </p>
-                      <p className="text-xs text-muted-foreground italic">
-                        (hosting e gestione)
-                      </p>
-                    </div>
-                  </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12">
+            {[
+              { icon: FileText, label: t("options.features.pages") },
+              { icon: Mail, label: t("options.features.email") },
+              { icon: MapPin, label: t("options.features.maps") },
+              { icon: Calendar, label: t("options.features.booking") }
+            ].map((feature, i) => (
+              <div key={i} className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white border border-border shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <feature.icon className="w-6 h-6 text-primary" />
                 </div>
-
-                {/* Included Features */}
-                <div className="mb-8">
-                  <h4 className="text-xl font-bold text-foreground mb-4 text-center">Servizi Inclusi</h4>
-                  <div className="space-y-3 max-w-md mx-auto pl-14">
-                    <div className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" />
-                      <span className="text-foreground">Sito web ad 1 pagina professionale</span>
-                    </div>
-                    <div className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" />
-                      <span className="text-foreground">Dominio incluso (.it / .com)</span>
-                    </div>
-                    <div className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" />
-                      <span className="text-foreground">Ottimizzazione mobile</span>
-                    </div>
-                    <div className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" />
-                      <span className="text-foreground">Mantenimento e hosting online</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Scrolling Extras Banner - Inside Card */}
-                <div className="mb-13">
-                  <p className="text-center text-muted-foreground text-sm font-medium mb-6 pt-4">
-                    Personalizza il tuo sito con funzionalità aggiuntive
-                  </p>
-                  <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-xl py-4 overflow-hidden">
-                    <div className="marquee-container">
-                      <div className="marquee-track">
-                        {/* First set */}
-                        <div className="marquee-item">
-                          <FileText className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Pagine aggiuntive</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <MapPin className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Google Maps</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Calendar className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Sistema appuntamenti</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Headphones className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Supporto prioritario</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Edit3 className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Modifiche mensili</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Globe className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Multilingue</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Mail className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Email professionale</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Camera className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Shooting fotografico</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        {/* Duplicate set for seamless loop */}
-                        <div className="marquee-item">
-                          <FileText className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Pagine aggiuntive</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <MapPin className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Google Maps</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Calendar className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Sistema appuntamenti</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Headphones className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Supporto prioritario</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Edit3 className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Modifiche mensili</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Globe className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Multilingue</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Mail className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Email professionale</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                        <div className="marquee-item">
-                          <Camera className="w-4 h-4 text-white mr-2" />
-                          <span className="text-white font-medium">Shooting fotografico</span>
-                        </div>
-                        <div className="marquee-item">
-                          <span className="text-white/60">•</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Divider */}
-                <div className="border-t border-border my-6"></div>
-
-                {/* CTA Button */}
-                <div className="text-center">
-                  <Button
-                    onClick={() => setShowForm(true)}
-                    className="btn-primary px-8 py-4 rounded-lg font-semibold text-lg shadow-xl hover:shadow-2xl"
-                  >
-                    Richiedi il Tuo Preventivo
-                  </Button>
-                  <p className="text-sm text-muted-foreground mt-4">
-                    Ti risponderemo entro 24 ore con un preventivo personalizzato
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+                <h4 className="font-semibold text-foreground text-sm lg:text-base">{feature.label}</h4>
+              </div>
+            ))}
           </div>
+
+          <Button 
+            className="px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+            onClick={() => setLocation('/opzioni')}
+          >
+            {t("options.cta")}
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
         </div>
       </section>
 
@@ -650,10 +413,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Strategia, Design e Tecnologia
+              {t("team.title")}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              La nostra Besa: il vostro successo online.
+              {t("team.subtitle")}
             </p>
           </div>
 
@@ -673,11 +436,14 @@ export default function Home() {
                   Ludovico Canclini
                 </h3>
                 <p className="text-primary font-semibold mb-3">
-                  Head of Marketing & Client Relations
+                  {t("team.roles.marketing")}
                 </p>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Stratega della relazione e della visione d'insieme. Collega le esigenze del cliente con il talento del team, guidando ogni progetto verso il successo condiviso.
+                <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                  {t("team.descriptions.ludo")}
                 </p>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors">
+                  <Linkedin className="w-5 h-5" />
+                </a>
               </CardContent>
             </Card>
 
@@ -696,11 +462,14 @@ export default function Home() {
                   Benito Valentino
                 </h3>
                 <p className="text-primary font-semibold mb-3">
-                  Lead Designer
+                  {t("team.roles.designer")}
                 </p>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Perfezionista nell'arte e nella scienza del web. Cura ogni aspetto, dal pixel al codice, per consegnare un prodotto che superi le aspettative.
+                <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                  {t("team.descriptions.benito")}
                 </p>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors">
+                  <Linkedin className="w-5 h-5" />
+                </a>
               </CardContent>
             </Card>
 
@@ -719,16 +488,48 @@ export default function Home() {
                   Leonardo Margiotta
                 </h3>
                 <p className="text-primary font-semibold mb-3">
-                  Technical Lead
+                  {t("team.roles.tech")}
                 </p>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Architetto della stabilità e dell'efficienza. Coordina l'infrastruttura tecnica con precisione, garantendo che ogni progetto sia solido, sicuro e performante.
+                <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                  {t("team.descriptions.leo")}
                 </p>
+                <a href="https://www.linkedin.com/in/leonardo-margiotta-7323871b7/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors">
+                  <Linkedin className="w-5 h-5" />
+                </a>
               </CardContent>
             </Card>
           </div>
+
+          {/* Click to Copy Email */}
+          <div className="mt-16 flex justify-center">
+            <Button
+              variant="outline"
+              className="group flex items-center justify-center gap-3 px-6 py-4 rounded-full border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all min-w-[250px] shadow-sm hover:shadow-md"
+              onClick={() => {
+                navigator.clipboard.writeText("info@besaweb.com");
+                setHasCopiedEmail(true);
+                setTimeout(() => setHasCopiedEmail(false), 2000);
+              }}
+            >
+              <Mail className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+              <span className="text-foreground font-medium text-base">
+                {hasCopiedEmail ? t("team.copy.success") : "info@besaweb.com"}
+              </span>
+              {hasCopiedEmail ? (
+                <CheckCircle className="w-5 h-5 text-green-500 animate-in zoom-in" />
+              ) : (
+                <span className="text-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity ml-2">
+                  {t("team.copy.hint")}
+                </span>
+              )}
+            </Button>
+          </div>
         </div>
       </section>
+
+      <div ref={contattiRef}>
+        <ContactSection />
+      </div>
 
       <Footer />
     </div>

@@ -51,6 +51,19 @@
               --success: hsl(142 71% 45%);
               --radius: 0.75rem;
               --font-sans: 'Inter', sans-serif;
+
+              /* Cookie Consent Theming */
+              --cc-bg: var(--background);
+              --cc-text: var(--foreground);
+              --cc-btn-primary-bg: hsl(229 65% 45%);
+              --cc-btn-primary-hover-bg: hsl(229 84% 32%);
+              --cc-btn-primary-color: white;
+              --cc-btn-secondary-bg: var(--muted);
+              --cc-btn-secondary-hover-bg: hsl(220 13% 91%);
+              --cc-btn-secondary-color: var(--foreground);
+              --cc-btn-border-radius: 0.75rem;
+              --cc-modal-border-radius: 1rem;
+              --cc-font-family: 'Inter', sans-serif;
             }
 
             .dark {
