@@ -67,6 +67,59 @@
     },
     "cta": "Scopri tutte le opzioni"
   },
+  "opzioni_page": {
+    "back": "Torna alla Home",
+    "title": "Funzionalità",
+    "titleBadge": "Premium",
+    "subtitle": "Scopri tutto ciò che possiamo integrare nel tuo nuovo spazio digitale. Dal design ad alte prestazioni a strumenti avanzati per il tuo business.",
+    "features": {
+      "pages": {
+        "title": "Pagine Illimitate",
+        "desc": "Possibilità di strutturare il sito senza limiti, aggiungendo tutte le pagine che servono per presentare al meglio la tua attività."
+      },
+      "form": {
+        "title": "Modulo Contatti",
+        "desc": "Ricevi le richieste dei tuoi clienti direttamente sulla tua email con moduli personalizzati e anti-spam."
+      },
+      "email": {
+        "title": "Email Custom",
+        "desc": "Indirizzi email professionali col tuo dominio (es. info@tuodominio.it) per trasmettere maggiore autorevolezza."
+      },
+      "maps": {
+        "title": "Integrazione Google Maps",
+        "desc": "Una mappa interattiva integrata nel sito per permettere ai tuoi clienti di trovare facilmente la tua sede."
+      },
+      "booking": {
+        "title": "Booking System",
+        "desc": "Sistema di prenotazione online per gestire appuntamenti, tavoli o consulenze in modo completamente automatico."
+      },
+      "design": {
+        "title": "Premium Custom Design",
+        "desc": "Design unico e realizzato su misura, con animazioni fluide e una grafica curata in ogni singolo pixel."
+      },
+      "lang": {
+        "title": "Multilingua",
+        "desc": "Raggiungi un pubblico internazionale offrendo il tuo sito in diverse lingue, con traduzioni SEO-friendly."
+      },
+      "social": {
+        "title": "Integrazione Social",
+        "desc": "Collega i tuoi profili social al sito web per aumentare l'interazione e far crescere la tua community."
+      },
+      "seo": {
+        "title": "Ottimizzazione SEO",
+        "desc": "Struttura tecnica e contenuti ottimizzati per favorire l'indicizzazione e migliorare il posizionamento su Google."
+      },
+      "ecommerce": {
+        "title": "Funzionalità E-commerce",
+        "desc": "Vendi i tuoi prodotti o servizi direttamente online con un sistema di checkout sicuro e facile da gestire."
+      }
+    },
+    "cta": {
+      "title": "Hai un'esigenza particolare?",
+      "desc": "Implementiamo anche funzioni su misura per ogni tipologia di business.",
+      "btn": "Parlane con noi"
+    }
+  },
   "portfolio": {
     "back": "Torna alla Home",
     "title": "I Nostri",

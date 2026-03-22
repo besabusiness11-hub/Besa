@@ -67,6 +67,59 @@
     },
     "cta": "Découvrez toutes les options"
   },
+  "opzioni_page": {
+    "back": "Retour à l'accueil",
+    "title": "Fonctionnalités",
+    "titleBadge": "Premium",
+    "subtitle": "Découvrez tout ce que nous pouvons intégrer dans votre nouvel espace numérique. Du design haute performance aux outils avancés pour votre entreprise.",
+    "features": {
+      "pages": {
+        "title": "Pages illimitées",
+        "desc": "Possibilité de structurer le site sans limites, en ajoutant toutes les pages nécessaires pour présenter parfaitement votre activité."
+      },
+      "form": {
+        "title": "Formulaire de contact",
+        "desc": "Recevez les demandes de vos clients directement par e-mail avec des formulaires personnalisés et anti-spam."
+      },
+      "email": {
+        "title": "Email personnalisé",
+        "desc": "Des adresses e-mail professionnelles avec votre domaine (ex. info@votredomaine.fr) pour transmettre plus d'autorité."
+      },
+      "maps": {
+        "title": "Intégration Google Maps",
+        "desc": "Une carte interactive intégrée au site pour permettre à vos clients de trouver facilement votre établissement."
+      },
+      "booking": {
+        "title": "Système de réservation",
+        "desc": "Système de réservation en ligne pour gérer les rendez-vous, les tables ou les consultations de manière entièrement automatique."
+      },
+      "design": {
+        "title": "Premium Custom Design",
+        "desc": "Design unique et sur mesure, avec des animations fluides et des graphismes soignés au pixel près."
+      },
+      "lang": {
+        "title": "Multilingue",
+        "desc": "Atteignez un public international en proposant votre site en plusieurs langues, avec des traductions optimisées pour le SEO."
+      },
+      "social": {
+        "title": "Intégration sociale",
+        "desc": "Connectez vos profils sociaux au site web pour augmenter l'engagement et faire croître votre communauté."
+      },
+      "seo": {
+        "title": "Optimisation SEO",
+        "desc": "Structure technique et contenu optimisés pour favoriser l'indexation et améliorer le positionnement sur Google."
+      },
+      "ecommerce": {
+        "title": "Fonctionnalités E-commerce",
+        "desc": "Vendez vos produits ou services directement en ligne avec un système de paiement sécurisé et facile à gérer."
+      }
+    },
+    "cta": {
+      "title": "Avez-vous un besoin spécifique ?",
+      "desc": "Nous mettons également en œuvre des fonctions sur mesure pour tout type d'entreprise.",
+      "btn": "Parlez-nous en"
+    }
+  },
   "portfolio": {
     "back": "Retour à l'accueil",
     "title": "Nos",

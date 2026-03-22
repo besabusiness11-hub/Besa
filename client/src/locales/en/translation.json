@@ -67,6 +67,59 @@
     },
     "cta": "Discover all options"
   },
+  "opzioni_page": {
+    "back": "Back to Home",
+    "title": "Features",
+    "titleBadge": "Premium",
+    "subtitle": "Discover everything we can integrate into your new digital space. From high-performance design to advanced tools for your business.",
+    "features": {
+      "pages": {
+        "title": "Unlimited Pages",
+        "desc": "Ability to structure the site without limits, adding all the pages needed to perfectly present your business."
+      },
+      "form": {
+        "title": "Contact Form",
+        "desc": "Receive your clients' requests directly to your email with customized and anti-spam forms."
+      },
+      "email": {
+        "title": "Custom Email",
+        "desc": "Professional email addresses with your domain (e.g., info@yourdomain.com) to convey more authority."
+      },
+      "maps": {
+        "title": "Google Maps Integration",
+        "desc": "An interactive map integrated into the site to allow your clients to easily find your location."
+      },
+      "booking": {
+        "title": "Booking System",
+        "desc": "Online booking system to manage appointments, tables, or consultations completely automatically."
+      },
+      "design": {
+        "title": "Premium Custom Design",
+        "desc": "Unique and tailor-made design, with fluid animations and graphics curated down to the single pixel."
+      },
+      "lang": {
+        "title": "Multilingual",
+        "desc": "Reach an international audience by offering your site in different languages, with SEO-friendly translations."
+      },
+      "social": {
+        "title": "Social Integration",
+        "desc": "Connect your social profiles to the website to increase engagement and grow your community."
+      },
+      "seo": {
+        "title": "SEO Optimization",
+        "desc": "Technical structure and content optimized to favor indexing and improve your ranking on Google."
+      },
+      "ecommerce": {
+        "title": "E-commerce Features",
+        "desc": "Sell your products or services directly online with a secure and easy-to-manage checkout system."
+      }
+    },
+    "cta": {
+      "title": "Do you have a specific need?",
+      "desc": "We also implement custom features for any type of business.",
+      "btn": "Talk to us"
+    }
+  },
   "portfolio": {
     "back": "Back to Home",
     "title": "Our",

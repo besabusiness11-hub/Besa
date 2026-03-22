@@ -18,71 +18,63 @@ import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ContactSection from "@/components/ContactSection";
+import { useTranslation } from "react-i18next";
 
-const features = [
+const featuresList = [
   {
     icon: LayoutTemplate,
-    title: "Pagine Illimitate",
-    description: "Possibilità di strutturare il sito senza limiti, aggiungendo tutte le pagine che servono per presentare al meglio la tua attività.",
+    key: "pages",
     color: "bg-blue-100 text-blue-600"
   },
   {
     icon: FileText,
-    title: "Modulo Contatti",
-    description: "Ricevi le richieste dei tuoi clienti direttamente sulla tua email con moduli personalizzati e anti-spam.",
+    key: "form",
     color: "bg-green-100 text-green-600"
   },
   {
     icon: Mail,
-    title: "Email Custom",
-    description: "Indirizzi email professionali col tuo dominio (es. info@tuodominio.it) per trasmettere maggiore autorevolezza.",
+    key: "email",
     color: "bg-purple-100 text-purple-600"
   },
   {
     icon: MapPin,
-    title: "Integrazione Google Maps",
-    description: "Una mappa interattiva integrata nel sito per permettere ai tuoi clienti di trovare facilmente la tua sede.",
+    key: "maps",
     color: "bg-red-100 text-red-600"
   },
   {
     icon: Calendar,
-    title: "Booking System",
-    description: "Sistema di prenotazione online per gestire appuntamenti, tavoli o consulenze in modo completamente automatico.",
+    key: "booking",
     color: "bg-yellow-100 text-yellow-600"
   },
   {
     icon: Palette,
-    title: "Premium Custom Design",
-    description: "Design unico e realizzato su misura, con animazioni fluide e una grafica curata in ogni singolo pixel.",
+    key: "design",
     color: "bg-pink-100 text-pink-600"
   },
   {
     icon: Globe,
-    title: "Multilingua",
-    description: "Raggiungi un pubblico internazionale offrendo il tuo sito in diverse lingue, con traduzioni SEO-friendly.",
+    key: "lang",
     color: "bg-indigo-100 text-indigo-600"
   },
   {
     icon: Share2,
-    title: "Integrazione Social",
-    description: "Collega i tuoi profili social al sito web per aumentare l'interazione e far crescere la tua community.",
+    key: "social",
     color: "bg-orange-100 text-orange-600"
   },
   {
     icon: Search,
-    title: "Ottimizzazione SEO",
-    description: "Struttura tecnica e contenuti ottimizzati per favorire l'indicizzazione e migliorare il posizionamento su Google.",
+    key: "seo",
     color: "bg-teal-100 text-teal-600"
   },
   {
     icon: ShoppingCart,
-    title: "Funzionalità E-commerce",
-    description: "Vendi i tuoi prodotti o servizi direttamente online con un sistema di checkout sicuro e facile da gestire.",
+    key: "ecommerce",
     color: "bg-cyan-100 text-cyan-600"
   }
 ];
 
 export default function Opzioni() {
+  const { t } = useTranslation();
   const [, setLocation] = useLocation();
 
   useEffect(() => {
@@ -110,21 +102,20 @@ export default function Opzioni() {
               className="mb-8 hover:bg-primary/10 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna alla Home
+              {t("opzioni_page.back")}
             </Button>
 
             <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
-              Funzionalità <span className="text-primary">Premium</span>
+              {t("opzioni_page.title")} <span className="text-primary">{t("opzioni_page.titleBadge")}</span>
             </h1>
 
             <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto">
-              Scopri tutto ciò che possiamo integrare nel tuo nuovo spazio digitale. 
-              Dal design ad alte prestazioni a strumenti avanzati per il tuo business.
+              {t("opzioni_page.subtitle")}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, idx) => (
+            {featuresList.map((feature, idx) => (
               <Card 
                 key={idx} 
                 className="group border-border/50 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300"
@@ -134,10 +125,10 @@ export default function Opzioni() {
                     <feature.icon className="w-7 h-7" />
                   </div>
                   <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                    {feature.title}
+                    {t(`opzioni_page.features.${feature.key}.title`)}
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    {feature.description}
+                    {t(`opzioni_page.features.${feature.key}.desc`)}
                   </p>
                 </CardContent>
               </Card>
@@ -147,10 +138,10 @@ export default function Opzioni() {
           <div className="mt-20 text-center">
             <div className="bg-gradient-to-r from-primary to-accent p-8 lg:p-12 rounded-2xl shadow-2xl max-w-4xl mx-auto text-center">
               <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-                Hai un'esigenza particolare?
+                {t("opzioni_page.cta.title")}
               </h3>
               <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-                Implementiamo anche funzioni su misura per ogni tipologia di business.
+                {t("opzioni_page.cta.desc")}
               </p>
               <Button
                 onClick={() => {
@@ -163,7 +154,7 @@ export default function Opzioni() {
                 }}
                 className="px-8 py-4 bg-white text-primary rounded-lg font-semibold text-base hover:bg-gray-100 transition-colors shadow-xl"
               >
-                Parlane con noi
+                {t("opzioni_page.cta.btn")}
               </Button>
             </div>
           </div>
