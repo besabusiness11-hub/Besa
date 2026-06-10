@@ -16,61 +16,26 @@ const getScreenshotUrl = (url: string) => {
   return `https://api.microlink.io?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url&waitFor=10000&v=2`;
 };
 
-const categories = ["Tutti", "Ristoranti", "Barbieri", "Tattoo", "Bar & Cocktail", "Liberi Professionisti"];
+const categories = ["Tutti", "Startup", "Liberi Professionisti", "Costruzioni"];
 
 // Dati degli esempi di siti
 const websiteExamples = [
   {
     id: 1,
-    title: "Ristorante X|V",
-    category: "Ristoranti",
-    demoPath: "https://xv.besaweb.com",
-    plan: "pro"
-  },
-  {
-    id: 3,
-    title: "MilanoScomparsa",
-    category: "Liberi Professionisti",
-    demoPath: "https://milanoscomparsa.besaweb.com/",
-    plan: "basic"
-  },
-  {
-    id: 5,
-    title: "TheGentleman's House",
-    category: "Barbieri",
-    demoPath: "https://thegentlemanhouse.besaweb.com/",
-    plan: "pro"
-  },
-  {
-    id: 6,
-    title: "The Gilded Glass",
-    category: "Bar & Cocktail",
-    demoPath: "https://thegildedglass.besaweb.com/",
-    plan: "pro"
-  },
-  {
-    id: 7,
-    title: "Tempta",
-    category: "Bar & Cocktail",
-    demoPath: "https://tempta.besaweb.com/",
-    plan: "pro"
-  },
-  {
-    id: 9,
     title: "Le Jardin Secret Studio",
-    category: "Beauty",
+    category: "Liberi Professionisti",
     demoPath: "https://lejardinsecretstudio.fr/",
     plan: "pro"
   },
   {
-    id: 10,
+    id: 2,
     title: "Marco Bortolan",
     category: "Liberi Professionisti",
     demoPath: "https://marcobortolan.it/",
     plan: "pro"
   },
   {
-    id: 11,
+    id: 3,
     title: "Progetto Bortolan",
     category: "Liberi Professionisti",
     demoPath: "https://progettobortolan.besaweb.com/",
@@ -79,8 +44,22 @@ const websiteExamples = [
   {
     id: 12,
     title: "J Costruzioni",
-    category: "Liberi Professionisti",
+    category: "Costruzioni",
     demoPath: "https://jcostruzioni.besaweb.com/",
+    plan: "pro"
+  },
+  {
+    id: 4,
+    title: "Treedoo",
+    category: "Startup",
+    demoPath: "https://treedoo.it/",
+    plan: "pro"
+  },
+  {
+    id: 5,
+    title: "Navi",
+    category: "Startup",
+    demoPath: "https://getnavi.dev",
     plan: "pro"
   }
 ];
@@ -116,13 +95,9 @@ export default function Esempi() {
     ? websiteExamples
     : websiteExamples.filter(example => {
       const categoryMap: { [key: string]: string } = {
-        "ristoranti": "Ristoranti",
-        "barbieri": "Barbieri",
-        "tattoo": "Tattoo",
-        "bar & cocktail": "Bar & Cocktail",
-        "dentisti": "Medico",
-        "centri estetici": "Beauty",
-        "liberi professionisti": "Liberi Professionisti"
+        "startup": "Startup",
+        "liberi professionisti": "Liberi Professionisti",
+        "costruzioni": "Costruzioni",
       };
       return example.category === categoryMap[selectedCategory.toLowerCase()];
     });
