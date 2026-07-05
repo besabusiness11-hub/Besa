@@ -4,6 +4,8 @@ import { palestreContent } from "@/lib/palestre-content";
 import "@/components/palestre/palestre.css";
 import PalestreHeader from "@/components/palestre/PalestreHeader";
 import Hero from "@/components/palestre/Hero";
+import Problema from "@/components/palestre/Problema";
+import ComeFunziona from "@/components/palestre/ComeFunziona";
 import WhatsAppFab from "@/components/palestre/WhatsAppFab";
 
 export default function Palestre() {
@@ -47,6 +49,8 @@ export default function Palestre() {
       <PalestreHeader />
       <main>
         <Hero />
+        <Problema />
+        <ComeFunziona />
         {/* sections mount here */}
       </main>
       <WhatsAppFab />
