@@ -2,6 +2,8 @@
 import { Helmet } from "react-helmet-async";
 import { palestreContent } from "@/lib/palestre-content";
 import "@/components/palestre/palestre.css";
+import PalestreHeader from "@/components/palestre/PalestreHeader";
+import WhatsAppFab from "@/components/palestre/WhatsAppFab";
 
 export default function Palestre() {
   const { meta } = palestreContent;
@@ -41,9 +43,11 @@ export default function Palestre() {
         {/* Umami analytics already loaded site-wide in client/index.html — no per-page tag needed */}
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
+      <PalestreHeader />
       <main>
         {/* sections mount here */}
       </main>
+      <WhatsAppFab />
     </div>
   );
 }
