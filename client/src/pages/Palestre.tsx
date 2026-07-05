@@ -13,6 +13,7 @@ import PhotoTeaser from "@/components/palestre/PhotoTeaser";
 import Pricing from "@/components/palestre/Pricing";
 import FaqAccordion from "@/components/palestre/FaqAccordion";
 import Testimonials from "@/components/palestre/Testimonials";
+import FinalCta from "@/components/palestre/FinalCta";
 import WhatsAppFab from "@/components/palestre/WhatsAppFab";
 
 export default function Palestre() {
@@ -65,7 +66,7 @@ export default function Palestre() {
         <Testimonials />
         <Pricing />
         <FaqAccordion />
-        {/* sections mount here */}
+        <FinalCta />
       </main>
       <WhatsAppFab />
     </div>
