@@ -6,8 +6,8 @@
 export const STRIPE_LINK_MONTHLY = "https://buy.stripe.com/TODO_monthly";
 // TODO: replace with live Stripe Payment Link
 export const STRIPE_LINK_ONETIME = "https://buy.stripe.com/TODO_onetime";
-// TODO: replace with real WhatsApp number (international format, digits only)
-export const WHATSAPP_NUMBER = "390000000000";
+// Real BESA WhatsApp number (same one published in the main site's footer/contact section)
+export const WHATSAPP_NUMBER = "393512338575";
 export const WHATSAPP_MESSAGE =
   "Ciao BESA! Ho visto la pagina per le palestre e vorrei saperne di più.";
 
@@ -63,7 +63,9 @@ export interface PalestreContent {
     items: { icon: FeatureIconKey; label: string }[];
   };
   educational: { title: string; paragraphs: string[] }[];
+  // Reserved for future manual outreach — deliberately not rendered on the page (insider offer, not advertised).
   photoTeaser: { title: string; body: string; ctaLabel: string; ctaHref: string };
+  contact: { title: string; body: string; whatsappLabel: string; emailLabel: string; email: string };
   pricing: {
     title: string;
     monthly: {
@@ -250,6 +252,13 @@ export const palestreContent: PalestreContent = {
     ctaLabel: "Scoprilo quando attivi",
     ctaHref: "#prezzi",
   },
+  contact: {
+    title: "Hai domande? Scrivici.",
+    body: "Rispondiamo su WhatsApp in giornata. Se preferisci scriverci con calma, va bene anche una email.",
+    whatsappLabel: "Scrivici su WhatsApp",
+    emailLabel: "Scrivici via email",
+    email: "info@besaweb.com",
+  },
   pricing: {
     title: "Quanto costa un sito per la tua palestra",
     monthly: {
@@ -311,11 +320,6 @@ export const palestreContent: PalestreContent = {
         question: "Cosa succede se voglio cambiare qualcosa dopo?",
         answer:
           "Con l'abbonamento gli aggiornamenti sono inclusi: ci scrivi cosa cambiare e lo aggiorniamo noi. Con l'una tantum sono a richiesta.",
-      },
-      {
-        question: "Offrite anche fotografia professionale?",
-        answer:
-          "Sì, per le palestre entro un'ora di macchina da noi. Lo verifichiamo insieme quando attivi.",
       },
     ],
   },

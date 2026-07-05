@@ -9,7 +9,7 @@ import ComeFunziona from "@/components/palestre/ComeFunziona";
 import GoalConfigurator from "@/components/palestre/GoalConfigurator";
 import FeatureGrid from "@/components/palestre/FeatureGrid";
 import EducationalSections from "@/components/palestre/EducationalSections";
-import PhotoTeaser from "@/components/palestre/PhotoTeaser";
+import Contact from "@/components/palestre/Contact";
 import Pricing from "@/components/palestre/Pricing";
 import FaqAccordion from "@/components/palestre/FaqAccordion";
 import Testimonials from "@/components/palestre/Testimonials";
@@ -62,7 +62,9 @@ export default function Palestre() {
         <GoalConfigurator />
         <FeatureGrid />
         <EducationalSections />
-        <PhotoTeaser />
+        {/* PhotoTeaser intentionally not mounted: photography is an insider upsell
+            offered manually during onboarding, not advertised on the page. */}
+        <Contact />
         <Testimonials />
         <Pricing />
         <FaqAccordion />
