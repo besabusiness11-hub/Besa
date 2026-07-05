@@ -10,6 +10,9 @@ import GoalConfigurator from "@/components/palestre/GoalConfigurator";
 import FeatureGrid from "@/components/palestre/FeatureGrid";
 import EducationalSections from "@/components/palestre/EducationalSections";
 import PhotoTeaser from "@/components/palestre/PhotoTeaser";
+import Pricing from "@/components/palestre/Pricing";
+import FaqAccordion from "@/components/palestre/FaqAccordion";
+import Testimonials from "@/components/palestre/Testimonials";
 import WhatsAppFab from "@/components/palestre/WhatsAppFab";
 
 export default function Palestre() {
@@ -59,6 +62,9 @@ export default function Palestre() {
         <FeatureGrid />
         <EducationalSections />
         <PhotoTeaser />
+        <Testimonials />
+        <Pricing />
+        <FaqAccordion />
         {/* sections mount here */}
       </main>
       <WhatsAppFab />
