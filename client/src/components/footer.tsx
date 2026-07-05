@@ -29,6 +29,7 @@ export default function Footer() {
               <li><a href="#esempi" className="text-white/70 hover:text-white transition-colors block">{t("nav.portfolio")}</a></li>
               <li><a href="#come-funziona" className="text-white/70 hover:text-white transition-colors block">{t("nav.howItWorks")}</a></li>
               <li><a href="#chi-siamo" className="text-white/70 hover:text-white transition-colors block">{t("nav.team")}</a></li>
+              <li><a href="/palestre" className="text-white/70 hover:text-white transition-colors block">{t("nav.forGyms")}</a></li>
             </ul>
           </div>
 
