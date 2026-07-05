@@ -1,6 +1,6 @@
 // client/src/pages/Palestre.tsx
 import { Helmet } from "react-helmet-async";
-import { palestreContent, UMAMI_SITE_ID, UMAMI_SRC } from "@/lib/palestre-content";
+import { palestreContent } from "@/lib/palestre-content";
 import "@/components/palestre/palestre.css";
 
 export default function Palestre() {
@@ -38,8 +38,7 @@ export default function Palestre() {
           href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&display=swap"
           rel="stylesheet"
         />
-        {/* TODO: insert real Umami site ID (and confirm script host) */}
-        <script defer src={UMAMI_SRC} data-website-id={UMAMI_SITE_ID}></script>
+        {/* Umami analytics already loaded site-wide in client/index.html — no per-page tag needed */}
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
       <main>

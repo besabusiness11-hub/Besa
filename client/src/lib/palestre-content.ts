@@ -10,10 +10,6 @@ export const STRIPE_LINK_ONETIME = "https://buy.stripe.com/TODO_onetime";
 export const WHATSAPP_NUMBER = "390000000000";
 export const WHATSAPP_MESSAGE =
   "Ciao BESA! Ho visto la pagina per le palestre e vorrei saperne di più.";
-// TODO: insert real Umami site ID
-export const UMAMI_SITE_ID = "TODO-umami-site-id";
-// TODO: confirm Umami script host
-export const UMAMI_SRC = "https://cloud.umami.is/script.js";
 
 export type GoalId = "free_trial" | "trust" | "information" | "contact";
 
