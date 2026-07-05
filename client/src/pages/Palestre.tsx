@@ -6,6 +6,7 @@ import PalestreHeader from "@/components/palestre/PalestreHeader";
 import Hero from "@/components/palestre/Hero";
 import Problema from "@/components/palestre/Problema";
 import ComeFunziona from "@/components/palestre/ComeFunziona";
+import GoalConfigurator from "@/components/palestre/GoalConfigurator";
 import WhatsAppFab from "@/components/palestre/WhatsAppFab";
 
 export default function Palestre() {
@@ -51,6 +52,7 @@ export default function Palestre() {
         <Hero />
         <Problema />
         <ComeFunziona />
+        <GoalConfigurator />
         {/* sections mount here */}
       </main>
       <WhatsAppFab />
