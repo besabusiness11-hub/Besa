@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { palestreContent } from "@/lib/palestre-content";
 import "@/components/palestre/palestre.css";
 import PalestreHeader from "@/components/palestre/PalestreHeader";
+import Hero from "@/components/palestre/Hero";
 import WhatsAppFab from "@/components/palestre/WhatsAppFab";
 
 export default function Palestre() {
@@ -45,6 +46,7 @@ export default function Palestre() {
       </Helmet>
       <PalestreHeader />
       <main>
+        <Hero />
         {/* sections mount here */}
       </main>
       <WhatsAppFab />
