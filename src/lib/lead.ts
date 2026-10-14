@@ -71,8 +71,16 @@ export async function readCapped(request: Request, max = MAX_BODY_BYTES): Promis
   const reader = request.body.getReader();
   const chunks: Uint8Array[] = [];
   let total = 0;
+  const deadline = Date.now() + 10_000; // slow-body guard
   for (;;) {
-    const { done, value } = await reader.read();
+    if (Date.now() > deadline) {
+      await reader.cancel().catch(() => {});
+      return null;
+    }
+    const { done, value } = await Promise.race([
+      reader.read(),
+      new Promise<never>((_, rej) => setTimeout(() => rej(new Error("body timeout")), 10_000).unref?.()),
+    ]);
     if (done) break;
     total += value.byteLength;
     if (total > max) {
@@ -100,7 +108,7 @@ export async function readBody(request: Request): Promise<Record<string, unknown
       return j && typeof j === "object" && !Array.isArray(j) ? (j as Record<string, unknown>) : null;
     }
     if (type.includes("multipart/form-data") || type.includes("application/x-www-form-urlencoded")) {
-      const fd = await new Response(bytes, { headers: { "content-type": type } }).formData();
+      const fd = await new Response(new Blob([bytes as BlobPart]), { headers: { "content-type": type } }).formData();
       const out: Record<string, unknown> = {};
       for (const [k, v] of fd.entries()) if (typeof v === "string") out[k] = v;
       return out;
@@ -162,11 +170,15 @@ export function buildEmail(lead: Lead): { subject: string; text: string; html: s
 /** Fixed-window in-memory rate limiter with a hard cap on tracked keys (oldest evicted first). */
 export function createRateLimiter(limit = 5, windowMs = 10 * 60 * 1000, maxKeys = 5000) {
   const hits = new Map<string, { count: number; reset: number }>();
+  let lastPrune = 0;
   return {
     /** Returns true if the request is allowed. */
     check(key: string, now = Date.now()): boolean {
       if (hits.size >= maxKeys) {
-        for (const [k, v] of hits) if (v.reset <= now) hits.delete(k);
+        if (now - lastPrune >= 1000) {
+          lastPrune = now;
+          for (const [k, v] of hits) if (v.reset <= now) hits.delete(k);
+        }
         // Still full of live entries: evict oldest so memory stays bounded.
         while (hits.size >= maxKeys) {
           const oldest = hits.keys().next().value;

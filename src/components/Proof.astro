@@ -1,0 +1,42 @@
+---
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+import { todo } from "../lib/todo";
+const c = copy.proof;
+---
+<section class="proof on-blue bg-ink text-white section" aria-labelledby="proof-title">
+  <div class="wrap grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+    <div class="reveal">
+      <h2 id="proof-title" class="t-h2 max-w-[14ch]" set:html={em(c.headline)} />
+      <div class="mt-8 grid gap-4 text-white/85">
+        {c.paragraphs.map((p) => <p class="lead">{p}</p>)}
+      </div>
+    </div>
+
+    <div class="grid content-start gap-10">
+      <ul class="how reveal-stagger">
+        {c.how.map((x) => <li>{x}</li>)}
+      </ul>
+
+      <div class="slot" aria-label="Casi reali">
+        <div class="ghost" aria-hidden="true"><span></span><span></span></div>
+        <p class="slot-text" set:html={todo(c.caseStudies)} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hd { height: auto; }
+  .how { display: grid; }
+  .how li { padding-block: 1.25rem; border-top: 1px solid rgb(255 255 255 / .25); font-size: var(--text-h3); line-height: 1.25; font-weight: 700; letter-spacing: -.015em; }
+  .how li:last-child { border-bottom: 1px solid rgb(255 255 255 / .25); }
+  .slot { border: 2px dashed rgb(255 255 255 / .5); border-radius: var(--radius-lg); padding: 1.25rem; display: grid; gap: 1rem; }
+  .ghost { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .ghost span { aspect-ratio: 4 / 3; border-radius: var(--radius-base); background: rgb(255 255 255 / .08); }
+  .slot-text { color: rgb(255 255 255 / .85); max-width: none; }
+  :global(.proof .todo) {
+    display: inline; font-size: .8125rem; font-weight: 600; font-style: normal; color: #fff;
+    background: transparent; padding: .05rem .4rem; border: 1.5px dashed #fff; border-radius: .35rem;
+  }
+</style>

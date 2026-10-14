@@ -1,0 +1,48 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo-white.png";
+import { copy } from "../lib/copy";
+import { splitTodo } from "../lib/todo";
+const f = copy.footer;
+const year = new Date().getFullYear();
+---
+<footer class="foot on-blue">
+  <div class="wrap body">
+    <div class="brand">
+      <a href="/" class="mark" aria-label="BESA, torna in cima"><Image src={logo} alt="BESA" width={120} height={61} loading="lazy" /></a>
+      <p class="slogan">{f.slogan}</p>
+    </div>
+    <div class="info">
+      <a class="mail" href={`mailto:${f.email}`}>{f.email}</a>
+      <p class="legal">
+        {splitTodo(f.legalLine).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}
+      </p>
+    </div>
+    <nav class="links" aria-label="Link legali">
+      <a href="/privacy-policy">{f.links.privacy}</a>
+      <a href="/cookie-policy">{f.links.cookie}</a>
+    </nav>
+  </div>
+  <div class="wrap copy"><p>&copy; {year} BESA</p></div>
+</footer>
+
+<style>
+  .foot { background: var(--color-ink); color: #fff; padding-block: clamp(3rem, 2rem + 4vw, 5rem) 1.5rem; }
+  .body { display: grid; gap: 2rem; }
+  .mark { display: inline-flex; min-height: 2.75rem; align-items: center; }
+  .mark :global(img) { width: 7.5rem; height: auto; }
+  .slogan { font-weight: 800; font-style: italic; font-size: 1.25rem; margin-top: .75rem; letter-spacing: -.015em; }
+  .info { display: grid; gap: .5rem; justify-items: start; }
+  a { text-decoration: underline; text-decoration-color: rgb(255 255 255 / .6); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: #fff; }
+  .mark { text-decoration: none; }
+  .mail, .links a { display: inline-flex; align-items: center; min-height: 2.75rem; font-weight: 500; }
+  .legal { color: rgb(255 255 255 / .82); font-size: .875rem; }
+  .links { display: flex; flex-wrap: wrap; gap: 0 1.5rem; font-size: .9375rem; }
+  .copy { margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid rgb(255 255 255 / .2); font-size: .875rem; color: rgb(255 255 255 / .82); }
+  .foot :global(mark.todo) { background: transparent; color: #fff; outline: 2px dashed rgb(255 255 255 / .7); outline-offset: 1px; border-radius: 2px; padding: 0 .2em; }
+  @media (min-width: 48rem) {
+    .body { grid-template-columns: 1.2fr 1.2fr auto; align-items: start; gap: 3rem; }
+    .links { flex-direction: column; }
+  }
+</style>

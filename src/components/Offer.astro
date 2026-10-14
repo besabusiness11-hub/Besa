@@ -1,0 +1,75 @@
+---
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+import { todo } from "../lib/todo";
+const c = copy.offer;
+const main = c.plans.find((p) => p.highlight)!;
+const rest = c.plans.filter((p) => !p.highlight);
+---
+<section class="offer section" aria-labelledby="offer-title">
+  <div class="wrap">
+    <div class="reveal">
+      <h2 id="offer-title" class="t-h2 max-w-[20ch]" set:html={em(c.headline)} />
+      <p class="lead mt-5 text-ink-soft">{c.lead}</p>
+    </div>
+
+    <div class="plans mt-12 grid gap-6 lg:grid-cols-[1.25fr_1fr] lg:items-start lg:gap-8">
+      <article class="main on-blue bg-blue text-white reveal" aria-labelledby={`plan-${main.id}`}>
+        <h3 id={`plan-${main.id}`} class="name">{main.name}</h3>
+        <p class="price" set:html={todo(main.price)} />
+        <p class="pnote" set:html={todo(main.priceNote)} />
+        <p class="tagline">{main.tagline}</p>
+        <ul class="feat">
+          {main.features.map((x) => <li set:html={todo(x)} />)}
+        </ul>
+        <a class="btn" href="#contatto">{main.cta}</a>
+      </article>
+
+      <div class="rows reveal-stagger">
+        {rest.map((p) => (
+          <article class="row" aria-labelledby={`plan-${p.id}`}>
+            <h3 id={`plan-${p.id}`} class="t-h3">{p.name}</h3>
+            <p class="mt-1 text-ink-soft">{p.tagline}</p>
+            <p class="rprice" set:html={todo(p.price)} />
+            <p class="mt-1 text-ink-soft" set:html={todo(p.priceNote)} />
+            <ul class="rfeat">
+              {p.features.map((x) => <li set:html={todo(x)} />)}
+            </ul>
+            <a class="cta" href="#contatto">{p.cta}</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hd { height: auto; }
+  .main { border-radius: var(--radius-lg); padding: clamp(1.5rem, 1rem + 2.5vw, 3rem); display: flex; flex-direction: column; align-items: flex-start; }
+  .name { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -.03em; font-weight: 800; }
+  .price { margin-top: 1.5rem; font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem); font-weight: 800; line-height: 1.2; font-variant-numeric: tabular-nums; max-width: none; }
+  .pnote { margin-top: .5rem; color: rgb(255 255 255 / .85); }
+  .tagline { margin-top: 1.5rem; font-size: var(--text-lead); line-height: 1.4; font-weight: 600; }
+  .feat { margin-top: 1.5rem; margin-bottom: 2rem; display: grid; gap: .75rem; }
+  .feat li, .rfeat li { padding-left: 1.25rem; position: relative; }
+  .feat li { color: rgb(255 255 255 / .9); }
+  .feat li::before { content: ""; position: absolute; left: 0; top: .7em; width: .5rem; height: 2px; background: #fff; }
+  .rfeat li::before { content: ""; position: absolute; left: 0; top: .7em; width: .5rem; height: 2px; background: var(--color-blue); }
+  .main .btn { margin-top: auto; }
+
+  .rows { display: grid; gap: 1.5rem; align-content: start; }
+  .row { background: var(--color-tint); border-radius: var(--radius-lg); padding: clamp(1.25rem, 1rem + 1.5vw, 2rem); }
+  .rprice { margin-top: 1rem; font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; max-width: none; }
+  .rfeat { margin-top: 1rem; display: grid; gap: .5rem; color: var(--color-ink-soft); }
+  .cta {
+    display: inline-flex; align-items: center; min-height: 2.75rem; margin-top: .75rem;
+    font-weight: 700; color: var(--color-blue-deep); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px;
+  }
+  .cta:hover { color: var(--color-ink); }
+
+  :global(.main .todo) { color: #fff; border: 1.5px dashed #fff; background: transparent; }
+  :global(.todo) {
+    display: inline; font-size: .8125rem; font-weight: 600; font-style: normal; color: var(--color-ink);
+    background: transparent; padding: .05rem .4rem; border: 1.5px dashed var(--color-blue-deep); border-radius: .35rem;
+  }
+</style>

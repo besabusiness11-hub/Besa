@@ -1,0 +1,102 @@
+---
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+import { todo } from "../lib/todo";
+const c = copy.inside;
+const f = c.features;
+// Phone rows: [feature index, side]. Labels sit on the same grid row as the mock element they name.
+const rows = [
+  { i: 3, side: "r", kind: "load" },
+  { i: 0, side: "l", kind: "head" },
+  { i: 2, side: "r", kind: "text" },
+  { i: 4, side: "l", kind: "form" },
+  { i: 1, side: "r", kind: "cta" },
+  { i: 5, side: "l", kind: "pixel" },
+] as const;
+---
+<section class="inside bg-tint section" aria-labelledby="inside-title">
+  <div class="wrap grid gap-12 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16">
+    <div class="reveal">
+      <h2 id="inside-title" class="t-h2 max-w-[18ch]" set:html={em(c.headline)} />
+      <p class="lead mt-5 text-ink-soft">{c.lead}</p>
+
+      <div class="anatomy mt-10" aria-hidden="true">
+        <div class="phone-chrome"></div>
+        {rows.map((r, n) => (
+          <>
+            <div class={`el el-${r.kind}`} style={`grid-row:${n + 1}`}>
+              {r.kind === "load" && <span class="bar"></span>}
+              {r.kind === "head" && <><b></b><b class="s"></b></>}
+              {r.kind === "text" && <><i></i><i></i><i class="s"></i></>}
+              {r.kind === "form" && <><u></u><u></u></>}
+              {r.kind === "cta" && <span class="fake-btn"></span>}
+              {r.kind === "pixel" && <span class="pix"></span>}
+            </div>
+            <span class={`tag tag-${r.side}`} style={`grid-row:${n + 1}`}>{f[r.i].title}</span>
+          </>
+        ))}
+      </div>
+    </div>
+
+    <ul class="list reveal-stagger">
+      {f.map((x) => (
+        <li>
+          <h3 class="t-h3">{x.title}</h3>
+          <p class="mt-1 text-ink-soft" set:html={todo(x.text)} />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .hd { height: auto; }
+  .list { display: grid; }
+  .list li { padding-block: 1.25rem; border-top: 1px solid oklch(0.44 0.03 265 / .25); }
+  .list li:last-child { border-bottom: 1px solid oklch(0.44 0.03 265 / .25); }
+
+  .anatomy {
+    display: grid; justify-content: center; position: relative;
+    grid-template-columns: 14rem; grid-template-rows: repeat(6, auto);
+    padding: 1.5rem 0;
+  }
+  .phone-chrome, .el { grid-column: 1; }
+  .phone-chrome {
+    grid-row: 1 / 7; background: #fff; border: 4px solid var(--color-ink);
+    border-radius: var(--radius-xl); box-shadow: var(--shadow-mock);
+  }
+  .el { display: grid; gap: .4rem; align-content: center; padding: .85rem 1.1rem; position: relative; }
+  .el-load { padding-top: 1.4rem; }
+  .el-pixel { padding-bottom: 1.4rem; }
+  .bar { height: .4rem; border-radius: 9999px; background: var(--color-line); position: relative; overflow: hidden; }
+  .bar::after { content: ""; position: absolute; inset: 0 25% 0 0; background: var(--color-blue); border-radius: inherit; }
+  b { display: block; height: 1rem; border-radius: .3rem; background: var(--color-ink); }
+  b.s { width: 65%; }
+  i { display: block; height: .45rem; border-radius: 9999px; background: var(--color-line); }
+  i.s { width: 55%; }
+  u { display: block; height: 1.6rem; border-radius: var(--radius-sm); background: var(--color-muted); }
+  .fake-btn { height: 2.25rem; border-radius: var(--radius-base); background: var(--color-blue); }
+  .pix { width: .6rem; height: .6rem; border-radius: 9999px; background: var(--color-blue); box-shadow: 0 0 0 4px var(--color-tint); justify-self: start; }
+
+  .tag { display: none; }
+  @media (min-width: 40rem) {
+    .anatomy { grid-template-columns: minmax(0, 1fr) 14rem minmax(0, 1fr); }
+    .phone-chrome, .el { grid-column: 2; }
+    .tag {
+      display: flex; align-items: center; align-self: center; position: relative;
+      font-size: .8125rem; font-weight: 600; line-height: 1.25; color: #fff; background: var(--color-ink);
+      padding: .35rem .7rem; border-radius: 9999px; width: max-content; max-width: calc(100% - 1.5rem);
+    }
+    .tag::after { content: ""; position: absolute; top: 50%; height: 1px; width: 1.5rem; background: var(--color-ink); }
+    .tag-l { grid-column: 1; justify-self: end; margin-right: 1.5rem; }
+    .tag-l::after { left: 100%; }
+    .tag-r { grid-column: 3; justify-self: start; margin-left: 1.5rem; }
+    .tag-r::after { right: 100%; }
+    .tag-l, .tag-r { text-align: left; }
+  }
+
+  :global(.todo) {
+    display: inline; font-size: .8125rem; font-weight: 600; font-style: normal; color: var(--color-ink);
+    background: transparent; padding: .05rem .4rem; border: 1.5px dashed var(--color-blue-deep); border-radius: .35rem;
+  }
+</style>

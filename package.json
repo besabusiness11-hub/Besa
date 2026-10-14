@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
+    "og": "node scripts/og.mjs",
+    "prebuild": "pnpm og",
     "build": "astro build",
     "start": "node server.mjs",
     "check": "astro check",

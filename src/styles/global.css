@@ -52,8 +52,8 @@
 
 @layer components {
   .h-display { font-size: var(--text-display); line-height: 1; letter-spacing: -0.035em; }
-  .h-2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; }
-  .h-3 { font-size: var(--text-h3); line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
+  .t-h2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; }
+  .t-h3 { font-size: var(--text-h3); line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
   .lead { font-size: var(--text-lead); line-height: 1.5; }
   .em { font-style: italic; color: var(--color-blue); }
   .on-blue .em { color: #fff; }

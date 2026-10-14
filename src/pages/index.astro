@@ -1,12 +1,38 @@
 ---
-import Base from "../layouts/Base.astro";
+import ContactForm from "../components/ContactForm.astro";
+import Faq from "../components/Faq.astro";
+import Fix from "../components/Fix.astro";
+import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
+import HowItWorks from "../components/HowItWorks.astro";
+import Inside from "../components/Inside.astro";
+import Offer from "../components/Offer.astro";
+import Problem from "../components/Problem.astro";
+import Proof from "../components/Proof.astro";
+import Team from "../components/Team.astro";
+import Base from "../layouts/Base.astro";
+import { copy } from "../lib/copy";
+import { faqJsonLd, organizationJsonLd, serviceJsonLd, websiteJsonLd } from "../lib/jsonld";
 ---
-<Base>
+<Base
+  title={copy.meta.title}
+  description={copy.meta.description}
+  path="/"
+  jsonLd={[organizationJsonLd(), serviceJsonLd(), websiteJsonLd(), faqJsonLd()]}
+>
   <Header />
   <main id="main">
     <Hero />
-    <section id="contatto" class="section"><div class="wrap"><h2 class="h-2">Contatto</h2></div></section>
+    <Problem />
+    <Fix />
+    <HowItWorks />
+    <Inside />
+    <Offer />
+    <Proof />
+    <Team />
+    <Faq />
+    <ContactForm />
   </main>
+  <Footer />
 </Base>

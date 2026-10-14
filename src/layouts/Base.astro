@@ -44,6 +44,12 @@ const og = new URL(ogImage, SITE.url).href;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={og} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="BESA: Il tuo annuncio paga il click. La tua pagina lo butta via." />
     <Font cssVariable="--font-inter" preload />
     {jsonLd.map((d) => <script type="application/ld+json" is:inline set:html={JSON.stringify(d)} />)}
     <script is:inline defer src="https://umami.besaweb.com/script.js" data-website-id="14bec9f8-0ae7-4d82-a1c5-d803f2295c7d" data-do-not-track="true"></script>

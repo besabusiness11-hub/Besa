@@ -1,0 +1,68 @@
+---
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+const f = copy.fix;
+const landing = copy.hero.annotations.landing;
+---
+<section class="section bg-tint overflow-hidden" aria-labelledby="fix-title">
+  <div class="wrap grid gap-12 lg:grid-cols-12 lg:gap-x-10">
+    <div class="reveal lg:col-span-8">
+      <h2 id="fix-title" class="t2 fix-h" set:html={em(f.headline)} />
+      <p class="lead mt-6 text-ink-soft">{f.lead}</p>
+    </div>
+
+    <div class="phone-wrap reveal lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1" aria-hidden="true">
+      <div class="phone">
+        <div class="phone-bar"></div>
+        <span class="lp-h"><i></i><i></i></span>
+        <div class="lp-img"></div>
+        <span class="lp-field"></span>
+        <span class="lp-field"></span>
+        <span class="lp-btn"></span>
+      </div>
+      <span class="pill">{landing}</span>
+    </div>
+
+    <ul class="points reveal-stagger lg:col-span-8">
+      {f.points.map((pt) => (
+        <li class="point">
+          <h3 class="t3">{pt.title}</h3>
+          <p class="text-ink-soft">{pt.text}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* .t-h2 and .t-h3 collide with Tailwind height utilities (t-h2 = 0.5rem), so headings use local classes. */
+  .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; }
+  .t3 { font-size: var(--text-h3); line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
+  .fix-h { max-width: 14ch; }
+  .points { list-style: none; margin: 0; padding: 0; display: grid; gap: 2rem; }
+  .point { border-top: 2px solid var(--color-ink); padding-top: 1rem; display: grid; gap: .5rem; max-width: 30rem; }
+  @media (min-width: 48rem) {
+    .points { gap: 2.5rem; }
+    .point:nth-child(2) { margin-left: 4rem; }
+    .point:nth-child(3) { margin-left: 8rem; }
+  }
+  @media (min-width: 64rem) { .fix-h { max-width: 12ch; } }
+
+  .phone-wrap { display: grid; gap: .75rem; justify-items: start; }
+  @media (min-width: 64rem) { .phone-wrap { justify-items: center; align-self: center; } }
+  .phone { width: min(100%, 17rem); background: #fff; border: 4px solid var(--color-ink); border-radius: var(--radius-xl); padding: 1rem .875rem 1.25rem; display: grid; gap: .7rem; box-shadow: var(--shadow-mock); }
+  .phone-bar { width: 2.5rem; height: .3rem; background: var(--color-line); border-radius: 9999px; margin-inline: auto; }
+  i { display: block; height: .9rem; border-radius: 9999px; background: var(--color-ink); }
+  .lp-h { display: grid; gap: .35rem; } .lp-h i:last-child { width: 65%; }
+  .lp-img { aspect-ratio: 4 / 3; border-radius: var(--radius-base); background: var(--color-tint); }
+  .lp-field { height: 2.25rem; border-radius: var(--radius-sm); background: var(--color-muted); display: block; }
+  .lp-btn { height: 2.75rem; border-radius: var(--radius-base); background: var(--color-blue); display: block; }
+  .pill { background: var(--color-ink); color: #fff; font-weight: 700; font-size: .875rem; padding: .4rem .9rem; border-radius: var(--radius-base); max-width: 17rem; }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .phone { animation: tilt linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
+      @keyframes tilt { from { transform: translateY(24px) rotate(2deg); } to { transform: none; } }
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+import { splitTodo } from "../lib/todo";
+const f = copy.faq;
+---
+<section class="section faq" aria-labelledby="faq-title">
+  <div class="wrap grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
+    <h2 id="faq-title" class="t-h2 reveal lg:sticky lg:top-24 lg:self-start" set:html={em(f.headline)} />
+    <div class="list">
+      {f.items.map((it) => (
+        <details>
+          <summary>
+            <span class="q">{it.q}</span>
+            <svg class="chev" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+              <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </summary>
+          <p class="a">
+            {splitTodo(it.a).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}
+          </p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  h2 { height: auto; }
+  .faq { background: var(--color-tint); }
+  .list { border-top: 1px solid var(--color-line); }
+  details { border-bottom: 1px solid var(--color-line); }
+  summary {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    min-height: 3.5rem; padding-block: .75rem; cursor: pointer; list-style: none;
+    font-weight: 700; font-size: 1.125rem; line-height: 1.3;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { color: var(--color-blue-deep); }
+  .chev { flex: none; color: var(--color-blue); transition: transform 250ms var(--ease-out); }
+  details[open] .chev { transform: rotate(180deg); }
+  .a { color: var(--color-ink-soft); padding-bottom: 1.25rem; max-width: 60ch; }
+  .q { min-width: 0; overflow-wrap: anywhere; }
+  :global(mark.todo) {
+    background: var(--color-tint); color: var(--color-ink);
+    outline: 2px dashed var(--color-blue); outline-offset: 1px; border-radius: 2px; padding: 0 .2em;
+    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  }
+  .faq :global(mark.todo) { background: #fff; }
+</style>

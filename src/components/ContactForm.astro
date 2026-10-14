@@ -1,0 +1,179 @@
+---
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+import { splitTodo } from "../lib/todo";
+
+const c = copy.finalCta;
+const f = copy.form;
+// Turnstile: no site key => no widget is rendered (local dev). In production the server
+// rejects leads without a valid token, so PUBLIC_TURNSTILE_SITEKEY must be set there.
+const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY as string | undefined;
+const msgs = JSON.stringify({
+  nome: f.fields.name.error,
+  contatto: f.fields.contact.error,
+  annuncio: f.fields.link.error,
+  privacy: f.privacy.error,
+  busy: f.submitting,
+  generic: f.errors.generic,
+  network: f.errors.network,
+});
+---
+<section id="contatto" class="on-blue bg-blue text-white section" aria-labelledby="contatto-title">
+  <div class="wrap grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-start">
+    <div>
+      <h2 id="contatto-title" class="t-h2" set:html={em(c.headline)} />
+      <p class="lead mt-6 text-white/85">
+        {splitTodo(c.lead).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}
+      </p>
+    </div>
+
+    <div>
+      {/*
+        No-JS: the browser posts natively; the endpoint answers Accept: text/html with a 303 to /grazie
+        (or /?invio=errore#contatto on failure, no field messages). Limitation: without JS the Turnstile
+        widget cannot load, so in production a no-JS submit fails the anti-spam check. JS is the main path.
+      */}
+      <form id="lead-form" method="post" action="/api/lead" novalidate data-msg={msgs} data-sitekey={sitekey ? "1" : undefined}>
+        <div class="field">
+          <label for="f-nome">{f.fields.name.label}</label>
+          <input id="f-nome" name="nome" type="text" autocomplete="name" placeholder={f.fields.name.placeholder} required minlength="2" maxlength="100" aria-describedby="e-nome" />
+          <p id="e-nome" class="err" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="f-contatto">{f.fields.contact.label}</label>
+          <input id="f-contatto" name="contatto" type="text" inputmode="email" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder={f.fields.contact.placeholder} required maxlength="200" aria-describedby="e-contatto" />
+          <p id="e-contatto" class="err" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="f-annuncio">{f.fields.link.label}</label>
+          <input id="f-annuncio" name="annuncio" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder={f.fields.link.placeholder} required maxlength="500" aria-describedby="e-annuncio" />
+          <p id="e-annuncio" class="err" role="alert"></p>
+        </div>
+
+        <div class="hp" aria-hidden="true">
+          <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div class="field">
+          <label class="check" for="f-privacy">
+            <input id="f-privacy" name="privacy" type="checkbox" required aria-describedby="e-privacy" />
+            <span set:html={f.privacy.label.replace(f.privacy.linkLabel, `<a href="/privacy-policy">${f.privacy.linkLabel}</a>`)} />
+          </label>
+          <p id="e-privacy" class="err" role="alert"></p>
+        </div>
+
+        {sitekey && <div id="ts" class="cf-turnstile" data-sitekey={sitekey} data-appearance="interaction-only"></div>}
+
+        <p id="e-form" class="err" role="alert"></p>
+        <button class="btn submit" type="submit" data-label={f.submit}>{f.submit}</button>
+      </form>
+
+      <div id="lead-ok" class="ok" tabindex="-1" hidden>
+        <h3 class="t-h3">{f.success.title}</h3>
+        <p class="mt-2">
+          {splitTodo(f.success.text).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .field { margin-bottom: 1.25rem; }
+  label { display: block; font-weight: 700; margin-bottom: .5rem; }
+  input[type="text"] {
+    width: 100%; min-height: 3rem; padding: .625rem .875rem; font: inherit; font-size: 1.0625rem;
+    color: var(--color-ink); background: #fff; border: 2px solid transparent; border-radius: var(--radius-base);
+  }
+  input[type="text"]::placeholder { color: var(--color-ink-soft); opacity: 1; }
+  input[aria-invalid="true"] { border-color: var(--color-err); }
+  .check { display: flex; gap: .75rem; align-items: flex-start; min-height: 2.75rem; font-weight: 400; margin: 0; padding-block: .25rem; }
+  .check input { flex: none; width: 1.5rem; height: 1.5rem; margin: .125rem 0 0; accent-color: var(--color-blue); }
+  .check a { color: #fff; text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
+  /* Error: white pill with err-colored text (>= 4.5:1 on white), readable on the blue drench. */
+  .err { display: none; width: fit-content; max-width: 100%; margin-top: .5rem; padding: .25rem .75rem; border-radius: var(--radius-sm); background: #fff; color: var(--color-err); font-size: .9375rem; font-weight: 600; line-height: 1.4; }
+  .err:not(:empty) { display: block; }
+  #e-form { margin: 0 0 1rem; }
+  .submit { width: 100%; font-size: 1.0625rem; border: 0; cursor: pointer; }
+  .submit[disabled] { opacity: .75; cursor: progress; transform: none; }
+  #ts { margin-bottom: 1.25rem; }
+  .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+  .ok { background: #fff; color: var(--color-ink); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .ok:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  #contatto :global(mark.todo) { background: rgb(255 255 255 / .92); color: var(--color-ink); outline: 1px dashed var(--color-ink); outline-offset: 1px; padding: 0 .25em; border-radius: 2px; }
+  @media (min-width: 640px) { .submit { width: auto; min-width: 16rem; } }
+</style>
+
+<script>
+  const form = document.getElementById("lead-form") as HTMLFormElement | null;
+  if (form) {
+    const M = JSON.parse(form.dataset.msg || "{}");
+    const btn = form.querySelector<HTMLButtonElement>(".submit")!;
+    const $ = (id: string) => document.getElementById(id)!;
+    const val = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value.trim();
+    const show = (n: string, msg: string) => {
+      const i = form.elements.namedItem(n) as HTMLInputElement | null;
+      $("e-" + n).textContent = msg;
+      i?.setAttribute("aria-invalid", msg ? "true" : "false");
+    };
+    const withScheme = (v: string) => (/^[a-z][a-z0-9+.-]*:\/\//i.test(v) ? v : "https://" + v);
+    const isUrl = (v: string) => {
+      try {
+        const u = new URL(withScheme(v));
+        return /^https?:$/.test(u.protocol) && u.hostname.includes(".");
+      } catch { return false; }
+    };
+    const isContact = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || /^\+?[\d\s().\-/]{6,}$/.test(v) && (v.match(/\d/g) || []).length >= 6;
+    const validate = () => {
+      const bad: string[] = [];
+      const chk = (n: string, ok: boolean) => { show(n, ok ? "" : M[n]); if (!ok) bad.push(n); };
+      chk("nome", val("nome").length >= 2);
+      chk("contatto", isContact(val("contatto")));
+      chk("annuncio", isUrl(val("annuncio")));
+      chk("privacy", (form.elements.namedItem("privacy") as HTMLInputElement).checked);
+      return bad;
+    };
+    form.addEventListener("input", (e) => {
+      const n = (e.target as HTMLInputElement).name;
+      if (n && $("e-" + n)?.textContent) show(n, "");
+    });
+
+    // Load Turnstile only when the form nears the viewport or gets focus (protects LCP/TBT).
+    if (form.dataset.sitekey) {
+      let loaded = false;
+      const load = () => {
+        if (loaded) return; loaded = true;
+        const s = document.createElement("script");
+        s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+        s.async = true; document.head.appendChild(s);
+      };
+      new IntersectionObserver((en, o) => { if (en[0].isIntersecting) { load(); o.disconnect(); } }, { rootMargin: "400px" }).observe(form);
+      form.addEventListener("focusin", load, { once: true });
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      $("e-form").textContent = "";
+      const bad = validate();
+      if (bad.length) { (form.elements.namedItem(bad[0]) as HTMLElement).focus(); return; }
+      const fd = new FormData(form);
+      fd.set("annuncio", withScheme(val("annuncio")));
+      btn.disabled = true; btn.textContent = M.busy;
+      try {
+        const r = await fetch(form.action, { method: "POST", body: fd, headers: { accept: "application/json" } });
+        const j = await r.json().catch(() => null);
+        if (j?.ok) {
+          (window as any).umami?.track("lead_submit");
+          form.hidden = true;
+          const ok = $("lead-ok"); ok.hidden = false; ok.focus();
+          return;
+        }
+        $("e-form").textContent = j?.error || M.generic;
+      } catch {
+        $("e-form").textContent = M.network;
+      }
+      (window as any).turnstile?.reset();
+      btn.disabled = false; btn.textContent = btn.dataset.label!;
+    });
+  }
+</script>

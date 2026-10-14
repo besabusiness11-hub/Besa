@@ -1,0 +1,76 @@
+---
+import { Picture } from "astro:assets";
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+import { splitTodo } from "../lib/todo";
+import leo from "../assets/team-leo.jpg";
+import benito from "../assets/team-benito.jpg";
+
+const t = copy.team;
+const photos = [leo, benito];
+---
+<section class="section team" aria-labelledby="team-title">
+  <div class="wrap">
+    <div class="intro reveal">
+      <h2 id="team-title" class="t-h2" set:html={em(t.headline)} />
+      <p class="lead mt-5 text-ink-soft">{t.lead}</p>
+    </div>
+
+    <div class="people reveal-stagger">
+      {t.members.map((m, i) => (
+        <article class={`person p${i}`}>
+          <Picture
+            src={photos[i]}
+            formats={["avif", "webp"]}
+            widths={i === 0 ? [240, 360, 500] : [200, 300, 400]}
+            sizes={i === 0 ? "(min-width: 768px) 360px, 70vw" : "(min-width: 768px) 260px, 52vw"}
+            width={i === 0 ? 360 : 260}
+            height={i === 0 ? 360 : 260}
+            alt={m.photoAlt}
+            loading="lazy"
+            decoding="async"
+            class="photo"
+          />
+          <div class="txt">
+            <h3 class="t-h3">{m.name}</h3>
+            <p class="role">{m.role}</p>
+            <p class="bio">
+              {splitTodo(m.bio).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Tailwind's .t-h2/.t-h3 (height) collide with the .t-h2/.t-h3 type utilities in global.css */
+  h2, h3 { height: auto; }
+  .team { background: var(--color-surface); }
+  .intro { max-width: 40rem; }
+  .people { display: grid; gap: 3rem; margin-top: 3rem; }
+  .person { display: grid; gap: 1.25rem; }
+  .photo { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: var(--color-muted); }
+  .p0 { max-width: 22rem; }
+  .p0 .photo { border-radius: var(--radius-xl); box-shadow: var(--shadow-mock); }
+  .p1 { max-width: 15rem; margin-left: auto; }
+  .p1 .photo { border-radius: var(--radius-lg); }
+  .role { color: var(--color-ink-soft); font-weight: 500; font-size: .9375rem; margin-top: .25rem; }
+  .bio { margin-top: .75rem; }
+  .p1 .txt { text-align: left; }
+
+  @media (min-width: 48rem) {
+    .people { grid-template-columns: 1.35fr 1fr; gap: 4rem; align-items: start; }
+    .p0 { max-width: none; grid-template-columns: 22.5rem 1fr; align-items: end; gap: 2rem; }
+    .p1 { max-width: 16.25rem; margin-left: 0; margin-top: 7rem; }
+  }
+  @media (min-width: 64rem) { .people { gap: 6rem; } .p0 { grid-template-columns: 22.5rem 1fr; } .p1 { margin-top: 9rem; } }
+
+  :global(mark.todo) {
+    background: var(--color-tint); color: var(--color-ink);
+    outline: 2px dashed var(--color-blue); outline-offset: 1px;
+    border-radius: 2px; padding: 0 .2em;
+    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  }
+</style>

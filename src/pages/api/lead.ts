@@ -6,13 +6,25 @@ export const prerender = false;
 
 const limiter = createRateLimiter(5, 10 * 60 * 1000);
 
-const json = (status: number, body: { ok: true } | { ok: false; error: string }) =>
+const jsonRes = (status: number, body: { ok: true } | { ok: false; error: string }) =>
   new Response(JSON.stringify(body), {
     status,
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });
 
+/** Plain browser form posts (no JS) send Accept: text/html; the fetch() path sends application/json. */
+const wantsHtml = (request: Request) => {
+  const a = request.headers.get("accept") ?? "";
+  return a.includes("text/html") && !a.includes("application/json");
+};
+
+const redirect = (to: string) =>
+  new Response(null, { status: 303, headers: { location: to, "cache-control": "no-store" } });
+
 export const POST: APIRoute = async ({ request, clientAddress }) => {
+  const html = wantsHtml(request);
+  const json = (status: number, body: { ok: true } | { ok: false; error: string }) =>
+    html ? redirect(body.ok ? "/grazie" : "/?invio=errore#contatto") : jsonRes(status, body);
   const rid = crypto.randomUUID().slice(0, 8);
   let ip = "unknown";
   try {
@@ -53,6 +65,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       port,
       secure: port === 465,
       auth: SMTP_USER ? { user: SMTP_USER, pass: SMTP_PASS } : undefined,
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 15000,
     });
     const mail = buildEmail(parsed.lead);
     await transport.sendMail({ from, to, subject: mail.subject, text: mail.text, html: mail.html });
@@ -64,4 +79,4 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 };
 
-export const ALL: APIRoute = () => json(405, { ok: false, error: MSG.body });
+export const ALL: APIRoute = () => jsonRes(405, { ok: false, error: MSG.body });

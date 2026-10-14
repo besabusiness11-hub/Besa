@@ -1,0 +1,14 @@
+{
+  "name": "BESA",
+  "short_name": "BESA",
+  "lang": "it",
+  "start_url": "/",
+  "display": "browser",
+  "theme_color": "#2844bd",
+  "background_color": "#2844bd",
+  "icons": [
+    { "src": "/favicon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
