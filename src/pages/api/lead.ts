@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import nodemailer from "nodemailer";
-import { buildEmail, createRateLimiter, MSG, parseLead, readBody, verifyTurnstile } from "../../lib/lead";
+import { buildEmail, clientIp, createRateLimiter, MSG, parseLead, readBody, verifyTurnstile } from "../../lib/lead";
 
 export const prerender = false;
 
@@ -12,16 +12,11 @@ const json = (status: number, body: { ok: true } | { ok: false; error: string })
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });
 
-function clientIp(request: Request, fallback?: string): string {
-  const fwd = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  return request.headers.get("cf-connecting-ip") ?? fwd ?? fallback ?? "unknown";
-}
-
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   const rid = crypto.randomUUID().slice(0, 8);
   let ip = "unknown";
   try {
-    ip = clientIp(request, clientAddress);
+    ip = clientIp(request.headers, clientAddress);
   } catch {}
 
   if (!limiter.check(ip)) return json(429, { ok: false, error: MSG.rate });

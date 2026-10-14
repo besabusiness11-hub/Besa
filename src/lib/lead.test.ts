@@ -62,3 +62,30 @@ describe("verifyTurnstile", () => {
     expect(await verifyTurnstile(undefined, undefined, { secret: "s" }, f as never)).toBe(false);
   });
 });
+
+import { clientIp, createRateLimiter as mkLimiter, readBody as rb } from "./lead";
+
+describe("hardening", () => {
+  it("ignores forwarded headers unless a trusted proxy is configured", () => {
+    const h = new Headers({ "x-forwarded-for": "1.1.1.1", "cf-connecting-ip": "2.2.2.2" });
+    expect(clientIp(h, "9.9.9.9", undefined)).toBe("9.9.9.9");
+    expect(clientIp(h, "9.9.9.9", "cloudflare")).toBe("2.2.2.2");
+    const x = new Headers({ "x-forwarded-for": "6.6.6.6, 3.3.3.3" });
+    expect(clientIp(x, "9.9.9.9", "xff-last")).toBe("3.3.3.3");
+  });
+  it("keeps the limiter bounded under many distinct keys", () => {
+    const l = mkLimiter(5, 60_000, 100);
+    for (let i = 0; i < 1000; i++) l.check(`ip${i}`, 1);
+    expect(l.size).toBeLessThanOrEqual(100);
+  });
+  it("rejects oversized bodies, with and without content-length", async () => {
+    const big = "a=" + "x".repeat(20_000);
+    const r1 = new Request("http://x/", { method: "POST", body: big, headers: { "content-type": "application/x-www-form-urlencoded" } });
+    expect(await rb(r1)).toBeNull();
+    const stream = new ReadableStream({ start(c) { c.enqueue(new TextEncoder().encode(big)); c.close(); } });
+    const r2 = new Request("http://x/", { method: "POST", body: stream, duplex: "half", headers: { "content-type": "application/x-www-form-urlencoded" } } as RequestInit);
+    expect(await rb(r2)).toBeNull();
+    const ok = new Request("http://x/", { method: "POST", body: "a=1", headers: { "content-type": "application/x-www-form-urlencoded" } });
+    expect(await rb(ok)).toEqual({ a: "1" });
+  });
+});

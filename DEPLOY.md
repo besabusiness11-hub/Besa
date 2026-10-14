@@ -44,3 +44,7 @@ Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Pagine prerenderi
 - IP client: usa `cf-connecting-ip` / `x-forwarded-for`; mantieni l'app dietro il proxy di Coolify/Cloudflare.
 - Header di sicurezza (CSP, nosniff, ecc.) sono applicati da `server.mjs` a tutte le risposte (anche ai file statici, che il node adapter serve prima del middleware Astro) e da `src/middleware.ts` alle route dinamiche. Tieni i due elenchi allineati.
 - Se aggiungi script/origini esterne, aggiorna la CSP in entrambi i file.
+
+## Rate limiting and proxies
+
+`TRUSTED_PROXY` decides which IP header the lead rate limiter trusts. Unset uses the socket address (behind Coolify/Traefik that is the proxy, so all visitors look alike). Set `cloudflare` only if the origin accepts traffic solely from Cloudflare; set `xff-last` if exactly one trusted proxy appends to X-Forwarded-For. Never trust these headers when the origin is directly reachable.
