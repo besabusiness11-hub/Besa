@@ -1,0 +1,30 @@
+{
+  "name": "@besa/agency-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro build",
+    "start": "node dist/server/entry.mjs",
+    "check": "astro check",
+    "typecheck": "astro check",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@astrojs/node": "^11.1.7",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.1",
+    "nodemailer": "^7.0.0",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@types/node": "^24",
+    "@types/nodemailer": "^7.0.0",
+    "typescript": "~5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

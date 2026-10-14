@@ -1,0 +1,55 @@
+---
+import { Font } from "astro:assets";
+import "../styles/global.css";
+import { SITE } from "../lib/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  noindex?: boolean;
+  ogImage?: string;
+  jsonLd?: object[];
+}
+const {
+  title = SITE.title,
+  description = SITE.description,
+  path = Astro.url.pathname,
+  noindex = false,
+  ogImage = "/og/home.png",
+  jsonLd = [],
+} = Astro.props;
+const canonical = new URL(path === "/" ? "/" : path.replace(/\/$/, ""), SITE.url).href;
+const og = new URL(ogImage, SITE.url).href;
+---
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#2844bd" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={og} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <Font cssVariable="--font-inter" preload />
+    {jsonLd.map((d) => <script type="application/ld+json" is:inline set:html={JSON.stringify(d)} />)}
+    <script is:inline defer src="https://umami.besaweb.com/script.js" data-website-id="14bec9f8-0ae7-4d82-a1c5-d803f2295c7d" data-do-not-track="true"></script>
+  </head>
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-30 focus:bg-white focus:p-3">Vai al contenuto</a>
+    <slot />
+  </body>
+</html>
