@@ -1,0 +1,12 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo-blue.png";
+---
+<header class="sticky top-0 z-10 border-b border-line bg-surface">
+  <div class="wrap flex h-16 items-center justify-between">
+    <a href="/" aria-label="BESA, torna all'inizio">
+      <Image src={logo} alt="BESA" width={88} height={45} densities={[1, 2]} loading="eager" />
+    </a>
+    <a class="btn !min-h-11 !px-4 !py-2 text-sm" href="#contatto">Mandaci il tuo annuncio</a>
+  </div>
+</header>

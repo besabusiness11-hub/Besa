@@ -1,0 +1,69 @@
+---
+/* BOZZA: informativa da far rivedere da un professionista (consulente legale/DPO) prima della pubblicazione. */
+import LegalPage from "../components/LegalPage.astro";
+---
+<!--
+  BOZZA. Questo testo e' una bozza e deve essere rivisto da un professionista
+  (consulente legale / privacy) prima della pubblicazione. Non costituisce parere legale.
+-->
+<LegalPage
+  title="Informativa privacy | BESA"
+  description="Come BESA tratta i dati personali raccolti tramite il modulo di contatto, ai sensi dell'art. 13 del Regolamento (UE) 2016/679."
+  path="/privacy-policy"
+  heading="Informativa sulla privacy"
+>
+  <p>Questa informativa, resa ai sensi dell'art. 13 del Regolamento (UE) 2016/679 (GDPR), descrive come trattiamo i dati personali di chi ci scrive tramite il modulo di contatto di questo sito.</p>
+
+  <h2>Titolare del trattamento</h2>
+  <p>BESA. [TODO: ragione sociale / P.IVA / sede legale]</p>
+  <p>Contatto per qualsiasi richiesta sulla privacy: <a href="mailto:info@besaweb.com">info@besaweb.com</a></p>
+
+  <h2>Dati che raccogliamo</h2>
+  <p>Tramite il modulo di contatto raccogliamo solo i dati che inserisci tu:</p>
+  <ul>
+    <li>nome;</li>
+    <li>contatto WhatsApp o email;</li>
+    <li>link all'annuncio o al profilo.</li>
+  </ul>
+  <p>Per il funzionamento tecnico del sito e del modulo vedi anche le sezioni su anti-spam e statistiche qui sotto.</p>
+
+  <h2>Finalita' e base giuridica</h2>
+  <ul>
+    <li><strong>Rispondere alla tua richiesta.</strong> Usiamo i dati per ricontattarti e darti riscontro. Base giuridica: art. 6, par. 1, lett. b) GDPR, misure precontrattuali adottate su tua richiesta.</li>
+    <li><strong>Consenso della casella del modulo.</strong> Dove il modulo prevede una casella da spuntare, il trattamento collegato si basa sul tuo consenso, art. 6, par. 1, lett. a) GDPR. Puoi revocarlo in ogni momento scrivendo a info@besaweb.com, senza pregiudicare i trattamenti precedenti.</li>
+  </ul>
+  <p>Non usiamo i tuoi dati per profilazione e non li vendiamo.</p>
+
+  <h2>Conservazione</h2>
+  <p>[TODO: periodo di conservazione]</p>
+
+  <h2>Destinatari dei dati</h2>
+  <ul>
+    <li>Il provider di hosting: il sito e il relativo database sono ospitati su un nostro server privato virtuale (VPS) gestito da noi.</li>
+    <li>Il provider di posta elettronica che usiamo per ricevere e gestire le richieste: [TODO: provider email].</li>
+  </ul>
+  <p>I dati sono accessibili solo a chi in BESA ne ha bisogno per risponderti.</p>
+
+  <h2>Protezione anti-spam: Cloudflare Turnstile</h2>
+  <p>Il modulo usa Cloudflare Turnstile per distinguere le persone dai programmi automatici. Turnstile esegue una verifica nel tuo browser e invia a Cloudflare alcune informazioni tecniche sul dispositivo e sulla navigazione (ad esempio indirizzo IP e dati del browser) per decidere se la richiesta sia legittima. Lo usiamo solo nella pagina con il modulo e solo a questo scopo. Per i dettagli sul trattamento da parte di Cloudflare consulta la sua informativa privacy.</p>
+  <p>[TODO: verifica con consulente se Turnstile richiede informativa aggiuntiva o indicazione di Cloudflare come destinatario/responsabile e trasferimenti extra UE]</p>
+
+  <h2>Statistiche: Umami</h2>
+  <p>Misuriamo le visite con Umami, installato sui nostri server. Non usa cookie e non profila le persone. Per i dettagli vedi la <a href="/cookie-policy">cookie policy</a>.</p>
+
+  <h2>I tuoi diritti</h2>
+  <p>Ai sensi degli artt. 15-22 GDPR puoi chiederci in ogni momento:</p>
+  <ul>
+    <li>accesso ai tuoi dati (art. 15);</li>
+    <li>rettifica (art. 16);</li>
+    <li>cancellazione (art. 17);</li>
+    <li>limitazione del trattamento (art. 18);</li>
+    <li>portabilita' dei dati (art. 20);</li>
+    <li>opposizione al trattamento (art. 21);</li>
+    <li>di non essere sottoposto a decisioni basate unicamente su trattamento automatizzato (art. 22). Non effettuiamo tali decisioni.</li>
+  </ul>
+  <p>Per esercitarli scrivi a <a href="mailto:info@besaweb.com">info@besaweb.com</a>. Hai inoltre il diritto di proporre reclamo al Garante per la protezione dei dati personali (<a href="https://www.garanteprivacy.it" rel="noopener">garanteprivacy.it</a>).</p>
+
+  <h2>Conferimento dei dati</h2>
+  <p>Inserire i dati nel modulo e' facoltativo, ma senza di essi non possiamo risponderti.</p>
+</LegalPage>

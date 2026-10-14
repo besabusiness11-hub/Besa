@@ -1,6 +1,6 @@
 # BESA 2.0 Design System
 
-Brand register. Lane: **ad teardown / product demo** (annotated real UI, big confident type, blue-committed). Not the editorial-magazine lane. Kept from brand: blue palette, Inter, skewed italic wordmark, 0.75rem radius.
+Brand register. Lane: **ad teardown / product demo** (annotated real UI, big confident type, blue-committed). Not the editorial-magazine lane. Kept from brand: blue palette, Inter (UI/body), the real BESA logo (condensed slanted bold wordmark, `src/assets/logo-*.png`, trimmed from the 3240px original; white variant only on blue surfaces), 0.75rem radius.
 
 Scene: a shop or gym owner on their phone between customers, mid-day light, thumb scrolling, deciding in seconds.
 
@@ -44,7 +44,7 @@ One family, weight + style contrast: **Inter variable**, self-hosted (Fontsource
 | body | `1.0625rem` | 400 | 1.6 | 0 |
 | small | `0.875rem` | 500 | 1.5 | 0.005em |
 
-Ratio >= 1.25 between steps. Max body width 65ch. `text-wrap: balance` on headings, `pretty` on prose. `font-variant-numeric: tabular-nums` on prices. Signature: 1-3 key words per headline set in 800 italic blue (no gradient). Wordmark keeps `skewX(-8deg)` Inter 800 italic, `--blue`. No all-caps body; no tracked uppercase kickers.
+Ratio >= 1.25 between steps. Max body width 65ch. `text-wrap: balance` on headings, `pretty` on prose. `font-variant-numeric: tabular-nums` on prices. Signature: 1-3 key words per headline set in 800 italic blue (no gradient). The logo is the image asset, never re-typeset in CSS. No all-caps body; no tracked uppercase kickers.
 
 ## Spacing, grid, shape
 

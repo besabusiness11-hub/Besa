@@ -69,5 +69,4 @@
   .btn:active { transform: scale(0.98); }
   .on-blue .btn { background: #fff; color: var(--color-blue); }
   .on-blue .btn:hover { background: var(--color-tint); }
-  .wordmark { font-weight: 800; font-style: italic; transform: skewX(-8deg); display: inline-block; color: var(--color-blue); letter-spacing: -0.02em; }
 }

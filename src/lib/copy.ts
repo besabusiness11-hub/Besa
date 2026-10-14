@@ -1,0 +1,281 @@
+// Copy IT per la landing BESA. Solo dati, nessuna logica.
+// Token enfasi: {em}...{/em}. Ogni lacuna e' marcata [TODO: ...].
+
+export const copy = {
+  meta: {
+    title: "Landing page per le tue Meta Ads | BESA",
+    description:
+      "Le tue inserzioni Facebook e Instagram portano a un profilo? Costruiamo la landing page che trasforma i click in richieste. Mandaci il tuo annuncio.",
+  },
+
+  nav: {
+    cta: "Mandaci il tuo annuncio",
+  },
+
+  hero: {
+    headline: "Il tuo annuncio paga il click. La tua pagina {em}lo butta via{/em}.",
+    lead: "Se le tue inserzioni Facebook e Instagram portano a un profilo o a un sito generico, chi clicca non sa cosa fare. Noi costruiamo la landing page con un solo obiettivo: farlo scrivere a te.",
+    cta: "Mandaci il tuo annuncio",
+    note: "Ci mandi il link, ti rispondiamo noi.",
+    slogan: "Veloce. Pratico. Funzionale.",
+    annotations: {
+      ad: "Il tuo annuncio",
+      profile: "Qui l'utente atterra: un profilo, niente da fare",
+      landing: "Qui atterra con la landing: una cosa sola da fare",
+    },
+  },
+
+  problem: {
+    headline: "Paghi per portare gente su una pagina che {em}non chiede nulla{/em}.",
+    paragraphs: [
+      "Una persona vede il tuo annuncio sul telefono, tocca, e finisce sul tuo profilo Instagram, su un post o sulla home del sito. Trova mille cose e nessuna domanda: dove clicco? Cosa devo fare?",
+      "In pochi secondi torna indietro. Tu hai pagato il click, lei non ha lasciato niente.",
+    ],
+    points: [
+      "Il profilo mostra tutto, ma non chiede un'azione sola.",
+      "Il sito generico parla a tutti, quindi non convince nessuno.",
+      "Dal telefono, ogni passaggio in più è una persona in meno.",
+    ],
+  },
+
+  fix: {
+    headline: "Un annuncio, una pagina, {em}un'azione{/em}.",
+    lead: "La landing page fa una cosa: prende chi arriva dal tuo annuncio e lo porta a contattarti. Stesso messaggio dell'inserzione, stessa offerta, un solo pulsante.",
+    points: [
+      {
+        title: "Coerente con l'annuncio",
+        text: "Chi clicca ritrova quello che ha visto: stesse parole, stessa promessa.",
+      },
+      {
+        title: "Pensata per il telefono",
+        text: "Si legge con il pollice, si carica in fretta, il pulsante è sempre a portata.",
+      },
+      {
+        title: "Un obiettivo solo",
+        text: "Messaggio WhatsApp, chiamata, richiesta di preventivo: scegliamo con te e togliamo tutto il resto.",
+      },
+    ],
+  },
+
+  howItWorks: {
+    headline: "Tre passaggi, {em}zero giri{/em}.",
+    steps: [
+      {
+        title: "Mandaci il tuo annuncio",
+        text: "Ci basta il link all'inserzione o al tuo profilo. Guardiamo cosa prometti e a chi ti rivolgi.",
+      },
+      {
+        title: "Costruiamo la landing",
+        text: "Scriviamo i testi e prepariamo la pagina partendo dal tuo annuncio. Tu controlli e ci dici cosa cambiare.",
+      },
+      {
+        title: "Vai online e aggiustiamo",
+        text: "Colleghi la pagina alle tue inserzioni. Se qualcosa non funziona, lo sistemiamo.",
+      },
+    ],
+  },
+
+  inside: {
+    headline: "Cosa trovi {em}dentro la pagina{/em}.",
+    lead: "Niente fronzoli. Ogni pezzo è lì per un motivo.",
+    features: [
+      {
+        title: "Titolo preso dal tuo annuncio",
+        text: "Chi arriva capisce subito di essere nel posto giusto.",
+      },
+      {
+        title: "Pulsante per contattarti",
+        text: "WhatsApp, telefono o modulo: quello che usi davvero per rispondere ai clienti.",
+      },
+      {
+        title: "Testi scritti da noi",
+        text: "Brevi, concreti, nel tuo modo di parlare. Non devi scrivere niente tu.",
+      },
+      {
+        title: "Pagina leggera",
+        text: "Costruita per caricarsi in fretta anche con poco segnale.",
+      },
+      {
+        title: "Modulo corto",
+        text: "Poche domande, perché ogni campo in più fa scappare qualcuno.",
+      },
+      {
+        title: "Tracciamento delle richieste",
+        text: "Possiamo collegare la pagina al Pixel di Meta, se lo vuoi. [TODO: confermare con Benito cosa e' incluso nel tracciamento]",
+      },
+    ],
+  },
+
+  offer: {
+    headline: "Scegli come lavoriamo {em}insieme{/em}.",
+    lead: "Tre modi, stesso risultato: una landing fatta bene per le tue inserzioni.",
+    plans: [
+      {
+        id: "abbonamento",
+        name: "Abbonamento",
+        tagline: "Costruiamo la landing e la teniamo aggiornata quando ce lo chiedi.",
+        highlight: true,
+        price: "[TODO: prezzo]",
+        priceNote: "[TODO: periodicità e durata minima]",
+        features: [
+          "Landing page costruita da noi",
+          "Modifiche su tua richiesta: nuova offerta, nuovo annuncio, testi aggiornati",
+          "Scrivi a noi direttamente quando serve una modifica",
+          "[TODO: numero di modifiche incluse al mese e tempi di risposta]",
+        ],
+        cta: "Mandaci il tuo annuncio",
+      },
+      {
+        id: "una-tantum",
+        name: "Una tantum",
+        tagline: "Una landing, pagata una volta.",
+        highlight: false,
+        price: "[TODO: prezzo]",
+        priceNote: "[TODO: cosa è incluso e per quanto tempo]",
+        features: [
+          "Una landing page costruita da noi",
+          "Consegna e messa online",
+          "[TODO: round di revisione inclusi e cosa succede dopo la consegna]",
+        ],
+        cta: "Mandaci il tuo annuncio",
+      },
+      {
+        id: "su-misura",
+        name: "Su misura",
+        tagline: "Più campagne, esigenze particolari o qualcosa fuori dal solito.",
+        highlight: false,
+        price: "[TODO: prezzo]",
+        priceNote: "[TODO: come si definisce il preventivo]",
+        features: [
+          "Ne parliamo e ti diciamo cosa serve davvero",
+          "Preventivo dopo aver visto il tuo caso",
+        ],
+        cta: "Raccontaci cosa ti serve",
+      },
+    ],
+  },
+
+  proof: {
+    headline: "Questo sito è {em}la nostra prova{/em}.",
+    paragraphs: [
+      "Quello che stai leggendo è una landing page fatta come le costruiamo per i clienti: un obiettivo, un'azione, niente di superfluo.",
+      "Non ti mostriamo numeri inventati né recensioni di comodo. Ti mostriamo il lavoro: guarda quanto si carica in fretta, quanto è chiaro cosa fare, e giudica da solo.",
+    ],
+    how: [
+      "Partiamo sempre dal tuo annuncio, non da un modello già pronto.",
+      "Scriviamo noi i testi, con te che controlli prima di andare online.",
+      "Dopo la pubblicazione guardiamo cosa succede e correggiamo.",
+    ],
+    caseStudies: "[TODO: casi reali con permesso del cliente, quando ci saranno]",
+  },
+
+  team: {
+    headline: "Siamo in due, {em}rispondi a noi{/em}.",
+    lead: "Niente account manager, niente passaggi di mano. Parli con chi lavora sulla tua pagina.",
+    members: [
+      {
+        name: "Leo",
+        role: "Business, strategia, marketing e contenuti",
+        bio: "[TODO: conferma bio con Leo]",
+        photoAlt: "Ritratto di Leo",
+      },
+      {
+        name: "Benito",
+        role: "Prodotto e sviluppo tecnico",
+        bio: "[TODO: conferma bio con Leo]",
+        photoAlt: "Ritratto di Benito",
+      },
+    ],
+  },
+
+  faq: {
+    headline: "Le domande che ci fanno {em}sempre{/em}.",
+    items: [
+      {
+        q: "Ho già un sito. Mi serve comunque una landing?",
+        a: "Dipende da dove mandi le inserzioni oggi. Il sito di solito parla a tutti e racconta tutto. La landing parla a chi ha cliccato quel preciso annuncio e gli chiede una cosa sola. Le due cose convivono: il sito resta dov'è.",
+      },
+      {
+        q: "Serve il Pixel di Meta?",
+        a: "Non è obbligatorio per avere la landing. Il Pixel serve a misurare cosa succede dopo il click. Possiamo collegarlo se vuoi. [TODO: confermare con Benito se l'installazione del Pixel è inclusa in ogni piano]",
+      },
+      {
+        q: "Quanto ci vuole per andare online?",
+        a: "[TODO: tempi di consegna dichiarati, da confermare con Benito]",
+      },
+      {
+        q: "Chi mi segue dopo la messa online?",
+        a: "Siamo noi due, Leo e Benito. Con l'abbonamento puoi chiederci modifiche quando ti servono. [TODO: cosa è incluso dopo la consegna negli altri piani]",
+      },
+      {
+        q: "Gestite voi anche le inserzioni?",
+        a: "Il nostro lavoro è la landing page. [TODO: confermare se offriamo anche gestione campagne Meta]",
+      },
+      {
+        q: "Quanto costa?",
+        a: "Dipende dal piano che scegli. [TODO: prezzo e condizioni dei tre piani]",
+      },
+      {
+        q: "Posso disdire l'abbonamento?",
+        a: "[TODO: condizioni di recesso e preavviso dell'abbonamento]",
+      },
+      {
+        q: "Cosa succede ai dati di chi compila la pagina?",
+        a: "Raccogliamo solo i campi che servono per essere ricontattati. Per i dettagli leggi l'informativa privacy. [TODO: link e testo definitivo della privacy, titolare del trattamento]",
+      },
+    ],
+  },
+
+  finalCta: {
+    headline: "Mandaci il tuo annuncio. {em}Ti diciamo cosa faremmo{/em}.",
+    lead: "Tre campi e hai fatto. Ti rispondiamo su WhatsApp o via email. [TODO: tempo di risposta promesso]",
+    cta: "Mandaci il tuo annuncio",
+  },
+
+  form: {
+    fields: {
+      name: {
+        label: "Nome",
+        placeholder: "Come ti chiami",
+        error: "Scrivi il tuo nome.",
+      },
+      contact: {
+        label: "WhatsApp o email",
+        placeholder: "Il numero o l'indirizzo dove risponderti",
+        error: "Inserisci un numero WhatsApp o un'email valida.",
+      },
+      link: {
+        label: "Link all'annuncio o al profilo",
+        placeholder: "Incolla qui il link",
+        error: "Incolla il link del tuo annuncio o del tuo profilo.",
+      },
+    },
+    privacy: {
+      label: "Ho letto l'informativa privacy e accetto che mi ricontattiate per rispondere a questa richiesta.",
+      linkLabel: "informativa privacy",
+      error: "Per inviare la richiesta devi accettare la privacy.",
+    },
+    submit: "Mandaci il tuo annuncio",
+    submitting: "Invio in corso...",
+    success: {
+      title: "Ricevuto, grazie.",
+      text: "Guardiamo il tuo annuncio e ti scriviamo noi. [TODO: tempo di risposta promesso]",
+    },
+    errors: {
+      generic: "Non siamo riusciti a inviare. Riprova tra poco o scrivici a info@besaweb.com.",
+      network: "Sembra che manchi la connessione. Controlla e riprova.",
+    },
+  },
+
+  footer: {
+    slogan: "Veloce. Pratico. Funzionale.",
+    email: "info@besaweb.com",
+    legalLine: "[TODO: ragione sociale / P.IVA]",
+    links: {
+      privacy: "Privacy",
+      cookie: "Cookie",
+    },
+  },
+} as const;
+
+export type Copy = typeof copy;

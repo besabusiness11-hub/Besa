@@ -1,0 +1,58 @@
+---
+import Base from "../layouts/Base.astro";
+import { Image } from "astro:assets";
+import logo from "../assets/logo-blue.png";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  heading: string;
+  updated?: string;
+  noindex?: boolean;
+}
+const { title, description, path, heading, updated, noindex = false } = Astro.props;
+---
+<Base title={title} description={description} path={path} noindex={noindex}>
+  <header class="legal-header">
+    <div class="wrap legal-header-in">
+      <a href="/" class="legal-mark" aria-label="BESA, torna alla home"><Image src={logo} alt="BESA" width={80} height={41} loading="eager" /></a>
+    </div>
+  </header>
+  <main id="main" class="legal wrap">
+    <h1 class="h-2">{heading}</h1>
+    {updated && <p class="legal-updated">Ultimo aggiornamento: {updated}</p>}
+    <div class="prose-legal"><slot /></div>
+  </main>
+  <footer class="legal-footer">
+    <div class="wrap legal-footer-in">
+      <a href="/" class="legal-mark" aria-label="BESA"><Image src={logo} alt="BESA" width={64} height={33} /></a>
+      <nav aria-label="Link legali">
+        <a href="/">Home</a>
+        <a href="/privacy-policy">Privacy</a>
+        <a href="/cookie-policy">Cookie</a>
+        <a href="mailto:info@besaweb.com">info@besaweb.com</a>
+      </nav>
+    </div>
+  </footer>
+</Base>
+
+<style is:global>
+  .legal-header { height: 4rem; border-bottom: 1px solid var(--color-line); background: var(--color-surface); }
+  .legal-header-in { height: 100%; display: flex; align-items: center; }
+  .legal-mark { font-size: 1.5rem; text-decoration: none; }
+  .legal { max-width: 65ch; padding-block: clamp(2.5rem, 2rem + 3vw, 5rem); }
+  .legal-updated { color: var(--color-ink-soft); font-size: .875rem; font-weight: 500; margin-top: 1rem; }
+  .prose-legal { margin-top: 2rem; }
+  .prose-legal h2 { font-size: var(--text-h3); line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; margin-top: 2.5rem; margin-bottom: .75rem; }
+  .prose-legal p, .prose-legal li { max-width: 65ch; }
+  .prose-legal p { margin-top: .75rem; }
+  .prose-legal ul { margin-top: .75rem; padding-left: 1.25rem; list-style: disc; }
+  .prose-legal li { margin-top: .4rem; }
+  .prose-legal a, .legal-footer a:not(.legal-mark) { text-decoration: underline; text-decoration-color: var(--color-blue); text-underline-offset: 3px; }
+  .prose-legal a:hover, .legal-footer a:not(.legal-mark):hover { color: var(--color-blue-deep); }
+  .legal-footer { border-top: 1px solid var(--color-line); background: var(--color-tint); padding-block: 2rem; }
+  .legal-footer-in { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; justify-content: space-between; }
+  .legal-footer nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; font-size: .875rem; font-weight: 500; }
+  .legal-footer nav a { min-height: 2.75rem; display: inline-flex; align-items: center; }
+</style>
