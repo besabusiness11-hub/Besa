@@ -1,5 +1,5 @@
 // Copy IT per la landing BESA. Solo dati, nessuna logica.
-// Token enfasi: {em}...{/em}. Ogni lacuna e' marcata [TODO: ...].
+// Token enfasi: {em}…{/em}. Ogni lacuna e’ marcata [TODO: …].
 
 export const copy = {
   meta: {
@@ -13,14 +13,14 @@ export const copy = {
   },
 
   hero: {
-    headline: "Il click l'hai già pagato. {em}Fallo arrivare a un messaggio{/em}.",
+    headline: "Il click l’hai già pagato. {em}Fallo arrivare a un messaggio{/em}.",
     lead: "Se le tue inserzioni Facebook e Instagram portano a un profilo o a un sito generico, chi clicca non sa cosa fare. Noi costruiamo la landing page con un solo obiettivo: farlo scrivere a te.",
     cta: "Mandaci il tuo annuncio",
     note: "Ci mandi il link, ti rispondiamo noi.",
     slogan: "Veloce. Pratico. Funzionale.",
     annotations: {
       ad: "Il tuo annuncio",
-      profile: "Qui l'utente atterra: un profilo, niente da fare",
+      profile: "Qui l’utente atterra: un profilo, niente da fare",
       landing: "Qui atterra con la landing: una cosa sola da fare",
     },
   },
@@ -32,18 +32,18 @@ export const copy = {
       "In pochi secondi torna indietro. Tu hai pagato il click, chi ha cliccato non ha lasciato niente.",
     ],
     points: [
-      "Il profilo mostra tutto, ma non chiede un'azione sola.",
+      "Il profilo mostra tutto, ma non chiede un’azione sola.",
       "Il sito generico parla a tutti, quindi non convince nessuno.",
       "Dal telefono, ogni passaggio in più è una persona in meno.",
     ],
   },
 
   fix: {
-    headline: "Un annuncio, una pagina, {em}un'azione{/em}.",
-    lead: "La landing page fa una cosa: prende chi arriva dal tuo annuncio e lo porta a contattarti. Stesso messaggio dell'inserzione, stessa offerta, un solo pulsante.",
+    headline: "Un annuncio, una pagina, {em}un’azione{/em}.",
+    lead: "La landing page fa una cosa: prende chi arriva dal tuo annuncio e lo porta a contattarti. Stesso messaggio dell’inserzione, stessa offerta, un solo pulsante.",
     points: [
       {
-        title: "Coerente con l'annuncio",
+        title: "Coerente con l’annuncio",
         text: "Chi clicca ritrova quello che ha visto: stesse parole, stessa promessa.",
       },
       {
@@ -62,7 +62,7 @@ export const copy = {
     steps: [
       {
         title: "Mandaci il tuo annuncio",
-        text: "Ci basta il link all'inserzione o al tuo profilo. Guardiamo cosa prometti e a chi ti rivolgi.",
+        text: "Ci basta il link all’inserzione o al tuo profilo. Guardiamo cosa prometti e a chi ti rivolgi.",
       },
       {
         title: "Costruiamo la landing",
@@ -76,7 +76,7 @@ export const copy = {
   },
 
   inside: {
-    headline: "Cosa c'è dentro la pagina.",
+    headline: "Cosa c’è dentro la pagina.",
         features: [
       {
         title: "Titolo preso dal tuo annuncio",
@@ -100,7 +100,7 @@ export const copy = {
       },
       {
         title: "Tracciamento delle richieste",
-        text: "Possiamo collegare la pagina al Pixel di Meta, se lo vuoi. [TODO: confermare con Benito cosa e' incluso nel tracciamento]",
+        text: "Possiamo collegare la pagina al Pixel di Meta, se lo vuoi. [TODO: confermare con Benito cosa e’ incluso nel tracciamento]",
       },
     ],
   },
@@ -122,7 +122,7 @@ export const copy = {
           "Scrivi a noi direttamente quando serve una modifica",
           "[TODO: numero di modifiche incluse al mese e tempi di risposta]",
         ],
-        cta: "Scegli l'abbonamento",
+        cta: "Scegli l’abbonamento",
       },
       {
         id: "una-tantum",
@@ -192,11 +192,11 @@ export const copy = {
     items: [
       {
         q: "Ho già un sito. Mi serve comunque una landing?",
-        a: "Dipende da dove mandi le inserzioni oggi. Il sito di solito parla a tutti e racconta tutto. La landing parla a chi ha cliccato quel preciso annuncio e gli chiede una cosa sola. Le due cose convivono: il sito resta dov'è.",
+        a: "Dipende da dove mandi le inserzioni oggi. Il sito di solito parla a tutti e racconta tutto. La landing parla a chi ha cliccato quel preciso annuncio e gli chiede una cosa sola. Le due cose convivono: il sito resta dov’è.",
       },
       {
         q: "Serve il Pixel di Meta?",
-        a: "Non è obbligatorio per avere la landing. Il Pixel serve a misurare cosa succede dopo il click. Possiamo collegarlo se vuoi. [TODO: confermare con Benito se l'installazione del Pixel è inclusa in ogni piano]",
+        a: "Non è obbligatorio per avere la landing. Il Pixel serve a misurare cosa succede dopo il click. Possiamo collegarlo se vuoi. [TODO: confermare con Benito se l’installazione del Pixel è inclusa in ogni piano]",
       },
       {
         q: "Quanto ci vuole per andare online?",
@@ -204,7 +204,7 @@ export const copy = {
       },
       {
         q: "Chi mi segue dopo la messa online?",
-        a: "Siamo noi due, Leo e Benito. Con l'abbonamento puoi chiederci modifiche quando ti servono. [TODO: cosa è incluso dopo la consegna negli altri piani]",
+        a: "Siamo noi due, Leo e Benito. Con l’abbonamento puoi chiederci modifiche quando ti servono. [TODO: cosa è incluso dopo la consegna negli altri piani]",
       },
       {
         q: "Gestite voi anche le inserzioni?",
@@ -215,12 +215,12 @@ export const copy = {
         a: "Dipende dal piano che scegli. [TODO: prezzo e condizioni dei tre piani]",
       },
       {
-        q: "Posso disdire l'abbonamento?",
-        a: "[TODO: condizioni di recesso e preavviso dell'abbonamento]",
+        q: "Posso disdire l’abbonamento?",
+        a: "[TODO: condizioni di recesso e preavviso dell’abbonamento]",
       },
       {
         q: "Cosa succede ai dati di chi compila la pagina?",
-        a: "Raccogliamo solo i campi che servono per essere ricontattati. Per i dettagli leggi l'informativa privacy. [TODO: link e testo definitivo della privacy, titolare del trattamento]",
+        a: "Raccogliamo solo i campi che servono per essere ricontattati. Per i dettagli leggi l’informativa privacy. [TODO: link e testo definitivo della privacy, titolare del trattamento]",
       },
     ],
   },
@@ -240,22 +240,22 @@ export const copy = {
       },
       contact: {
         label: "WhatsApp o email",
-        placeholder: "Il numero o l'indirizzo dove risponderti",
-        error: "Inserisci un numero WhatsApp o un'email valida.",
+        placeholder: "Il numero o l’indirizzo dove risponderti",
+        error: "Inserisci un numero WhatsApp o un’email valida.",
       },
       link: {
-        label: "Link all'annuncio o al profilo",
+        label: "Link all’annuncio o al profilo",
         placeholder: "Incolla qui il link",
         error: "Incolla il link del tuo annuncio o del tuo profilo.",
       },
     },
     privacy: {
-      label: "Ho letto l'informativa privacy e accetto che mi ricontattiate per rispondere a questa richiesta.",
+      label: "Ho letto l’informativa privacy e accetto che mi ricontattiate per rispondere a questa richiesta.",
       linkLabel: "informativa privacy",
       error: "Per inviare la richiesta devi accettare la privacy.",
     },
     submit: "Mandaci il tuo annuncio",
-    submitting: "Invio in corso...",
+    submitting: "Invio in corso…",
     success: {
       title: "Ricevuto, grazie.",
       text: "Guardiamo il tuo annuncio e ti scriviamo noi. [TODO: tempo di risposta promesso]",

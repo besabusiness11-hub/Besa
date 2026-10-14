@@ -3,11 +3,11 @@ import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 const f = copy.fix;
 ---
-<section class="section bg-tint overflow-hidden" aria-labelledby="fix-title">
+<section class="section bg-surface-subtle overflow-hidden" aria-labelledby="fix-title">
   <div class="wrap">
     <div class="reveal">
       <h2 id="fix-title" class="t2 fix-h" set:html={em(f.headline)} />
-      <p class="lead mt-6 text-ink-soft">{f.lead}</p>
+      <p class="lead mt-6 text-text-secondary">{f.lead}</p>
     </div>
   </div>
 </section>

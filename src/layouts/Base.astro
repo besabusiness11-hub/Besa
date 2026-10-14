@@ -32,6 +32,7 @@ const og = new URL(ogImage, SITE.url).href;
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content="#2844bd" />
+    <meta name="color-scheme" content="light" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={SITE.locale} />
     <meta property="og:site_name" content={SITE.name} />
@@ -55,7 +56,17 @@ const og = new URL(ogImage, SITE.url).href;
     <script is:inline defer src="https://umami.besaweb.com/script.js" data-website-id="14bec9f8-0ae7-4d82-a1c5-d803f2295c7d" data-do-not-track="true"></script>
   </head>
   <body>
-    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-30 focus:bg-white focus:p-3">Vai al contenuto</a>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-30 focus:bg-surface-page focus:text-[var(--color-text-primary)] focus:p-3 focus:rounded-sm">Vai al contenuto</a>
     <slot />
   </body>
 </html>
+
+<style is:global>
+  /* Shared marker for copy still to be written ([TODO: ...]); components override per surface. */
+  mark.todo {
+    background: var(--color-surface-subtle); color: var(--color-text-primary);
+    outline: 2px dashed var(--color-accent-solid); outline-offset: 1px;
+    border-radius: 2px; padding: 0 .2em;
+    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  }
+</style>

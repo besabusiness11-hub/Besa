@@ -3,13 +3,13 @@ import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 const h = copy.hero;
 ---
-<section class="on-blue bg-blue text-white overflow-hidden" aria-labelledby="hero-title">
+<section class="on-blue bg-accent-solid text-text-on-accent overflow-hidden" aria-labelledby="hero-title">
   <div class="wrap grid items-center gap-12 py-12 md:py-16 lg:grid-cols-[1.1fr_1fr]">
     <div>
       <h1 id="hero-title" class="h-display" set:html={em(h.headline)} />
-      <p class="lead mt-6 text-white/85">{h.lead}</p>
+      <p class="lead mt-6 text-text-on-accent-muted">{h.lead}</p>
       <a class="btn mt-8" href="#contatto">{h.cta}</a>
-      <p class="mt-4 text-sm text-white/85">{h.note}</p>
+      <p class="mt-4 text-sm text-text-on-accent-muted">{h.note}</p>
     </div>
 
     <div class="stage" aria-hidden="true">
@@ -27,7 +27,7 @@ const h = copy.hero;
         </div>
         <p class="note">{h.annotations.profile}</p>
       </div>
-      <svg class="arrow" viewBox="0 0 48 24" width="48" height="24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+      <svg class="arrow" viewBox="0 0 48 24" width="48" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
       <div class="mock lp">
         <p class="tag">Con BESA</p>
         <div class="phone">
@@ -35,7 +35,7 @@ const h = copy.hero;
           <p class="lp-h">Offerta di benvenuto</p>
           <div class="lp-img"></div>
           <span class="lp-field"></span><span class="lp-field"></span>
-          <span class="lp-btn">Richiedi l'offerta</span>
+          <span class="lp-btn">Richiedi l’offerta</span>
         </div>
         <p class="note">{h.annotations.landing} (esempio demo)</p>
       </div>
@@ -45,36 +45,37 @@ const h = copy.hero;
 
 <style>
   .stage { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: end; }
-  .mock { color: var(--color-ink); }
-  .tag { font-weight: 800; font-size: .875rem; color: #fff; margin-bottom: .5rem; }
-  .note { font-size: .875rem; color: rgb(255 255 255 / .85); margin-top: .75rem; max-width: 22ch; }
-  .ad-card, .profile, .phone { background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-mock); padding: .75rem; }
+  .mock { color: var(--color-text-primary); }
+  .tag { font-weight: 800; font-size: .875rem; color: var(--color-text-on-accent); margin-bottom: .5rem; }
+  .note { font-size: .875rem; color: var(--color-text-on-accent-muted); margin-top: .75rem; max-width: 22ch; }
+  .ad-card, .profile, .phone { background: var(--color-surface-page); border-radius: var(--radius-lg); box-shadow: var(--shadow-mock); padding: .75rem; }
   .row { display: flex; gap: .5rem; align-items: center; margin-bottom: .5rem; }
-  .avatar { width: 2rem; height: 2rem; border-radius: 9999px; background: var(--color-line); flex: none; }
+  .avatar { width: 2rem; height: 2rem; border-radius: 9999px; background: var(--color-border-subtle); flex: none; }
   .avatar.sm { width: 1.5rem; height: 1.5rem; }
-  i { display: block; height: .45rem; border-radius: 9999px; background: var(--color-line); }
+  i { display: block; height: .45rem; border-radius: 9999px; background: var(--color-border-subtle); }
   .lines { display: grid; gap: .3rem; flex: 1; } .lines i:first-child { width: 60%; } .lines i:last-child { width: 35%; }
-  .ad-img { aspect-ratio: 4 / 3; border-radius: var(--radius-base); background: var(--color-muted); display: grid; place-items: center; text-align: center; padding: .5rem; }
-  .ad-t { font-weight: 800; font-size: 1.05rem; line-height: 1.1; letter-spacing: -.02em; color: var(--color-ink); }
-  .arrow { display: none; }
+  /* concentric: ad-card radius-lg (1.25rem) - .75rem padding = radius-sm (.5rem) */
+  .ad-img { aspect-ratio: 4 / 3; border-radius: var(--radius-sm); background: var(--color-surface-sunken); display: grid; place-items: center; text-align: center; padding: .5rem; }
+  .ad-t { font-weight: 800; font-size: 1.05rem; line-height: 1.1; letter-spacing: -.02em; color: var(--color-text-primary); }
+  .arrow { display: none; color: var(--color-text-on-accent); }
   @media (min-width: 64rem) { .stage { position: relative; } .arrow { display: block; position: absolute; left: 50%; top: 38%; transform: translateX(-50%); z-index: 1; } }
   .cap { display: grid; gap: .3rem; margin: .6rem 0; } .cap i:last-child { width: 70%; }
-  .ad-btn { display: block; text-align: center; font-weight: 700; font-size: .8125rem; padding: .5rem; border-radius: var(--radius-sm); background: var(--color-muted); }
+  .ad-btn { display: block; text-align: center; font-weight: 700; font-size: .8125rem; padding: .5rem; border-radius: var(--radius-sm); background: var(--color-surface-sunken); }
   .profile { margin-top: .5rem; display: grid; gap: .5rem; transform: scale(.94); opacity: .9; }
   .grid-ph { display: grid; grid-template-columns: repeat(3, 1fr); gap: .25rem; }
-  .grid-ph i { height: auto; aspect-ratio: 1; border-radius: .25rem; }
-  .phone { border-radius: var(--radius-xl); padding: 1rem .875rem 1.25rem; border: 4px solid var(--color-ink); display: grid; gap: .6rem; }
-  .phone-bar { width: 2.5rem; height: .3rem; background: var(--color-line); border-radius: 9999px; margin-inline: auto; }
+  .grid-ph i { height: auto; aspect-ratio: 1; border-radius: var(--radius-sm); }
+  .phone { border-radius: var(--radius-xl); padding: 1rem .875rem 1.25rem; border: 4px solid var(--color-surface-inverse); display: grid; gap: .6rem; }
+  .phone-bar { width: 2.5rem; height: .3rem; background: var(--color-border-subtle); border-radius: 9999px; margin-inline: auto; }
   .lp-h { font-weight: 800; font-size: 1.05rem; line-height: 1.1; letter-spacing: -.02em; }
-  .lp-img { aspect-ratio: 16 / 9; border-radius: var(--radius-base); background: var(--color-tint); }
-  .lp-field { height: 2rem; border-radius: var(--radius-sm); background: var(--color-muted); display: block; }
-  .lp-btn { text-align: center; color: #fff; font-weight: 800; padding: .65rem; border-radius: var(--radius-base); background: var(--color-blue); font-size: .9rem; }
+  .lp-img { aspect-ratio: 16 / 9; border-radius: var(--radius-base); background: var(--color-surface-subtle); }
+  .lp-field { height: 2rem; border-radius: var(--radius-sm); background: var(--color-surface-sunken); display: block; }
+  .lp-btn { text-align: center; color: var(--color-text-on-accent); font-weight: 800; padding: .65rem; /* concentric with phone: radius-xl - 4px border - 1.25rem bottom padding */ border-radius: var(--radius-sm); background: var(--color-accent-solid); font-size: .9rem; }
 
   /* Scroll-linked enhancement. Default state above is fully visible. */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      .lp { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
-      .ad { animation: settle linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
+      .lp { will-change: transform; animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
+      .ad { will-change: transform; animation: settle linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
       @keyframes rise { from { opacity: .0; transform: translateY(32px); } to { opacity: 1; transform: none; } }
       @keyframes settle { from { transform: scale(1.04); } to { transform: none; } }
     }

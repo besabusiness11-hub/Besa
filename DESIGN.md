@@ -86,3 +86,10 @@ No em dashes in copy; no buzzwords; no eyebrow/number scaffolding except the rea
 1. Inter italic emphasis (adds ~25KB font file) vs weight-only emphasis (0KB). Recommended: italic, subset to latin, preloaded only if above the fold needs it.
 2. Hero drenched blue vs white hero with blue stage. Recommended: drenched blue.
 3. Opsz axis (Inter Display at large sizes): verify Fontsource support at build time.
+
+## Token layers and interface rules (added after the interfaces.dev checklist pass)
+
+- **Primitives** (`--color-blue`, `--color-ink`, ...) live in `@theme` in `src/styles/global.css` and are never used in components.
+- **Semantic tokens** (by purpose): `accent-solid`, `accent-solid-hover`, `accent-text`, `accent-subtle`, `text-primary`, `text-secondary`, `text-on-accent`, `text-on-accent-muted`, `text-on-inverse`, `surface-page`, `surface-subtle`, `surface-sunken`, `surface-inverse`, `border-subtle`, `status-success`, `status-error`, `focus-ring`, `focus-ring-on-accent`. "accent" means the brand blue only. Single light theme, no theme switching.
+- Known gaps (nice to have): `text-on-inverse-muted`, `border-on-inverse`, a placeholder/skeleton fill token, a `todo-outline` token.
+- **Rules applied:** concentric radii, layered shadows instead of decorative borders, `.img-outline` on photos, named-property transitions only (never `transition: all`), button press via `scale` 0.97, all `:hover` inside `@media (hover: hover)`, animations only under `prefers-reduced-motion: no-preference`, `tabular-nums` on prices, `text-wrap: balance` on headings, curly quotes and en dash for ranges (no em dashes by project rule), `scroll-margin-top` on anchor targets, `role="status"` for routine form updates, submit stays enabled until the request starts.

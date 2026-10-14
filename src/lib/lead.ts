@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const MSG = {
   invalid: "Controlla i campi del modulo e riprova.",
-  privacy: "Devi accettare l'informativa privacy.",
-  annuncio: "Inserisci un link valido (https://...).",
+  privacy: "Devi accettare l’informativa privacy.",
+  annuncio: "Inserisci un link valido (https://…).",
   rate: "Troppe richieste. Riprova tra qualche minuto.",
   turnstile: "Verifica anti-spam non riuscita. Ricarica la pagina e riprova.",
   server: "Non siamo riusciti a inviare la richiesta. Scrivici a info@besaweb.com.",

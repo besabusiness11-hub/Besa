@@ -3,7 +3,7 @@ import { copy } from "../lib/copy";
 import { Image } from "astro:assets";
 import logo from "../assets/logo-blue.png";
 ---
-<header class="sticky top-0 z-10 border-b border-line bg-surface">
+<header class="sticky top-0 z-10 bg-surface-page shadow-[0_1px_0_var(--color-border-subtle)]">
   <div class="wrap flex h-16 items-center justify-between">
     <a href="/" aria-label="BESA, torna all'inizio">
       <Image src={logo} alt="BESA" width={88} height={45} densities={[1, 2]} loading="eager" />

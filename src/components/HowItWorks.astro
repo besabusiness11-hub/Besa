@@ -3,7 +3,7 @@ import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 const h = copy.howItWorks;
 ---
-<section class="section bg-surface overflow-hidden" aria-labelledby="how-title">
+<section class="section bg-surface-page overflow-hidden" aria-labelledby="how-title">
   <div class="wrap">
     <h2 id="how-title" class="t2 reveal" set:html={em(h.headline)} />
 
@@ -13,7 +13,7 @@ const h = copy.howItWorks;
           <span class="num" aria-hidden="true"></span>
           <div class="body">
             <h3 class="t3">{s.title}</h3>
-            <p class="mt-2 text-ink-soft">{s.text}</p>
+            <p class="mt-2 text-text-secondary">{s.text}</p>
           </div>
           <div class="viz" aria-hidden="true">
             {i === 0 && (
@@ -50,8 +50,12 @@ const h = copy.howItWorks;
   .t3 { font-size: var(--text-h3); line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
   .steps { list-style: none; counter-reset: step; margin: 3rem 0 0; padding: 0; display: grid; gap: 3.5rem; }
   .step { counter-increment: step; display: grid; gap: 1.25rem; align-items: center; }
-  .num::before { content: counter(step); display: block; font-weight: 800; font-size: clamp(6rem, 4rem + 14vw, 11rem); line-height: .8; letter-spacing: -0.06em; color: var(--color-blue); }
-  .step:nth-child(2) .num::before { color: var(--color-ink); }
+  .num::before { content: counter(step); display: block; font-weight: 800; font-size: clamp(6rem, 4rem + 14vw, 11rem); line-height: .8; letter-spacing: -0.06em; color: var(--color-accent-text); margin-left: var(--bearing, -0.03em); }
+  /* optical alignment: pull each numeral left by its measured side bearing so the ink is flush with the text column */
+  .step:nth-child(1) .num::before { --bearing: -0.018em; }
+  .step:nth-child(2) .num::before { --bearing: -0.033em; }
+  .step:nth-child(3) .num::before { --bearing: -0.03em; }
+  .step:nth-child(2) .num::before { color: var(--color-text-primary); }
   .body { max-width: 28rem; }
 
   @media (min-width: 56rem) {
@@ -63,25 +67,23 @@ const h = copy.howItWorks;
 
   .viz { display: flex; }
   i { display: block; }
-  .paste { display: grid; grid-template-columns: 1fr auto; gap: .5rem; width: min(100%, 22rem); background: var(--color-muted); border-radius: var(--radius-lg); padding: .5rem; }
-  .field { background: #fff; border: 2px solid var(--color-blue); border-radius: var(--radius-base); height: 3rem; display: flex; align-items: center; padding-inline: .75rem; }
-  .field i { height: .5rem; width: 80%; border-radius: 9999px; background: var(--color-line); }
-  .send { width: 3rem; height: 3rem; border-radius: var(--radius-base); background: var(--color-blue); }
+  .paste { display: grid; grid-template-columns: 1fr auto; gap: .5rem; width: min(100%, 22rem); background: var(--color-surface-sunken); border-radius: var(--radius-lg); padding: .5rem; }
+  .field { background: var(--color-surface-page); border: 2px solid var(--color-accent-solid); border-radius: var(--radius-base); height: 3rem; display: flex; align-items: center; padding-inline: .75rem; }
+  .field i { height: .5rem; width: 80%; border-radius: 9999px; background: var(--color-border-subtle); }
+  .send { width: 3rem; height: 3rem; border-radius: var(--radius-base); background: var(--color-accent-solid); }
 
-  .phone { width: 10.5rem; min-height: 15rem; align-content: start; background: #fff; border: 4px solid var(--color-ink); border-radius: var(--radius-xl); padding: 1rem .75rem; display: grid; gap: .5rem; box-shadow: var(--shadow-mock); }
-  .phone span { display: block; border-radius: 9999px; background: var(--color-line); height: .55rem; }
-  .phone .l1 { width: 85%; background: var(--color-ink); height: .7rem; }
-  .phone .l2 { width: 55%; background: var(--color-ink); height: .7rem; }
-  .phone .img { height: 3.5rem; border-radius: var(--radius-base); background: var(--color-tint); }
+  .phone { width: 10.5rem; min-height: 15rem; align-content: start; background: var(--color-surface-page); border: 4px solid var(--color-surface-inverse); border-radius: var(--radius-xl); padding: 1rem .75rem; display: grid; gap: .5rem; box-shadow: var(--shadow-mock); }
+  .phone span { display: block; border-radius: 9999px; background: var(--color-border-subtle); height: .55rem; }
+  .phone .l1 { width: 85%; background: var(--color-surface-inverse); height: .7rem; }
+  .phone .l2 { width: 55%; background: var(--color-surface-inverse); height: .7rem; }
+  .phone .img { height: 3.5rem; border-radius: var(--radius-base); background: var(--color-surface-subtle); }
   .phone .l3 { width: 70%; }
-  .phone .caret { width: .15rem; height: 1rem; border-radius: 0; background: var(--color-blue); }
-  .phone .btn-ph { height: 2.25rem; border-radius: var(--radius-base); background: var(--color-blue); }
-  .live .dot { width: .7rem; height: .7rem; background: var(--color-ok); }
+  .phone .caret { width: .15rem; height: 1rem; border-radius: 0; background: var(--color-accent-solid); }
+  .phone .btn-ph { height: 2.25rem; border-radius: var(--radius-base); background: var(--color-accent-solid); }
+  .live .dot { width: .7rem; height: .7rem; background: var(--color-status-success); }
 
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .caret { animation: blink 1s steps(2, start) infinite; }
-      @keyframes blink { to { opacity: 0; } }
-    }
+  @media (prefers-reduced-motion: no-preference) {
+    .caret { animation: blink 1s steps(2, start) infinite; }
+    @keyframes blink { to { opacity: 0; } }
   }
 </style>

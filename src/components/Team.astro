@@ -13,7 +13,7 @@ const photos = [leo, benito];
   <div class="wrap">
     <div class="intro reveal">
       <h2 id="team-title" class="t-h2" set:html={em(t.headline)} />
-      <p class="lead mt-5 text-ink-soft">{t.lead}</p>
+      <p class="lead mt-5 text-[var(--color-text-secondary)]">{t.lead}</p>
     </div>
 
     <div class="people reveal-stagger">
@@ -29,7 +29,7 @@ const photos = [leo, benito];
             alt={m.photoAlt}
             loading="lazy"
             decoding="async"
-            class="photo"
+            class="photo img-outline"
           />
           <div class="txt">
             <h3 class="t-h3">{m.name}</h3>
@@ -47,16 +47,16 @@ const photos = [leo, benito];
 <style>
   /* Tailwind's .t-h2/.t-h3 (height) collide with the .t-h2/.t-h3 type utilities in global.css */
   h2, h3 { height: auto; }
-  .team { background: var(--color-surface); }
+  .team { background: var(--color-surface-page); }
   .intro { max-width: 40rem; }
   .people { display: grid; gap: 3rem; margin-top: 3rem; }
   .person { display: grid; gap: 1.25rem; }
-  .photo { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: var(--color-muted); }
+  .photo { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: var(--color-surface-sunken); }
   .p0 { max-width: 22rem; }
   .p0 .photo { border-radius: var(--radius-xl); box-shadow: var(--shadow-mock); }
   .p1 { max-width: 15rem; margin-left: auto; }
   .p1 .photo { border-radius: var(--radius-lg); }
-  .role { color: var(--color-ink-soft); font-weight: 500; font-size: .9375rem; margin-top: .25rem; }
+  .role { color: var(--color-text-secondary); font-weight: 500; font-size: .9375rem; margin-top: .25rem; }
   .bio { margin-top: .75rem; }
   .p1 .txt { text-align: left; }
 
@@ -66,11 +66,4 @@ const photos = [leo, benito];
     .p1 { max-width: 16.25rem; margin-left: 0; margin-top: 7rem; }
   }
   @media (min-width: 64rem) { .people { gap: 6rem; } .p0 { grid-template-columns: minmax(0, 22.5rem) minmax(0, 1fr); } .p1 { margin-top: 9rem; } }
-
-  :global(mark.todo) {
-    background: var(--color-tint); color: var(--color-ink);
-    outline: 2px dashed var(--color-blue); outline-offset: 1px;
-    border-radius: 2px; padding: 0 .2em;
-    -webkit-box-decoration-break: clone; box-decoration-break: clone;
-  }
 </style>
