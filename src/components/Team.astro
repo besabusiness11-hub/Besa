@@ -61,11 +61,11 @@ const photos = [leo, benito];
   .p1 .txt { text-align: left; }
 
   @media (min-width: 48rem) {
-    .people { grid-template-columns: 1.35fr 1fr; gap: 4rem; align-items: start; }
-    .p0 { max-width: none; grid-template-columns: 22.5rem 1fr; align-items: end; gap: 2rem; }
+    .people { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 4rem; align-items: start; }
+    .p0 { max-width: none; grid-template-columns: minmax(0, 22.5rem) minmax(0, 1fr); align-items: end; gap: 2rem; }
     .p1 { max-width: 16.25rem; margin-left: 0; margin-top: 7rem; }
   }
-  @media (min-width: 64rem) { .people { gap: 6rem; } .p0 { grid-template-columns: 22.5rem 1fr; } .p1 { margin-top: 9rem; } }
+  @media (min-width: 64rem) { .people { gap: 6rem; } .p0 { grid-template-columns: minmax(0, 22.5rem) minmax(0, 1fr); } .p1 { margin-top: 9rem; } }
 
   :global(mark.todo) {
     background: var(--color-tint); color: var(--color-ink);

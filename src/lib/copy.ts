@@ -5,15 +5,15 @@ export const copy = {
   meta: {
     title: "Landing page per le tue Meta Ads | BESA",
     description:
-      "Le tue inserzioni Facebook e Instagram portano a un profilo? Costruiamo la landing page che trasforma i click in richieste. Mandaci il tuo annuncio.",
+      "Le tue inserzioni Facebook e Instagram portano a un profilo? Costruiamo la landing page pensata per chi clicca il tuo annuncio. Mandaci il link.",
   },
 
   nav: {
-    cta: "Mandaci il tuo annuncio",
+    cta: "Invia annuncio",
   },
 
   hero: {
-    headline: "Il tuo annuncio paga il click. La tua pagina {em}lo butta via{/em}.",
+    headline: "Il click l'hai già pagato. {em}Fallo arrivare a un messaggio{/em}.",
     lead: "Se le tue inserzioni Facebook e Instagram portano a un profilo o a un sito generico, chi clicca non sa cosa fare. Noi costruiamo la landing page con un solo obiettivo: farlo scrivere a te.",
     cta: "Mandaci il tuo annuncio",
     note: "Ci mandi il link, ti rispondiamo noi.",
@@ -29,7 +29,7 @@ export const copy = {
     headline: "Paghi per portare gente su una pagina che {em}non chiede nulla{/em}.",
     paragraphs: [
       "Una persona vede il tuo annuncio sul telefono, tocca, e finisce sul tuo profilo Instagram, su un post o sulla home del sito. Trova mille cose e nessuna domanda: dove clicco? Cosa devo fare?",
-      "In pochi secondi torna indietro. Tu hai pagato il click, lei non ha lasciato niente.",
+      "In pochi secondi torna indietro. Tu hai pagato il click, chi ha cliccato non ha lasciato niente.",
     ],
     points: [
       "Il profilo mostra tutto, ma non chiede un'azione sola.",
@@ -48,7 +48,7 @@ export const copy = {
       },
       {
         title: "Pensata per il telefono",
-        text: "Si legge con il pollice, si carica in fretta, il pulsante è sempre a portata.",
+        text: "Si legge con il pollice e il pulsante resta ben visibile.",
       },
       {
         title: "Un obiettivo solo",
@@ -58,7 +58,7 @@ export const copy = {
   },
 
   howItWorks: {
-    headline: "Tre passaggi, {em}zero giri{/em}.",
+    headline: "Come funziona.",
     steps: [
       {
         title: "Mandaci il tuo annuncio",
@@ -70,15 +70,14 @@ export const copy = {
       },
       {
         title: "Vai online e aggiustiamo",
-        text: "Colleghi la pagina alle tue inserzioni. Se qualcosa non funziona, lo sistemiamo.",
+        text: "Ti diciamo dove collegare la pagina alle tue inserzioni. Dopo la messa online ne parliamo.",
       },
     ],
   },
 
   inside: {
-    headline: "Cosa trovi {em}dentro la pagina{/em}.",
-    lead: "Niente fronzoli. Ogni pezzo è lì per un motivo.",
-    features: [
+    headline: "Cosa c'è dentro la pagina.",
+        features: [
       {
         title: "Titolo preso dal tuo annuncio",
         text: "Chi arriva capisce subito di essere nel posto giusto.",
@@ -89,11 +88,11 @@ export const copy = {
       },
       {
         title: "Testi scritti da noi",
-        text: "Brevi, concreti, nel tuo modo di parlare. Non devi scrivere niente tu.",
+        text: "Brevi e concreti. Li scriviamo noi e li controlli tu prima di andare online.",
       },
       {
         title: "Pagina leggera",
-        text: "Costruita per caricarsi in fretta anche con poco segnale.",
+        text: "Costruita per caricarsi in fretta dal telefono.",
       },
       {
         title: "Modulo corto",
@@ -123,7 +122,7 @@ export const copy = {
           "Scrivi a noi direttamente quando serve una modifica",
           "[TODO: numero di modifiche incluse al mese e tempi di risposta]",
         ],
-        cta: "Mandaci il tuo annuncio",
+        cta: "Scegli l'abbonamento",
       },
       {
         id: "una-tantum",
@@ -137,7 +136,7 @@ export const copy = {
           "Consegna e messa online",
           "[TODO: round di revisione inclusi e cosa succede dopo la consegna]",
         ],
-        cta: "Mandaci il tuo annuncio",
+        cta: "Scegli una tantum",
       },
       {
         id: "su-misura",
@@ -158,20 +157,20 @@ export const copy = {
   proof: {
     headline: "Questo sito è {em}la nostra prova{/em}.",
     paragraphs: [
-      "Quello che stai leggendo è una landing page fatta come le costruiamo per i clienti: un obiettivo, un'azione, niente di superfluo.",
-      "Non ti mostriamo numeri inventati né recensioni di comodo. Ti mostriamo il lavoro: guarda quanto si carica in fretta, quanto è chiaro cosa fare, e giudica da solo.",
+      "Questo sito è costruito come le nostre pagine: veloce, chiaro, con una sola richiesta da fare.",
+      "Non ti mostriamo numeri inventati né recensioni di comodo. Ti mostriamo il lavoro: guarda quanto si carica in fretta, quanto è chiaro cosa fare, e giudica tu.",
     ],
     how: [
       "Partiamo sempre dal tuo annuncio, non da un modello già pronto.",
       "Scriviamo noi i testi, con te che controlli prima di andare online.",
-      "Dopo la pubblicazione guardiamo cosa succede e correggiamo.",
+      "Dopo la messa online guardiamo insieme cosa succede.",
     ],
     caseStudies: "[TODO: casi reali con permesso del cliente, quando ci saranno]",
   },
 
   team: {
-    headline: "Siamo in due, {em}rispondi a noi{/em}.",
-    lead: "Niente account manager, niente passaggi di mano. Parli con chi lavora sulla tua pagina.",
+    headline: "Chi siamo.",
+    lead: "Siamo in due e parli direttamente con noi.",
     members: [
       {
         name: "Leo",
@@ -189,7 +188,7 @@ export const copy = {
   },
 
   faq: {
-    headline: "Le domande che ci fanno {em}sempre{/em}.",
+    headline: "Domande frequenti.",
     items: [
       {
         q: "Ho già un sito. Mi serve comunque una landing?",
@@ -227,7 +226,7 @@ export const copy = {
   },
 
   finalCta: {
-    headline: "Mandaci il tuo annuncio. {em}Ti diciamo cosa faremmo{/em}.",
+    headline: "Mandaci il tuo annuncio. {em}Ti rispondiamo noi{/em}.",
     lead: "Tre campi e hai fatto. Ti rispondiamo su WhatsApp o via email. [TODO: tempo di risposta promesso]",
     cta: "Mandaci il tuo annuncio",
   },

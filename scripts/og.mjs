@@ -8,7 +8,7 @@ import sharp from "sharp";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const out = resolve(root, "public/og/home.png");
 const BLUE = "#2844bd";
-const headline = "Il tuo annuncio paga il click. La tua pagina lo butta via.";
+const headline = "Il click l’hai già pagato. Fallo arrivare a un messaggio.";
 
 const b64 = (p) => readFileSync(resolve(root, p)).toString("base64");
 const html = `<!doctype html><meta charset="utf-8"><style>

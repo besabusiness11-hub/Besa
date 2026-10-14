@@ -31,7 +31,7 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; -webkit-text-size-adjust: 100%; }
   body {
     background: var(--color-surface);
     color: var(--color-ink);
@@ -40,7 +40,7 @@
     line-height: 1.6;
     text-rendering: optimizeLegibility;
   }
-  h1, h2, h3 { text-wrap: balance; font-weight: 800; }
+  h1, h2, h3 { text-wrap: balance; font-weight: 800; overflow-wrap: anywhere; }
   p { text-wrap: pretty; max-width: 65ch; }
   :focus-visible { outline: 3px solid var(--color-blue-deep); outline-offset: 2px; border-radius: 2px; }
   .on-blue :focus-visible { outline-color: #fff; }

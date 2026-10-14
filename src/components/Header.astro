@@ -1,4 +1,5 @@
 ---
+import { copy } from "../lib/copy";
 import { Image } from "astro:assets";
 import logo from "../assets/logo-blue.png";
 ---
@@ -7,6 +8,6 @@ import logo from "../assets/logo-blue.png";
     <a href="/" aria-label="BESA, torna all'inizio">
       <Image src={logo} alt="BESA" width={88} height={45} densities={[1, 2]} loading="eager" />
     </a>
-    <a class="btn !min-h-11 !px-4 !py-2 text-sm" href="#contatto">Mandaci il tuo annuncio</a>
+    <a class="btn !min-h-11 !px-4 !py-2 text-sm" href="#contatto">{copy.nav.cta}</a>
   </div>
 </header>
