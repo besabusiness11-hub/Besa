@@ -2,12 +2,133 @@
 import { copy } from "../lib/copy";
 import { Image } from "astro:assets";
 import logo from "../assets/logo-blue.png";
+const links = copy.nav.links;
 ---
-<header class="sticky top-0 z-10 bg-surface-page shadow-[0_1px_0_var(--color-border-subtle)]">
-  <div class="wrap flex h-16 items-center justify-between">
-    <a href="/" aria-label="BESA, torna all'inizio">
-      <Image src={logo} alt="BESA" width={88} height={45} densities={[1, 2]} loading="eager" />
+<header class="site-header sticky top-0 z-10 bg-surface-page shadow-[0_1px_0_var(--color-border-subtle)]">
+  <div class="wrap bar">
+    <a class="brand" href="/" aria-label="BESA, torna all'inizio">
+      <Image src={logo} alt="BESA" width={47} height={24} densities={[2, 3]} loading="eager" />
     </a>
-    <a class="btn !min-h-11 !px-4 !py-2 text-sm" href="#contatto">{copy.nav.cta}</a>
+
+    <nav class="nav" aria-label="Principale">
+      <ul id="site-menu" class="menu">
+        {links.map((l) => (
+          <li><a class="nlink" href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="btn cta" href="#contatto">{copy.nav.cta}</a>
+
+    <button class="toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Menu">
+      <span class="bars" aria-hidden="true"><i></i><i></i></span>
+    </button>
   </div>
 </header>
+
+<!-- Runs before first paint of the body below: enables the JS-only disclosure layout. -->
+<script is:inline>document.documentElement.classList.add("js");</script>
+
+<script>
+  const header = document.querySelector<HTMLElement>(".site-header")!;
+  const toggle = header.querySelector<HTMLButtonElement>(".toggle")!;
+  const menu = header.querySelector<HTMLElement>("#site-menu")!;
+  const anchors = Array.from(menu.querySelectorAll<HTMLAnchorElement>("a"));
+  const wide = matchMedia("(min-width: 64rem)");
+
+  const setOpen = (open: boolean, restoreFocus = false) => {
+    toggle.setAttribute("aria-expanded", String(open));
+    header.toggleAttribute("data-open", open);
+    if (!open && restoreFocus) toggle.focus();
+  };
+
+  toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
+  anchors.forEach((a) => a.addEventListener("click", () => setOpen(false)));
+  header.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") setOpen(false, true);
+  });
+  document.addEventListener("click", (e) => {
+    if (!header.contains(e.target as Node)) setOpen(false);
+  });
+  wide.addEventListener("change", () => setOpen(false));
+
+  // Current-section indication (progressive enhancement).
+  const map = new Map<Element, HTMLAnchorElement>();
+  anchors.forEach((a) => {
+    const el = document.getElementById(a.hash.slice(1));
+    if (el) map.set(el, a);
+  });
+  if (map.size && "IntersectionObserver" in window) {
+    const visible = new Set<Element>();
+    const mark = () => {
+      const first = [...map.keys()].find((el) => visible.has(el));
+      anchors.forEach((a) => {
+        if (first && map.get(first) === a) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => (en.isIntersecting ? visible.add(en.target) : visible.delete(en.target)));
+        mark();
+      },
+      { rootMargin: "-25% 0px -60% 0px" },
+    );
+    map.forEach((_, el) => io.observe(el));
+  }
+</script>
+
+<style>
+  .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: .5rem; min-height: 3.5rem; }
+  .brand { display: inline-flex; align-items: center; min-height: 2.75rem; }
+  .brand :global(img) { height: 1.25rem; width: auto; }
+  .cta { min-height: 2.75rem !important; padding: .5rem 1rem !important; font-size: .875rem; margin-left: auto; }
+
+  /* No JS: links wrap on their own row under the logo and CTA. */
+  .nav { order: 5; width: 100%; }
+  .menu { list-style: none; margin: 0; padding: 0 0 .5rem; display: flex; flex-wrap: wrap; gap: 0 1rem; }
+  .nlink { position: relative; display: inline-flex; align-items: center; min-height: 2.75rem; font-size: .9375rem; font-weight: 500; color: var(--color-text-primary); text-decoration: none; }
+  .toggle { display: none; }
+
+  /* With JS on mobile: disclosure panel. */
+  :global(.js) .toggle { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; margin-right: -.5rem; background: none; border: 0; border-radius: var(--radius-sm); color: var(--color-text-primary); cursor: pointer; }
+  :global(.js) .bar { flex-wrap: nowrap; }
+  :global(.js) .nav { order: 0; width: auto; }
+  :global(.js) .menu {
+    position: absolute; inset-inline: 0; top: 100%; flex-direction: column; flex-wrap: nowrap; gap: 0;
+    padding: .5rem max(1rem, calc((100% - 75rem) / 2)) 1rem; background: var(--color-surface-page);
+    box-shadow: 0 1px 0 var(--color-border-subtle), 0 12px 24px oklch(0.2 0.04 266 / 0.08);
+    opacity: 0; transform: translateY(-.5rem); visibility: hidden; pointer-events: none;
+    transition: opacity 200ms var(--ease-out), transform 250ms var(--ease-out), visibility 0s linear 250ms;
+  }
+  :global(.js) [data-open] .menu { opacity: 1; transform: none; visibility: visible; pointer-events: auto; transition-delay: 0s; }
+  :global(.js) .nlink { width: 100%; min-height: 3rem; font-size: 1.0625rem; border-bottom: 1px solid var(--color-border-subtle); }
+  :global(.js) .menu li:last-child .nlink { border-bottom: 0; }
+  .nlink[aria-current="true"] { color: var(--color-accent-text); font-weight: 700; }
+
+  .bars { position: relative; width: 1.375rem; height: 1rem; display: block; }
+  .bars i { position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px; background: currentColor; transition: transform 250ms var(--ease-out); }
+  .bars i:first-child { top: .25rem; }
+  .bars i:last-child { top: .625rem; }
+  [data-open] .bars i:first-child { transform: translateY(.1875rem) rotate(45deg); }
+  [data-open] .bars i:last-child { transform: translateY(-.1875rem) rotate(-45deg); }
+
+  @media (min-width: 64rem) {
+    .bar { min-height: 3.75rem; flex-wrap: nowrap; column-gap: 1.5rem; }
+    .brand :global(img) { height: 1.5rem; }
+    .brand, .nav { flex: none; }
+    .nav { order: 0; width: auto; margin-inline: auto; }
+    .menu, :global(.js) .menu {
+      position: static; flex-direction: row; flex-wrap: nowrap; gap: .25rem 1.5rem; padding: 0; box-shadow: none; background: none;
+      opacity: 1; transform: none; visibility: visible; pointer-events: auto; transition: none;
+    }
+    .nlink, :global(.js) .nlink { width: auto; min-height: 2.75rem; font-size: .9375rem; border-bottom: 0; }
+    .nlink::after { content: ""; position: absolute; left: 0; right: 0; bottom: .5rem; height: 2px; background: var(--color-accent-solid); transform: scaleX(0); transform-origin: left; transition: transform 250ms var(--ease-out); }
+    .nlink[aria-current="true"]::after { transform: scaleX(1); }
+    .cta { margin-left: 0; }
+    :global(.js) .toggle { display: none; }
+  }
+  @media (min-width: 64rem) and (hover: hover) {
+    .nlink:hover::after { transform: scaleX(1); }
+  }
+</style>

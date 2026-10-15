@@ -1,9 +1,10 @@
 ---
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
+import { todo } from "../lib/todo";
 const h = copy.howItWorks;
 ---
-<section class="section bg-surface-page overflow-hidden" aria-labelledby="how-title">
+<section id="come-funziona" class="section bg-surface-page overflow-hidden" aria-labelledby="how-title">
   <div class="wrap">
     <h2 id="how-title" class="t2 reveal" set:html={em(h.headline)} />
 
@@ -13,7 +14,7 @@ const h = copy.howItWorks;
           <span class="num" aria-hidden="true"></span>
           <div class="body">
             <h3 class="t3">{s.title}</h3>
-            <p class="mt-2 text-text-secondary">{s.text}</p>
+            <p class="mt-2 text-text-secondary" set:html={todo(s.text)} />
           </div>
           <div class="viz" aria-hidden="true">
             {i === 0 && (
@@ -41,6 +42,18 @@ const h = copy.howItWorks;
         </li>
       ))}
     </ol>
+
+    <aside class="demo reveal" aria-labelledby="demo-title">
+      <div class="browser" aria-hidden="true">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="url">indirizzo-di-prova/la-tua-pagina</span>
+      </div>
+      <div class="demo-copy">
+        <p id="demo-title" class="demo-tag">Prova prima di decidere</p>
+        <p class="mt-1">{h.demoNote}</p>
+        <p class="demo-ill">Indirizzo illustrativo: quello vero ti arriva con la pagina.</p>
+      </div>
+    </aside>
   </div>
 </section>
 
@@ -81,6 +94,17 @@ const h = copy.howItWorks;
   .phone .caret { width: .15rem; height: 1rem; border-radius: 0; background: var(--color-accent-solid); }
   .phone .btn-ph { height: 2.25rem; border-radius: var(--radius-base); background: var(--color-accent-solid); }
   .live .dot { width: .7rem; height: .7rem; background: var(--color-status-success); }
+
+  .demo { margin-top: clamp(3rem, 2rem + 4vw, 5rem); display: grid; gap: 1.25rem; align-items: center; background: var(--color-surface-subtle); border-radius: var(--radius-lg); padding: 1.25rem; max-width: 52rem; }
+  .browser { display: flex; align-items: center; gap: .75rem; background: var(--color-surface-page); border-radius: var(--radius-base); padding: .625rem .75rem; box-shadow: var(--shadow-mock); min-width: 0; }
+  .dots { display: flex; gap: .25rem; flex: none; }
+  .dots i { width: .5rem; height: .5rem; border-radius: 9999px; background: var(--color-border-subtle); }
+  .url { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: var(--color-surface-sunken); border-radius: var(--radius-sm); padding: .375rem .625rem; font-size: .875rem; color: var(--color-text-secondary); }
+  .demo-tag { font-weight: 700; color: var(--color-accent-text); }
+  .demo-ill { margin-top: .5rem; font-size: .875rem; color: var(--color-text-secondary); }
+  @media (min-width: 56rem) {
+    .demo { grid-template-columns: 1fr 1.3fr; gap: 2rem; padding: 1.5rem; margin-left: 24%; }
+  }
 
   @media (prefers-reduced-motion: no-preference) {
     .caret { animation: blink 1s steps(2, start) infinite; }

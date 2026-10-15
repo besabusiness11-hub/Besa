@@ -6,7 +6,7 @@ const c = copy.offer;
 const main = c.plans.find((p) => p.highlight)!;
 const rest = c.plans.filter((p) => !p.highlight);
 ---
-<section class="offer section" aria-labelledby="offer-title">
+<section id="piani" class="offer section" aria-labelledby="offer-title">
   <div class="wrap">
     <div class="reveal">
       <h2 id="offer-title" class="t-h2 max-w-[20ch]" set:html={em(c.headline)} />

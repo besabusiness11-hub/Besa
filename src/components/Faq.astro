@@ -4,7 +4,7 @@ import { em } from "../lib/em";
 import { splitTodo } from "../lib/todo";
 const f = copy.faq;
 ---
-<section class="section faq" aria-labelledby="faq-title">
+<section id="faq" class="section faq" aria-labelledby="faq-title">
   <div class="wrap grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
     <h2 id="faq-title" class="t-h2 reveal lg:sticky lg:top-24 lg:self-start" set:html={em(f.headline)} />
     <div class="list">

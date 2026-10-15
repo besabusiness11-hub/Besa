@@ -2,83 +2,205 @@
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 const h = copy.hero;
+const d = h.diagram;
+const lanes = [
+  { key: "before", data: d.before },
+  { key: "after", data: d.after },
+] as const;
 ---
 <section class="on-blue bg-accent-solid text-text-on-accent overflow-hidden" aria-labelledby="hero-title">
-  <div class="wrap grid items-center gap-12 py-12 md:py-16 lg:grid-cols-[1.1fr_1fr]">
-    <div>
+  <div class="wrap py-12 md:py-16">
+    <div class="max-w-4xl">
       <h1 id="hero-title" class="h-display" set:html={em(h.headline)} />
       <p class="lead mt-6 text-text-on-accent-muted">{h.lead}</p>
       <a class="btn mt-8" href="#contatto">{h.cta}</a>
       <p class="mt-4 text-sm text-text-on-accent-muted">{h.note}</p>
     </div>
 
-    <div class="stage" aria-hidden="true">
-      <div class="mock ad">
-        <p class="tag">Oggi</p>
-        <div class="ad-card">
-          <div class="row"><span class="avatar"></span><span class="lines"><i></i><i></i></span></div>
-          <div class="ad-img"><span class="ad-t">Offerta di benvenuto</span></div>
-          <span class="cap"><i></i><i></i></span>
-          <span class="ad-btn">Scopri di più</span>
-        </div>
-        <div class="profile">
-          <span class="avatar sm"></span>
-          <span class="grid-ph"><i></i><i></i><i></i><i></i><i></i><i></i></span>
-        </div>
-        <p class="note">{h.annotations.profile}</p>
+    <figure class="diagram mt-12 md:mt-16">
+      <figcaption class="dg-label">{d.label}</figcaption>
+
+      <ul class="sr-only">
+        {lanes.map(({ data }) => (
+          <li>
+            {data.title}:
+            <ol>{data.steps.map((s) => <li>{s.label}. {s.text}</li>)}</ol>
+          </li>
+        ))}
+      </ul>
+
+      <div class="lanes" aria-hidden="true">
+        {lanes.map(({ key, data }) => (
+          <section class={`lane ${key}`}>
+            <h2 class="lane-title">{data.title}</h2>
+            <div class="spine"><span class="rider"></span></div>
+            <ol class="steps">
+              {data.steps.map((s, i) => (
+                <li class="step" style={`--i:${i}`}>
+                  <span class="node"></span>
+                  <div class={`mock m${i + 1}`}>
+                    {key === "before" && i === 0 && (<Fragment>{/* ad */}
+                      <span class="ad-top"><b class="av"></b><u class="ln w60"></u></span>
+                      <span class="ad-img"></span>
+                      <u class="ln w80"></u><u class="ln w50"></u>
+                      <span class="ad-cta"></span>
+                    </Fragment>)}
+                    {key === "before" && i === 1 && (<Fragment>
+                      <span class="pf-head"><b class="av"></b><span class="pf-bio"><u class="ln w80"></u><u class="ln w50"></u></span></span>
+                      <span class="pf-links"><u></u><u></u><u></u><u></u></span>
+                      <span class="pf-grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                    </Fragment>)}
+                    {key === "before" && i === 2 && (<Fragment>
+                      <span class="pf-grid dim"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                      <span class="pf-links dim"><u></u><u></u><u></u></span>
+                      <span class="ask">?</span>
+                    </Fragment>)}
+                    {key === "before" && i === 3 && (
+                      <svg class="exit" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 8h14a2 2 0 0 1 2 2v28a2 2 0 0 1-2 2H10"/><path d="M20 24h22M34 15l9 9-9 9"/></svg>
+                    )}
+                    {key === "after" && i === 0 && (<Fragment>
+                      <span class="ad-top"><b class="av"></b><u class="ln w60"></u></span>
+                      <span class="ad-img"></span>
+                      <u class="ln w80"></u><u class="ln w50"></u>
+                      <span class="ad-cta"></span>
+                    </Fragment>)}
+                    {key === "after" && i === 1 && (<Fragment>
+                      <u class="hl w90"></u><u class="hl w60"></u>
+                      <span class="ad-img sm"></span>
+                      <u class="ln w80"></u>
+                    </Fragment>)}
+                    {key === "after" && i === 2 && (<Fragment>
+                      <u class="hl w90"></u>
+                      <u class="ln w80"></u><u class="ln w50"></u>
+                      <span class="one-btn"></span>
+                    </Fragment>)}
+                    {key === "after" && i === 3 && (<Fragment>
+                      <span class="wa-head"><b class="av"></b><u class="ln w50"></u></span>
+                      <span class="bubble"><u></u><u></u></span>
+                      <span class="bubble you"><u></u></span>
+                    </Fragment>)}
+                  </div>
+                  <div class="txt">
+                    <p class="s-label">{s.label}</p>
+                    <p class="s-text">{s.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
       </div>
-      <svg class="arrow" viewBox="0 0 48 24" width="48" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
-      <div class="mock lp">
-        <p class="tag">Con BESA</p>
-        <div class="phone">
-          <div class="phone-bar"></div>
-          <p class="lp-h">Offerta di benvenuto</p>
-          <div class="lp-img"></div>
-          <span class="lp-field"></span><span class="lp-field"></span>
-          <span class="lp-btn">Richiedi l’offerta</span>
-        </div>
-        <p class="note">{h.annotations.landing} (esempio demo)</p>
-      </div>
-    </div>
+    </figure>
   </div>
 </section>
 
 <style>
-  .stage { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: end; }
-  .mock { color: var(--color-text-primary); }
-  .tag { font-weight: 800; font-size: .875rem; color: var(--color-text-on-accent); margin-bottom: .5rem; }
-  .note { font-size: .875rem; color: var(--color-text-on-accent-muted); margin-top: .75rem; max-width: 22ch; }
-  .ad-card, .profile, .phone { background: var(--color-surface-page); border-radius: var(--radius-lg); box-shadow: var(--shadow-mock); padding: .75rem; }
-  .row { display: flex; gap: .5rem; align-items: center; margin-bottom: .5rem; }
-  .avatar { width: 2rem; height: 2rem; border-radius: 9999px; background: var(--color-border-subtle); flex: none; }
-  .avatar.sm { width: 1.5rem; height: 1.5rem; }
-  i { display: block; height: .45rem; border-radius: 9999px; background: var(--color-border-subtle); }
-  .lines { display: grid; gap: .3rem; flex: 1; } .lines i:first-child { width: 60%; } .lines i:last-child { width: 35%; }
-  /* concentric: ad-card radius-lg (1.25rem) - .75rem padding = radius-sm (.5rem) */
-  .ad-img { aspect-ratio: 4 / 3; border-radius: var(--radius-sm); background: var(--color-surface-sunken); display: grid; place-items: center; text-align: center; padding: .5rem; }
-  .ad-t { font-weight: 800; font-size: 1.05rem; line-height: 1.1; letter-spacing: -.02em; color: var(--color-text-primary); }
-  .arrow { display: none; color: var(--color-text-on-accent); }
-  @media (min-width: 64rem) { .stage { position: relative; } .arrow { display: block; position: absolute; left: 50%; top: 38%; transform: translateX(-50%); z-index: 1; } }
-  .cap { display: grid; gap: .3rem; margin: .6rem 0; } .cap i:last-child { width: 70%; }
-  .ad-btn { display: block; text-align: center; font-weight: 700; font-size: .8125rem; padding: .5rem; border-radius: var(--radius-sm); background: var(--color-surface-sunken); }
-  .profile { margin-top: .5rem; display: grid; gap: .5rem; transform: scale(.94); opacity: .9; }
-  .grid-ph { display: grid; grid-template-columns: repeat(3, 1fr); gap: .25rem; }
-  .grid-ph i { height: auto; aspect-ratio: 1; border-radius: var(--radius-sm); }
-  .phone { border-radius: var(--radius-xl); padding: 1rem .875rem 1.25rem; border: 4px solid var(--color-surface-inverse); display: grid; gap: .6rem; }
-  .phone-bar { width: 2.5rem; height: .3rem; background: var(--color-border-subtle); border-radius: 9999px; margin-inline: auto; }
-  .lp-h { font-weight: 800; font-size: 1.05rem; line-height: 1.1; letter-spacing: -.02em; }
-  .lp-img { aspect-ratio: 16 / 9; border-radius: var(--radius-base); background: var(--color-surface-subtle); }
-  .lp-field { height: 2rem; border-radius: var(--radius-sm); background: var(--color-surface-sunken); display: block; }
-  .lp-btn { text-align: center; color: var(--color-text-on-accent); font-weight: 800; padding: .65rem; /* concentric with phone: radius-xl - 4px border - 1.25rem bottom padding */ border-radius: var(--radius-sm); background: var(--color-accent-solid); font-size: .9rem; }
+  .diagram { margin-inline: 0; }
+  .dg-label { font-size: .875rem; color: var(--color-text-on-accent-muted); margin-bottom: 1rem; }
+  .lanes { display: grid; gap: 1rem; }
+  @media (min-width: 48rem) { .lanes { grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: stretch; } }
 
-  /* Scroll-linked enhancement. Default state above is fully visible. */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .lp { will-change: transform; animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
-      .ad { will-change: transform; animation: settle linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
-      @keyframes rise { from { opacity: .0; transform: translateY(32px); } to { opacity: 1; transform: none; } }
-      @keyframes settle { from { transform: scale(1.04); } to { transform: none; } }
-    }
+  .lane { position: relative; border-radius: var(--radius-lg); padding: 1.25rem 1rem 0.5rem; }
+  .lane-title { font-size: var(--text-h3); line-height: 1.2; letter-spacing: -.015em; margin-bottom: 1rem; }
+  /* before: muted, ghosted. after: filled, wins */
+  .lane.before { background: color-mix(in oklab, var(--color-text-on-accent) 10%, transparent); color: var(--color-text-on-accent-muted); }
+  .lane.before .lane-title { font-weight: 700; }
+  .lane.after { background: var(--color-surface-page); color: var(--color-text-primary); box-shadow: var(--shadow-mock); }
+  .lane.after .lane-title { color: var(--color-accent-text); }
+
+  .steps { list-style: none; margin: 0; padding: 0; position: relative; }
+  .step { position: relative; display: grid; grid-template-columns: 1.5rem 6rem 1fr; gap: .75rem; align-items: start; padding-bottom: 1.5rem; }
+  .step:last-child { padding-bottom: 1rem; }
+
+  /* spine: the visitor's path */
+  .spine { position: absolute; left: calc(1rem + .75rem); top: 5.05rem; bottom: 4.4rem; width: 3px; margin-left: -1.5px; overflow: hidden; border-radius: 9999px; transform-origin: top; }
+  .spine::before { content: ""; position: absolute; inset: 0; background: currentColor; opacity: .35; }
+  .lane.before .spine::before { background: repeating-linear-gradient(to bottom, currentColor 0 6px, transparent 6px 12px); }
+  .lane.after .spine::before { background: var(--color-accent-solid); opacity: 1; }
+  .rider { position: absolute; inset: 0; }
+  .lane.after .rider { transform: translateY(calc(100% - .4rem)); }
+  .lane.before .rider { opacity: 0; }
+  .rider::before { content: ""; position: absolute; left: 50%; top: 0; width: .8rem; height: .8rem; margin-left: -.4rem; border-radius: 9999px; background: var(--color-text-on-accent); }
+  .lane.after .rider::before { background: var(--color-surface-page); outline: 3px solid var(--color-accent-solid); }
+  .spine { overflow: visible; }
+
+  .node { grid-column: 1; justify-self: center; width: .9rem; height: .9rem; margin-top: 2.9rem; border-radius: 9999px; position: relative; z-index: 1; background: var(--color-accent-solid); border: 3px solid currentColor; }
+  .lane.before .node { background: transparent; border-color: color-mix(in oklab, var(--color-text-on-accent) 60%, transparent); }
+  .lane.after .node { background: var(--color-accent-solid); border-color: var(--color-surface-page); outline: 3px solid var(--color-accent-solid); }
+
+  .txt { padding-top: .25rem; min-width: 0; }
+  .s-label { font-weight: 800; font-size: 1rem; line-height: 1.25; letter-spacing: -.01em; }
+  .s-text { font-size: .9375rem; line-height: 1.4; margin-top: .25rem; }
+  .lane.before .s-label { color: var(--color-text-on-accent); font-weight: 700; }
+  .lane.after .s-text { color: var(--color-text-secondary); }
+
+  /* mock phones */
+  .mock { grid-column: 2; height: 6.5rem; border-radius: var(--radius-base); padding: .5rem; display: flex; flex-direction: column; gap: .3rem; background: var(--color-surface-page); box-shadow: var(--shadow-mock); position: relative; overflow: hidden; }
+  .lane.before .mock { opacity: .72; box-shadow: none; }
+  .lane.after .mock { background: var(--color-surface-subtle); }
+  .mock .av { width: 1rem; height: 1rem; border-radius: 9999px; background: var(--color-border-subtle); flex: none; }
+  .ln, .hl { display: block; height: .3rem; border-radius: 9999px; background: var(--color-border-subtle); }
+  .lane.after .ln { background: color-mix(in oklab, var(--color-text-secondary) 28%, transparent); }
+  .hl { height: .5rem; background: var(--color-text-primary); }
+  .w90 { width: 90%; } .w80 { width: 80%; } .w60 { width: 60%; } .w50 { width: 50%; }
+  .ad-top, .wa-head { display: flex; align-items: center; gap: .3rem; }
+  .ad-top .ln { flex: 1; width: auto; max-width: 60%; }
+  .ad-img { flex: 1; min-height: 0; border-radius: var(--radius-sm); background: var(--color-surface-sunken); position: relative; }
+  .ad-img::after { content: ""; position: absolute; inset: 22% 28%; border-radius: 9999px; background: var(--color-border-subtle); }
+  .lane.after .ad-img { background: var(--color-accent-solid); }
+  .lane.after .ad-img::after { background: color-mix(in oklab, var(--color-text-on-accent) 35%, transparent); }
+  .lane.after .m1 .ad-img { background: var(--color-surface-sunken); }
+  .lane.after .m1 .ad-img::after { background: var(--color-border-subtle); }
+  .ad-img.sm { flex: none; height: 1.9rem; }
+  .ad-img.sm::after { inset: 20% 38%; }
+  .ad-cta { height: 1rem; border-radius: var(--radius-sm); background: var(--color-surface-sunken); flex: none; }
+  .lane.after .m1 .ad-cta { background: var(--color-border-subtle); }
+
+  .pf-head { display: flex; gap: .3rem; align-items: center; }
+  .pf-bio { flex: 1; display: grid; gap: .25rem; }
+  .pf-links { display: flex; flex-wrap: wrap; gap: .2rem; }
+  .pf-links u { display: block; width: 1.1rem; height: .5rem; border-radius: 9999px; background: var(--color-border-subtle); text-decoration: none; }
+  .pf-links u:nth-child(odd) { width: 1.6rem; }
+  .pf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .15rem; flex: 1; min-height: 0; overflow: hidden; }
+  .pf-grid i { display: block; background: var(--color-surface-sunken); border-radius: 2px; }
+  .pf-grid i:nth-child(3n+2) { background: var(--color-border-subtle); }
+  .m3 { align-items: stretch; }
+  .m3 .dim { opacity: .5; filter: blur(.4px); }
+  .ask { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 800; font-size: 2.25rem; color: var(--color-text-primary); }
+  .m4 { place-items: center; justify-content: center; align-items: center; }
+  .exit { width: 2.5rem; height: 2.5rem; color: var(--color-text-secondary); }
+
+  .one-btn { margin-top: auto; height: 1.5rem; border-radius: var(--radius-sm); background: var(--color-accent-solid); position: relative; }
+  .one-btn::after { content: ""; position: absolute; left: 22%; right: 22%; top: 50%; height: .3rem; margin-top: -.15rem; border-radius: 9999px; background: var(--color-text-on-accent); }
+  .wa-head { padding-bottom: .15rem; }
+  .bubble { align-self: flex-start; width: 78%; display: grid; gap: .22rem; padding: .35rem .4rem; border-radius: var(--radius-sm); background: var(--color-surface-page); }
+  .bubble u { display: block; height: .28rem; border-radius: 9999px; background: var(--color-border-subtle); text-decoration: none; }
+  .bubble u:last-child { width: 60%; }
+  .bubble.you { align-self: flex-end; width: 60%; background: var(--color-status-success); }
+  .bubble.you u { background: color-mix(in oklab, var(--color-text-on-accent) 80%, transparent); }
+
+  /* motion: staged reveal on load, spine draws, rider walks the path */
+  @media (prefers-reduced-motion: no-preference) {
+    .lane { animation: fade-in .5s var(--ease-out) both; }
+    .lane.after { animation-delay: .1s; }
+    .step { animation: step-in .55s var(--ease-expo) both; animation-delay: calc(.35s + var(--i) * .22s); }
+    .lane.after .step { animation-delay: calc(.5s + var(--i) * .22s); }
+    .spine { animation: draw 1s var(--ease-out) .5s both; }
+    .lane.before .rider { animation: ride-out 1.4s var(--ease-out) 1.2s both; }
+    .lane.after .rider { animation: ride 1.6s var(--ease-out) 1.2s both; }
+    .lane.after .m4 .bubble { animation: pop .4s var(--ease-expo) both; }
+    .lane.after .m4 .bubble:nth-of-type(1) { animation-delay: 2.5s; }
+    .lane.after .m4 .bubble.you { animation-delay: 2.8s; }
+    .lane.before .m4 { animation: dim-out .8s var(--ease-out) 2.4s both; }
+    .lane.after .one-btn { animation: tap 2.8s var(--ease-out) 3s infinite; }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes step-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes draw { from { transform: scaleY(0); } to { transform: none; } }
+    /* rider is as tall as the spine; the dot sits at its top, so translating by -100% hides it above, 0 is the start */
+    @keyframes ride { from { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } to { transform: translateY(calc(100% - .4rem)); opacity: 1; } }
+    @keyframes ride-out { from { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 70% { opacity: 1; } to { transform: translateY(calc(100% - .4rem)); opacity: 0; } }
+    @keyframes pop { from { opacity: 0; transform: scale(.85) translateY(4px); } to { opacity: 1; transform: none; } }
+    @keyframes dim-out { from { opacity: .72; } to { opacity: .45; } }
+    @keyframes tap { 0%, 80%, 100% { transform: none; } 88% { transform: scale(.96); } 94% { transform: scale(1.02); } }
   }
-  @media (max-width: 480px) { .stage { gap: .5rem; } .lp-h { font-size: .9rem; } }
 </style>

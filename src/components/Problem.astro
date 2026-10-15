@@ -2,49 +2,58 @@
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 const p = copy.problem;
-const adLabel = copy.hero.annotations.ad;
+const last = p.timeline.length - 1;
 ---
-<section class="section bg-surface-page overflow-hidden" aria-labelledby="problem-title">
-  <div class="wrap grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-20 lg:items-start">
-    <div class="reveal lg:sticky lg:top-28">
+<section id="problema" class="section bg-surface-page overflow-hidden" aria-labelledby="problem-title">
+  <div class="wrap">
+    <div class="reveal head">
       <h2 id="problem-title" class="t2" set:html={em(p.headline)} />
-      <div class="mt-6 grid gap-4 text-text-secondary">
-        {p.paragraphs.map((t) => <p class="lead">{t}</p>)}
-      </div>
+      <p class="scenario"><strong>{p.scenarioLabel}</strong> {p.scenarioNote}</p>
     </div>
 
-    <div class="leak">
-      <div class="ad-node" aria-hidden="true">
-        <div class="ad-card">
-          <span class="avatar"></span>
-          <span class="lines"><i></i><i></i></span>
-          <span class="ad-img"></span>
-        </div>
-        <span class="pill">{adLabel}</span>
-      </div>
+    <ol class="tl">
+      {p.timeline.map((s, i) => (
+        <li class:list={["st", { end: i === last }]} style={`--i:${i}`}>
+          <span class="chip">{s.time}</span>
+          <div class="card">
+            <div class={`phone ph${i + 1}`} aria-hidden="true">
+              {i === 0 && (<>
+                <span class="ad-img"></span>
+                <span class="ad-lines"><i></i><i></i></span>
+                <span class="tap"></span>
+              </>)}
+              {i === 1 && (<>
+                <span class="prof"><b></b><i></i></span>
+                <span class="grid-ph"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+              </>)}
+              {i === 2 && (<>
+                <span class="prof"><b></b><i></i></span>
+                <span class="grid-ph"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="q">?</span>
+              </>)}
+              {i === 3 && (<>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7" /></svg>
+                <span class="empty"></span>
+              </>)}
+            </div>
+            <div class="txt">
+              <h3 class="t3">{s.title}</h3>
+              <p>{s.text}</p>
+              {i === last && (
+                <p class="spent" aria-hidden="true"><span class="coin">€</span><span class="dash"></span><span class="zero">0</span></p>
+              )}
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
 
-      <ul class="steps reveal-stagger">
-        <li class="step s1">
-          <div class="mock profile" aria-hidden="true">
-            <span class="avatar"></span>
-            <span class="grid-ph"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-          </div>
-          <p class="note">{p.points[0]}</p>
-        </li>
-        <li class="step s2">
-          <div class="mock site" aria-hidden="true">
-            <span class="nav"><i></i><i></i><i></i><i></i></span>
-            <span class="blocks"><i></i><i></i><i></i></span>
-          </div>
-          <p class="note">{p.points[1]}</p>
-        </li>
-        <li class="step s3">
-          <div class="mock back" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7" /></svg>
-            <span class="gone"></span>
-          </div>
-          <p class="note">{p.points[2]}</p>
-        </li>
+    <div class="after">
+      <div class="paras text-text-secondary">
+        {p.paragraphs.map((t) => <p>{t}</p>)}
+      </div>
+      <ul class="pts">
+        {p.points.map((t) => <li>{t}</li>)}
       </ul>
     </div>
   </div>
@@ -52,48 +61,82 @@ const adLabel = copy.hero.annotations.ad;
 
 <style>
   /* .t-h2 and .t-h3 collide with Tailwind height utilities (t-h2 = 0.5rem), so headings use local classes. */
-  .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; }
-  .t3 { font-size: var(--text-h3); line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
-  .leak { position: relative; display: grid; gap: 0; }
-  .ad-node { display: grid; gap: .5rem; justify-items: start; }
-  .ad-card { display: grid; grid-template-columns: auto 1fr; gap: .5rem .75rem; align-items: center; width: min(100%, 22rem); background: var(--color-surface-sunken); border-radius: var(--radius-lg); padding: .75rem; box-shadow: var(--shadow-mock); }
-  .ad-img { grid-column: 1 / -1; aspect-ratio: 16 / 7; border-radius: var(--radius-sm); background: var(--color-border-subtle); }
-  .pill { background: var(--color-surface-inverse); color: var(--color-text-on-inverse); white-space: nowrap; font-weight: 700; font-size: .875rem; padding: .35rem .85rem; border-radius: 9999px; }
-  .avatar { width: 2rem; height: 2rem; border-radius: 9999px; background: var(--color-border-subtle); display: block; }
-  i { display: block; height: .45rem; border-radius: 9999px; background: var(--color-border-subtle); }
-  .lines { display: grid; gap: .3rem; } .lines i:first-child { width: 60%; } .lines i:last-child { width: 35%; }
+  .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; max-width: 18ch; }
+  .t3 { font-size: 1.25rem; line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
+  .head { display: grid; gap: 1.25rem; }
+  .scenario { color: var(--color-text-secondary); font-size: 1rem; line-height: 1.5; max-width: 46ch; }
+  .scenario strong { color: var(--color-text-primary); font-weight: 800; }
 
-  .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
-  .step { position: relative; display: grid; gap: .75rem; padding: 2.5rem 0 0 1.75rem; }
-  /* the path: a dashed vertical line that the visitor falls down */
-  .step::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-left: 3px dashed var(--color-accent-solid); opacity: .5; }
-  .step:last-child::before { bottom: 55%; }
-  .step::after { content: ""; position: absolute; left: -.4rem; top: 2.5rem; width: .85rem; height: .85rem; border-radius: 9999px; background: var(--color-accent-solid); }
-  .ad-node + .steps .step:first-child { padding-top: 2rem; }
-  .ad-node + .steps .step:first-child::after { top: 2rem; }
-  .ad-node { padding-left: 0; }
+  /* ---- timeline: vertical on mobile, horizontal from lg ---- */
+  .tl { list-style: none; padding: 0; margin: 3rem 0 0; position: relative; display: grid; gap: 1.5rem; }
+  .tl::before { content: ""; position: absolute; left: 1.625rem; top: 1rem; bottom: 1rem; width: 3px; border-radius: 9999px; background: linear-gradient(to bottom, var(--color-accent-solid), var(--color-border-subtle)); transform-origin: top; }
+  .st { position: relative; display: grid; grid-template-columns: 3.5rem 1fr; gap: 0 .75rem; align-items: start; }
+  .chip { position: relative; z-index: 1; justify-self: center; min-width: 3.25rem; text-align: center; background: var(--color-accent-solid); color: var(--color-text-on-accent); font-weight: 800; font-size: 1rem; line-height: 1; padding: .55rem .6rem; border-radius: 9999px; font-variant-numeric: tabular-nums; box-shadow: 0 0 0 4px var(--color-surface-page); }
+  .end .chip { background: var(--color-surface-inverse); color: var(--color-text-on-inverse); }
+  .card { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; background: var(--color-surface-page); border-radius: var(--radius-lg); padding: 1rem; box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-mock); }
+  .end .card { background: var(--color-surface-subtle); }
+  .txt { display: grid; gap: .4rem; min-width: 0; }
+  .txt p { font-size: 1rem; line-height: 1.5; color: var(--color-text-secondary); }
 
-  /* depth by layered shadow (hairline ring + soft layers), radius-lg - .75rem padding = radius-sm inside */
-  .mock { background: var(--color-surface-page); border-radius: var(--radius-lg); padding: .75rem; box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-mock); display: grid; gap: .5rem; }
-  .steps { max-width: 24rem; }
-  .s1 .mock { width: 88%; }
-  .s2 .mock { width: 68%; }
-  .s3 .mock { width: 46%; min-width: 9rem; }
-  .profile { grid-template-columns: auto 1fr; align-items: start; }
-  .grid-ph { display: grid; grid-template-columns: repeat(3, 1fr); gap: .25rem; }
-  .grid-ph i { height: auto; aspect-ratio: 1; border-radius: var(--radius-sm); }
-  .nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: .4rem; }
-  .blocks { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .4rem; }
-  .blocks i { height: 2.25rem; border-radius: var(--radius-sm); background: var(--color-surface-subtle); }
-  .back { grid-template-columns: auto 1fr; align-items: center; color: var(--color-text-primary); }
-  .gone { height: .45rem; border-radius: 9999px; background: var(--color-border-subtle); }
+  /* mini phone: concentric radii (outer lg-ish, inner sm) */
+  .phone { position: relative; width: 4.25rem; aspect-ratio: 9 / 16; background: var(--color-surface-sunken); border-radius: var(--radius-base); padding: .4rem; display: grid; align-content: start; gap: .3rem; box-shadow: 0 0 0 1px var(--color-border-subtle); color: var(--color-text-primary); overflow: hidden; }
+  .phone i, .phone b { display: block; height: .3rem; border-radius: 9999px; background: var(--color-border-subtle); }
+  .ad-img { display: block; aspect-ratio: 1; border-radius: var(--radius-sm); background: var(--color-accent-subtle); }
+  .ad-lines { display: grid; gap: .25rem; } .ad-lines i:last-child { width: 55%; }
+  .tap { position: absolute; right: .55rem; bottom: .7rem; width: 1.1rem; height: 1.1rem; border-radius: 9999px; background: var(--color-accent-solid); box-shadow: 0 0 0 4px var(--color-accent-subtle); }
+  .prof { display: grid; grid-template-columns: auto 1fr; gap: .3rem; align-items: center; }
+  .prof b { width: .9rem; height: .9rem; }
+  .grid-ph { display: grid; grid-template-columns: repeat(3, 1fr); gap: .15rem; }
+  .grid-ph i { height: auto; aspect-ratio: 1; border-radius: .15rem; }
+  .q { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 800; font-size: 2rem; color: var(--color-accent-text); background: oklch(1 0 0 / .55); }
+  .ph4 { align-content: space-between; }
+  .empty { display: block; height: 1.1rem; border-radius: var(--radius-sm); border: 2px dashed var(--color-border-subtle); }
 
-  .note { background: var(--color-surface-subtle); color: var(--color-text-primary); border-radius: var(--radius-base); padding: .75rem 1rem; font-weight: 600; font-size: 1rem; line-height: 1.4; max-width: 30rem; }
+  /* the money spent, nothing gained */
+  .spent { display: flex; align-items: center; gap: .5rem; margin-top: .25rem; font-weight: 800; font-size: 1.125rem; color: var(--color-text-primary) !important; }
+  .coin, .zero { display: inline-grid; place-items: center; min-width: 2rem; height: 2rem; border-radius: 9999px; line-height: 1; }
+  .coin { background: var(--color-accent-solid); color: var(--color-text-on-accent); }
+  .zero { background: var(--color-surface-page); box-shadow: 0 0 0 2px var(--color-border-subtle); }
+  .dash { flex: 0 0 1.5rem; height: 0; border-top: 3px dotted var(--color-text-secondary); }
 
+  /* condensed supporting copy */
+  .after { margin-top: 3.5rem; display: grid; gap: 2rem; }
+  .paras { display: grid; gap: 1rem; font-size: 1.0625rem; line-height: 1.6; }
+  .pts { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
+  .pts li { padding: .9rem 0; border-top: 1px solid var(--color-border-subtle); font-weight: 600; font-size: 1rem; line-height: 1.45; color: var(--color-text-primary); }
+
+  @media (min-width: 48rem) {
+    .paras { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .pts { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .pts li { padding-top: 1rem; }
+  }
+
+  @media (min-width: 64rem) {
+    .tl { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 4rem; }
+    .tl::before { left: 1.625rem; right: 1.625rem; top: 1rem; bottom: auto; width: auto; height: 3px; background: linear-gradient(to right, var(--color-accent-solid), var(--color-border-subtle)); transform-origin: left; }
+    .st { display: block; }
+    .chip { display: inline-block; margin-left: 0; }
+    .card { grid-template-columns: 1fr; align-content: start; margin-top: 1.25rem; height: calc(100% - 3rem); }
+    .phone { width: 5rem; }
+    .after { grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: start; }
+    .paras { grid-template-columns: 1fr; gap: 1rem; }
+    .pts { grid-template-columns: 1fr; gap: 0; }
+    .pts li { padding: .9rem 0; }
+  }
+
+  /* scroll-driven: line draws, steps appear in sequence, the last phone drains. transform/opacity only. */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      .s3 .mock { will-change: transform; animation: slip linear both; animation-timeline: view(); animation-range: entry 20% cover 60%; }
-      @keyframes slip { from { transform: none; opacity: 1; } to { transform: translateX(-12px); opacity: .6; } }
+      .tl::before { animation: draw linear both; animation-timeline: view(); animation-range: entry 15% cover 45%; }
+      .st { animation: step linear both; animation-timeline: view(); animation-range: entry calc(5% + var(--i) * 9%) entry calc(45% + var(--i) * 9%); }
+      .end .phone { animation: drain linear both; animation-timeline: view(); animation-range: entry 40% cover 50%; }
+      @keyframes draw { from { transform: scaleY(0); } to { transform: none; } }
+      @keyframes step { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+      @keyframes drain { from { opacity: 1; } to { opacity: .45; } }
+      @media (min-width: 64rem) {
+        .tl::before { animation-name: draw-x; }
+        @keyframes draw-x { from { transform: scaleX(0); } to { transform: none; } }
+      }
     }
   }
 </style>
