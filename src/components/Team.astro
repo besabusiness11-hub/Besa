@@ -18,14 +18,14 @@ const photos = [leo, benito];
 
     <div class="people reveal-stagger">
       {t.members.map((m, i) => (
-        <article class={`person p${i}`}>
+        <article class="person">
           <Picture
             src={photos[i]}
             formats={["avif", "webp"]}
-            widths={i === 0 ? [240, 360, 500] : [200, 300, 400]}
-            sizes={i === 0 ? "(min-width: 768px) 360px, 70vw" : "(min-width: 768px) 260px, 52vw"}
-            width={i === 0 ? 360 : 260}
-            height={i === 0 ? 360 : 260}
+            widths={[240, 360, 500]}
+            sizes="(min-width: 64rem) 360px, (min-width: 48rem) 40vw, 44vw"
+            width={360}
+            height={360}
             alt={m.photoAlt}
             loading="lazy"
             decoding="async"
@@ -49,21 +49,18 @@ const photos = [leo, benito];
   h2, h3 { height: auto; }
   .team { background: var(--color-surface-page); }
   .intro { max-width: 40rem; }
-  .people { display: grid; gap: 3rem; margin-top: 3rem; }
-  .person { display: grid; gap: 1.25rem; }
-  .photo { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: var(--color-surface-sunken); }
-  .p0 { max-width: 22rem; }
-  .p0 .photo { border-radius: var(--radius-xl); box-shadow: var(--shadow-mock); }
-  .p1 { max-width: 15rem; margin-left: auto; }
-  .p1 .photo { border-radius: var(--radius-lg); }
+  .people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 3rem; align-items: start; max-width: 50rem; }
+  .person { display: grid; grid-template-rows: auto 1fr; gap: 1rem; min-width: 0; }
+  .photo { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; object-position: 50% 35%; border-radius: var(--radius-lg); background: var(--color-surface-sunken); }
   .role { color: var(--color-text-secondary); font-weight: 500; font-size: .9375rem; margin-top: .25rem; }
   .bio { margin-top: .75rem; }
-  .p1 .txt { text-align: left; }
+  .txt { min-width: 0; }
+  .txt :global(h3) { overflow-wrap: anywhere; }
 
   @media (min-width: 48rem) {
-    .people { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 4rem; align-items: start; }
-    .p0 { max-width: none; grid-template-columns: minmax(0, 22.5rem) minmax(0, 1fr); align-items: end; gap: 2rem; }
-    .p1 { max-width: 16.25rem; margin-left: 0; margin-top: 7rem; }
+    .people { gap: 2rem; }
+    .person { gap: 1.25rem; }
+    .photo { border-radius: var(--radius-xl); }
   }
-  @media (min-width: 64rem) { .people { gap: 6rem; } .p0 { grid-template-columns: minmax(0, 22.5rem) minmax(0, 1fr); } .p1 { margin-top: 9rem; } }
+  @media (min-width: 64rem) { .people { gap: 3rem; } }
 </style>

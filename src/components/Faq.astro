@@ -43,7 +43,18 @@ const f = copy.faq;
     summary:hover { color: var(--color-accent-solid-hover); }
   }
   @media (prefers-reduced-motion: no-preference) {
-    .chev { transition: transform 250ms var(--ease-out); }
+    .chev { transition: transform 300ms var(--ease-out); }
+    /* Height animation where supported; elsewhere the panel toggles instantly. */
+    @supports (interpolate-size: allow-keywords) and selector(::details-content) {
+      details { interpolate-size: allow-keywords; }
+      details::details-content {
+        block-size: 0;
+        overflow: clip;
+        opacity: 0;
+        transition: block-size 300ms var(--ease-out), opacity 300ms var(--ease-out), content-visibility 300ms allow-discrete;
+      }
+      details[open]::details-content { block-size: auto; opacity: 1; }
+    }
   }
   .a { color: var(--color-text-secondary); padding-bottom: 1.25rem; max-width: 60ch; }
   .q { min-width: 0; overflow-wrap: anywhere; }
