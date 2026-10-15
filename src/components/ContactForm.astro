@@ -89,7 +89,10 @@ const msgs = JSON.stringify({
   .field input::placeholder { color: var(--color-text-secondary); opacity: 1; }
   .field input[aria-invalid="true"] { border-color: var(--color-status-error); }
   .check { display: flex; gap: .75rem; align-items: flex-start; min-height: 2.75rem; font-weight: 400; margin: 0; padding-block: .25rem; }
-  .check input { flex: none; width: 1.5rem; height: 1.5rem; margin: .125rem 0 0; accent-color: var(--color-text-on-accent); }
+  .check input { flex: none; appearance: none; width: 1.5rem; height: 1.5rem; margin: .125rem 0 0; border: 2px solid var(--color-text-on-accent); border-radius: .375rem; background: transparent; display: grid; place-content: center; }
+  .check input::after { content: ""; width: .75rem; height: .4rem; margin-top: -.1rem; border-left: 3px solid var(--color-accent-text); border-bottom: 3px solid var(--color-accent-text); rotate: -45deg; opacity: 0; }
+  .check input:checked { background: var(--color-text-on-accent); }
+  .check input:checked::after { opacity: 1; }
   .check a { color: var(--color-text-on-accent); text-decoration-thickness: from-font; text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
   /* Error: white pill with err-colored text (>= 4.5:1 on white), readable on the blue drench. */
   .err { display: none; width: fit-content; max-width: 100%; margin-top: .5rem; padding: .25rem .75rem; border-radius: var(--radius-sm); background: var(--color-surface-page); color: var(--color-status-error); font-size: .9375rem; font-weight: 600; line-height: 1.4; }

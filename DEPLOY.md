@@ -15,11 +15,14 @@ Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Pagine prerenderi
    - Build-time (spunta "Build Variable"): `PUBLIC_SITE_URL=https://new.besaweb.com` (per produzione `https://besaweb.com`)
    - Runtime: `TURNSTILE_SECRET`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_TO` (default `info@besaweb.com`), `MAIL_FROM`
    - `NODE_ENV`, `HOST`, `PORT` sono gia' impostate dal Dockerfile.
+   - **Staging non indicizzabile**: `PUBLIC_NOINDEX=true` (spunta sia "Build Variable" sia runtime). Effetti: `<meta name="robots" content="noindex, nofollow">` in ogni pagina, header `X-Robots-Tag: noindex, nofollow` su ogni risposta, `robots.txt` con `Disallow: /`, `sitemap.xml` vuota. In produzione lascia la variabile non impostata (o `false`).
 6. Health Check (tab Healthcheck): abilita, Method `GET`, Path `/healthz`, Port `4321`, Return Code `200`. (Il Dockerfile ha anche un `HEALTHCHECK` nativo.)
 7. **Deploy**. Verifica:
    ```sh
    curl -sI https://new.besaweb.com/ | grep -iE 'content-security|x-frame|nosniff'
    curl -s https://new.besaweb.com/healthz        # ok
+   curl -sI https://new.besaweb.com/ | grep -i x-robots-tag   # noindex, nofollow (staging)
+   curl -s https://new.besaweb.com/robots.txt                 # Disallow: /
    ```
 8. Test form end-to-end: invia una richiesta da new.besaweb.com e controlla che arrivi la mail a `MAIL_TO`. In produzione senza SMTP o con Turnstile non valido l'API risponde errore (mai falso successo).
 9. Turnstile: nel dashboard Cloudflare aggiungi `new.besaweb.com` (e `besaweb.com`) agli hostname del widget.
@@ -30,7 +33,7 @@ Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Pagine prerenderi
 2. In Coolify aggiungi il dominio `https://besaweb.com` (e `https://www.besaweb.com` con redirect) all'app.
 3. DNS: abbassa il TTL a 300s con 24h di anticipo; poi punta `besaweb.com` e `www` all'IP del VPS (proxy Cloudflare attivo).
 4. Verifica `curl -sI https://besaweb.com/healthz`, form, e analytics Umami.
-5. Rimuovi `new.besaweb.com` quando non serve piu' (o lascialo con `noindex`).
+5. Rimuovi `new.besaweb.com` quando non serve piu' (o lascialo con `PUBLIC_NOINDEX=true`).
 
 ## 3. Rollback
 
@@ -48,3 +51,9 @@ Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Pagine prerenderi
 ## Rate limiting and proxies
 
 `TRUSTED_PROXY` decides which IP header the lead rate limiter trusts. Unset uses the socket address (behind Coolify/Traefik that is the proxy, so all visitors look alike). Set `cloudflare` only if the origin accepts traffic solely from Cloudflare; set `xff-last` if exactly one trusted proxy appends to X-Forwarded-For. Never trust these headers when the origin is directly reachable.
+
+## SEO: checklist al go-live
+
+- Produzione: `PUBLIC_SITE_URL=https://besaweb.com` e `PUBLIC_NOINDEX` NON impostata (canonical, og:url, sitemap e JSON-LD derivano da `PUBLIC_SITE_URL`; sono baked a build time, quindi rifai la build quando cambi dominio/flag).
+- Verifica: `curl -s https://besaweb.com/robots.txt` mostra `Allow: /` e la riga `Sitemap:`; nessun `X-Robots-Tag` su `/`.
+- Nota: con `Disallow: /` Google non rilegge il noindex; se new.besaweb.com e' gia' stato indicizzato, rimuovilo da Search Console (Rimozioni) o, temporaneamente, togli il Disallow lasciando noindex finche' non sparisce.

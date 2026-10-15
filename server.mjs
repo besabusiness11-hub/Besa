@@ -90,6 +90,11 @@ function compress(req, res) {
   };
 }
 
+// Staging: PUBLIC_NOINDEX=true adds X-Robots-Tag everywhere. Transactional/utility URLs are
+// always noindex (never in the sitemap), also at header level.
+const NOINDEX_ALL = ["true", "1"].includes(String(process.env.PUBLIC_NOINDEX ?? ""));
+const NOINDEX_PATH = /^\/(api\/|grazie(\.html)?$|404(\.html)?$|healthz$)/;
+
 const origCreateServer = http.createServer;
 http.createServer = (...args) => {
   const i = args.findIndex((a) => typeof a === "function");
@@ -97,6 +102,7 @@ http.createServer = (...args) => {
     const listener = args[i];
     args[i] = (req, res) => {
       for (const [k, v] of Object.entries(HEADERS)) res.setHeader(k, v);
+      if (NOINDEX_ALL || NOINDEX_PATH.test((req.url ?? "").split("?")[0])) res.setHeader("X-Robots-Tag", "noindex, nofollow");
       applyCache(req, res);
       compress(req, res);
       return listener(req, res);

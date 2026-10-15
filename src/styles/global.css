@@ -60,6 +60,7 @@
     overflow-wrap: break-word;
   }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  html { scroll-padding-top: 5rem; }
   [id] { scroll-margin-top: 4rem; }
   body {
     background: var(--color-surface-page);

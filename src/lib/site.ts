@@ -1,10 +1,18 @@
+import { copy } from "./copy";
+
+const env = (import.meta as { env?: Record<string, string | undefined> }).env ?? {};
+const origin = (env.PUBLIC_SITE_URL || "https://besaweb.com").replace(/\/+$/, "");
+
 export const SITE = {
   name: "BESA",
-  url: "https://besaweb.com",
+  /** Origin used for canonical, og:url, sitemap and JSON-LD. Set PUBLIC_SITE_URL at build time. */
+  url: origin,
   email: "info@besaweb.com",
   locale: "it_IT",
-  title: "Landing page per le tue Meta Ads | BESA",
-  description:
-    "Le tue inserzioni Facebook e Instagram portano a un profilo? Costruiamo la landing page pensata per chi clicca il tuo annuncio. Mandaci il link.",
+  // Single source of truth: same strings as the homepage <title>/<meta description>.
+  title: copy.meta.title,
+  description: copy.meta.description,
   legalLine: "[TODO: ragione sociale / P.IVA]",
+  /** PUBLIC_NOINDEX=true (staging): noindex meta, X-Robots-Tag, robots.txt Disallow. */
+  noindex: env.PUBLIC_NOINDEX === "true" || env.PUBLIC_NOINDEX === "1",
 } as const;

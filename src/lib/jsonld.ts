@@ -1,5 +1,5 @@
 import { copy } from "./copy";
-import { splitTodo } from "./todo";
+import { hasTodo, splitTodo } from "./todo";
 
 const strip = (s: string) =>
   splitTodo(s)
@@ -9,9 +9,13 @@ const strip = (s: string) =>
     .replace(/\s+/g, " ")
     .trim();
 
-/** FAQPage JSON-LD from real answers only: [TODO] segments are stripped, all-TODO answers are dropped. */
+/**
+ * FAQPage JSON-LD from fully answered items only. Any item whose question or answer still
+ * contains a [TODO] is skipped, so the markup always equals the visible text exactly.
+ */
 export function faqJsonLd() {
   const mainEntity = copy.faq.items
+    .filter((it) => !hasTodo(it.q) && !hasTodo(it.a))
     .map((it) => ({ q: strip(it.q), a: strip(it.a) }))
     .filter((it) => it.q && it.a)
     .map((it) => ({
