@@ -2,141 +2,219 @@
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 const p = copy.problem;
-const last = p.timeline.length - 1;
+const r = p.results;
+const inputs = [
+  { id: "budget", ...p.inputs.budget },
+  { id: "cpc", ...p.inputs.cpc },
+  { id: "msgs", ...p.inputs.msgs },
+] as const;
+
+// Same math as the script below, so the no-JS page shows the example result.
+const nf = (n: number, d = 0) => new Intl.NumberFormat("it-IT", { maximumFractionDigits: d }).format(n);
+const eur = (n: number) => new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR", maximumFractionDigits: n < 10 ? 2 : 0 }).format(n);
+const fmt = (id: string, v: number) => (id === "msgs" ? nf(v) : eur(v));
+const budget = p.inputs.budget.value, cpc = p.inputs.cpc.value, msgs = p.inputs.msgs.value;
+const clicks = Math.round(budget / cpc);
+const gone = Math.max(0, clicks - msgs);
+const per100 = clicks ? Math.min(100, (msgs / clicks) * 100) : 0;
+const filled = msgs > 0 ? Math.min(100, Math.max(1, Math.round(per100))) : 0;
+const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)) * 100;
 ---
-<section id="problema" class="section bg-surface-page overflow-hidden" aria-labelledby="problem-title">
-  <div class="wrap">
-    <div class="reveal head">
-      <h2 id="problem-title" class="t2" set:html={em(p.headline)} />
-      <p class="scenario"><strong>{p.scenarioLabel}</strong> {p.scenarioNote}</p>
-    </div>
-
-    <ol class="tl">
-      {p.timeline.map((s, i) => (
-        <li class:list={["st", { end: i === last }]} style={`--i:${i}`}>
-          <span class="chip">{s.time}</span>
-          <div class="card">
-            <div class={`phone ph${i + 1}`} aria-hidden="true">
-              {i === 0 && (<>
-                <span class="ad-img"></span>
-                <span class="ad-lines"><i></i><i></i></span>
-                <span class="tap"></span>
-              </>)}
-              {i === 1 && (<>
-                <span class="prof"><b></b><i></i></span>
-                <span class="grid-ph"><i></i><i></i><i></i><i></i><i></i><i></i></span>
-              </>)}
-              {i === 2 && (<>
-                <span class="prof"><b></b><i></i></span>
-                <span class="grid-ph"><i></i><i></i><i></i><i></i><i></i><i></i></span>
-                <span class="q">?</span>
-              </>)}
-              {i === 3 && (<>
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7" /></svg>
-                <span class="empty"></span>
-              </>)}
-            </div>
-            <div class="txt">
-              <h3 class="t3">{s.title}</h3>
-              <p>{s.text}</p>
-              {i === last && (
-                <p class="spent" aria-hidden="true"><span class="coin">€</span><span class="dash"></span><span class="zero">0</span></p>
-              )}
-            </div>
-          </div>
-        </li>
-      ))}
-    </ol>
-
-    <div class="after">
-      <div class="paras text-text-secondary">
-        {p.paragraphs.map((t) => <p>{t}</p>)}
+<section id="problema" class="section calc-sec" aria-labelledby="problem-title">
+  <div class="wrap layout">
+    <div class="side">
+      <div class="reveal">
+        <h2 id="problem-title" class="t2" set:html={em(p.headline)} />
+        <p class="lead mt-5 text-text-secondary">{p.lead}</p>
       </div>
-      <ul class="pts">
-        {p.points.map((t) => <li>{t}</li>)}
-      </ul>
+
+      <form class="inputs" id="calc" aria-label="Calcolatore">
+        {inputs.map((i) => (
+          <div class="rng">
+            <label for={`c-${i.id}`}>{i.label}</label>
+            <output for={`c-${i.id}`} id={`o-${i.id}`} class="val">{fmt(i.id, i.value)}</output>
+            <input
+              type="range"
+              id={`c-${i.id}`}
+              name={i.id}
+              min={i.min}
+              max={i.max}
+              step={i.step}
+              value={i.value}
+              aria-valuetext={fmt(i.id, i.value)}
+              style={`--p:${pct(i)}%`}
+            />
+          </div>
+        ))}
+        <p class="defaults">{p.defaultsNote}</p>
+      </form>
     </div>
+
+    <div class="receipt-wrap">
+      <div class="paper"><div class="receipt" id="receipt">
+        <p class="r-title">{r.title}</p>
+        <dl class="rows">
+          <div class="row"><dt>{r.clicks}</dt><dd data-k="clicks">{nf(clicks)}</dd></div>
+          <div class="row"><dt>{r.gone}</dt><dd data-k="gone">{nf(gone)}</dd></div>
+          <div class="row total">
+            <dt data-k="perMsgLabel" data-yes={r.perMsg} data-no={r.perMsgNone}>{msgs > 0 ? r.perMsg : r.perMsgNone}</dt>
+            <dd data-k="perMsg">{msgs > 0 ? eur(budget / msgs) : "–"}</dd>
+          </div>
+        </dl>
+
+        <div class="dots-box">
+          <p class="dots-title">{r.dotsPre} <strong data-k="per100">{nf(per100, 1)}</strong>.</p>
+          <div class="dots" aria-hidden="true" style={`--filled:${filled}`}>
+            {Array.from({ length: 100 }, (_, n) => <i class:list={{ on: n < filled }} style={`--d:${n}`}></i>)}
+          </div>
+          <p class="legend" aria-hidden="true"><span class="k on"></span>{r.dotsLegendWrote}<span class="k"></span>{r.dotsLegendGone}</p>
+        </div>
+      </div></div>
+      <p class="note">{p.note}</p>
+    </div>
+
+    <p class="closing reveal">{p.closing}</p>
+    <p id="calc-live" class="sr-only" aria-live="polite"></p>
   </div>
 </section>
 
+<script>
+  const form = document.getElementById("calc") as HTMLFormElement | null;
+  const rc = document.getElementById("receipt");
+  if (form && rc) {
+    const nf = (n: number, d = 0) => new Intl.NumberFormat("it-IT", { maximumFractionDigits: d }).format(n);
+    const eur = (n: number) => new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR", maximumFractionDigits: n < 10 ? 2 : 0 }).format(n);
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const el = (k: string) => rc.querySelector<HTMLElement>(`[data-k="${k}"]`)!;
+    const dots = Array.from(rc.querySelectorAll<HTMLElement>(".dots i"));
+    const live = document.getElementById("calc-live")!;
+    const live0 = document.querySelector<HTMLElement>("#problema .dots-title")!;
+    const shown = new Map<string, number>();
+    let liveT = 0;
+
+    // Counts from the shown value to the new one; instant with reduced motion.
+    const tween = (k: string, to: number, f: (n: number) => string) => {
+      const node = el(k);
+      const from = shown.get(k) ?? to;
+      shown.set(k, to);
+      if (reduce || from === to) { node.textContent = f(to); return; }
+      const t0 = performance.now();
+      const step = (t: number) => {
+        const q = Math.min(1, (t - t0) / 380);
+        const e = 1 - Math.pow(1 - q, 4);
+        node.textContent = f(from + (to - from) * e);
+        if (q < 1 && shown.get(k) === to) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    const num = (n: string) => Number((form.elements.namedItem(n) as HTMLInputElement).value);
+    const update = () => {
+      for (const inp of Array.from(form.querySelectorAll<HTMLInputElement>("input[type=range]"))) {
+        const v = Number(inp.value);
+        const txt = inp.name === "msgs" ? nf(v) : eur(v);
+        document.getElementById("o-" + inp.name)!.textContent = txt;
+        inp.setAttribute("aria-valuetext", txt);
+        inp.style.setProperty("--p", ((v - Number(inp.min)) / (Number(inp.max) - Number(inp.min))) * 100 + "%");
+      }
+      const budget = num("budget"), cpc = num("cpc"), msgs = num("msgs");
+      const clicks = Math.round(budget / cpc);
+      const gone = Math.max(0, clicks - msgs);
+      const per100 = clicks ? Math.min(100, (msgs / clicks) * 100) : 0;
+      const filled = msgs > 0 ? Math.min(100, Math.max(1, Math.round(per100))) : 0;
+      tween("clicks", clicks, (n) => nf(Math.round(n)));
+      tween("gone", gone, (n) => nf(Math.round(n)));
+      tween("per100", per100, (n) => nf(n, 1));
+      if (msgs > 0) {
+        el("perMsgLabel").textContent = el("perMsgLabel").dataset.yes!;
+        tween("perMsg", budget / msgs, (n) => eur(n));
+      } else {
+        el("perMsgLabel").textContent = el("perMsgLabel").dataset.no!;
+        shown.delete("perMsg");
+        el("perMsg").textContent = "–";
+      }
+      dots.forEach((d, i) => d.classList.toggle("on", i < filled));
+      clearTimeout(liveT);
+      liveT = window.setTimeout(() => {
+        live.textContent = `${el("clicks").textContent} ${rc.querySelectorAll("dt")[0].textContent}. ${live0.textContent}`;
+      }, 700);
+    };
+    form.addEventListener("input", update);
+    form.addEventListener("submit", (e) => e.preventDefault());
+  }
+</script>
+
 <style>
-  /* .t-h2 and .t-h3 collide with Tailwind height utilities (t-h2 = 0.5rem), so headings use local classes. */
-  .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; max-width: 18ch; }
-  .t3 { font-size: 1.25rem; line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
-  .head { display: grid; gap: 1.25rem; }
-  .scenario { color: var(--color-text-secondary); font-size: 1rem; line-height: 1.5; max-width: 46ch; }
-  .scenario strong { color: var(--color-text-primary); font-weight: 800; }
-
-  /* ---- timeline: vertical on mobile, horizontal from lg ---- */
-  .tl { list-style: none; padding: 0; margin: 3rem 0 0; position: relative; display: grid; gap: 1.5rem; }
-  .tl::before { content: ""; position: absolute; left: 1.625rem; top: 1rem; bottom: 1rem; width: 3px; border-radius: 9999px; background: linear-gradient(to bottom, var(--color-accent-solid), var(--color-border-subtle)); transform-origin: top; }
-  .st { position: relative; display: grid; grid-template-columns: 3.5rem 1fr; gap: 0 .75rem; align-items: start; }
-  .chip { position: relative; z-index: 1; justify-self: center; min-width: 3.25rem; text-align: center; background: var(--color-accent-solid); color: var(--color-text-on-accent); font-weight: 800; font-size: 1rem; line-height: 1; padding: .55rem .6rem; border-radius: 9999px; font-variant-numeric: tabular-nums; box-shadow: 0 0 0 4px var(--color-surface-page); }
-  .end .chip { background: var(--color-surface-inverse); color: var(--color-text-on-inverse); }
-  .card { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; background: var(--color-surface-page); border-radius: var(--radius-lg); padding: 1rem; box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-mock); }
-  .end .card { background: var(--color-surface-subtle); }
-  .txt { display: grid; gap: .4rem; min-width: 0; }
-  .txt p { font-size: 1rem; line-height: 1.5; color: var(--color-text-secondary); }
-
-  /* mini phone: concentric radii (outer lg-ish, inner sm) */
-  .phone { position: relative; width: 4.25rem; aspect-ratio: 9 / 16; background: var(--color-surface-sunken); border-radius: var(--radius-base); padding: .4rem; display: grid; align-content: start; gap: .3rem; box-shadow: 0 0 0 1px var(--color-border-subtle); color: var(--color-text-primary); overflow: hidden; }
-  .phone i, .phone b { display: block; height: .3rem; border-radius: 9999px; background: var(--color-border-subtle); }
-  .ad-img { display: block; aspect-ratio: 1; border-radius: var(--radius-sm); background: var(--color-accent-subtle); }
-  .ad-lines { display: grid; gap: .25rem; } .ad-lines i:last-child { width: 55%; }
-  .tap { position: absolute; right: .55rem; bottom: .7rem; width: 1.1rem; height: 1.1rem; border-radius: 9999px; background: var(--color-accent-solid); box-shadow: 0 0 0 4px var(--color-accent-subtle); }
-  .prof { display: grid; grid-template-columns: auto 1fr; gap: .3rem; align-items: center; }
-  .prof b { width: .9rem; height: .9rem; }
-  .grid-ph { display: grid; grid-template-columns: repeat(3, 1fr); gap: .15rem; }
-  .grid-ph i { height: auto; aspect-ratio: 1; border-radius: .15rem; }
-  .q { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 800; font-size: 2rem; color: var(--color-accent-text); background: oklch(1 0 0 / .55); }
-  .ph4 { align-content: space-between; }
-  .empty { display: block; height: 1.1rem; border-radius: var(--radius-sm); border: 2px dashed var(--color-border-subtle); }
-
-  /* the money spent, nothing gained */
-  .spent { display: flex; align-items: center; gap: .5rem; margin-top: .25rem; font-weight: 800; font-size: 1.125rem; color: var(--color-text-primary) !important; }
-  .coin, .zero { display: inline-grid; place-items: center; min-width: 2rem; height: 2rem; border-radius: 9999px; line-height: 1; }
-  .coin { background: var(--color-accent-solid); color: var(--color-text-on-accent); }
-  .zero { background: var(--color-surface-page); box-shadow: 0 0 0 2px var(--color-border-subtle); }
-  .dash { flex: 0 0 1.5rem; height: 0; border-top: 3px dotted var(--color-text-secondary); }
-
-  /* condensed supporting copy */
-  .after { margin-top: 3.5rem; display: grid; gap: 2rem; }
-  .paras { display: grid; gap: 1rem; font-size: 1.0625rem; line-height: 1.6; }
-  .pts { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
-  .pts li { padding: .9rem 0; border-top: 1px solid var(--color-border-subtle); font-weight: 600; font-size: 1rem; line-height: 1.45; color: var(--color-text-primary); }
-
-  @media (min-width: 48rem) {
-    .paras { grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .pts { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-    .pts li { padding-top: 1rem; }
-  }
-
+  .calc-sec { background: var(--color-surface-page); }
+  .layout { display: grid; gap: 2.5rem; }
   @media (min-width: 64rem) {
-    .tl { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 4rem; }
-    .tl::before { left: 1.625rem; right: 1.625rem; top: 1rem; bottom: auto; width: auto; height: 3px; background: linear-gradient(to right, var(--color-accent-solid), var(--color-border-subtle)); transform-origin: left; }
-    .st { display: block; }
-    .chip { display: inline-block; margin-left: 0; }
-    .card { grid-template-columns: 1fr; align-content: start; margin-top: 1.25rem; height: calc(100% - 3rem); }
-    .phone { width: 5rem; }
-    .after { grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: start; }
-    .paras { grid-template-columns: 1fr; gap: 1rem; }
-    .pts { grid-template-columns: 1fr; gap: 0; }
-    .pts li { padding: .9rem 0; }
+    .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 27rem); column-gap: 5rem; row-gap: 3rem; align-items: start; }
+    .closing { grid-column: 1 / -1; }
   }
+  .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; max-width: 16ch; }
 
-  /* scroll-driven: line draws, steps appear in sequence, the last phone drains. transform/opacity only. */
+  /* ---- sliders ---- */
+  .inputs { margin-top: 2.5rem; display: grid; gap: 1.75rem; max-width: 34rem; }
+  .rng { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .5rem 1rem; }
+  .rng label { font-weight: 600; font-size: 1rem; line-height: 1.35; }
+  .val { font-weight: 800; font-size: 1.375rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
+  .rng input { grid-column: 1 / -1; }
+  .defaults { font-size: .875rem; color: var(--color-text-secondary); }
+
+  input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 2.75rem; margin: 0; background: transparent; cursor: pointer; --track: linear-gradient(to right, var(--color-accent-solid) var(--p), var(--color-border-subtle) var(--p)); }
+  input[type="range"]::-webkit-slider-runnable-track { height: .5rem; border-radius: 9999px; background: var(--track); }
+  input[type="range"]::-moz-range-track { height: .5rem; border-radius: 9999px; background: var(--track); }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 1.75rem; height: 1.75rem; margin-top: -.625rem; border-radius: 9999px; background: var(--color-surface-page); border: 3px solid var(--color-accent-solid); box-shadow: 0 4px 12px -2px oklch(0.2 0.1 266 / .35); transition: scale 200ms var(--ease-out); }
+  input[type="range"]::-moz-range-thumb { width: 1.75rem; height: 1.75rem; box-sizing: border-box; border-radius: 9999px; background: var(--color-surface-page); border: 3px solid var(--color-accent-solid); box-shadow: 0 4px 12px -2px oklch(0.2 0.1 266 / .35); }
+  input[type="range"]:active::-webkit-slider-thumb { scale: 1.15; }
+  input[type="range"]:focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; border-radius: var(--radius-sm); }
+  @media (hover: hover) { input[type="range"]:hover::-webkit-slider-thumb { scale: 1.1; } }
+
+  /* ---- receipt: what the month of ads buys you ---- */
+  .receipt-wrap { display: grid; gap: .75rem; }
+  /* the mask would clip a box-shadow, so the outline and shadow live on the parent */
+  .paper { filter: drop-shadow(0 0 1px oklch(0.2 0.04 266 / .25)) drop-shadow(0 18px 24px oklch(0.2 0.06 266 / .14)); }
+  .receipt {
+    --tooth: .6rem;
+    position: relative; padding: 1.5rem 1.5rem calc(1.5rem + var(--tooth));
+    background: var(--color-surface-page); color: var(--color-text-primary);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    /* serrated bottom edge */
+    mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(var(--tooth) * 2) 100%;
+  }
+  .r-title { text-align: center; font-weight: 800; font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary); padding-bottom: .9rem; margin: 0 auto .4rem; border-bottom: 2px dashed var(--color-border-subtle); max-width: none; }
+  .rows { margin: 0; display: grid; }
+  .row { display: flex; align-items: baseline; gap: .5rem; padding-block: .7rem; }
+  .row dt { font-size: .9375rem; color: var(--color-text-secondary); flex: 0 1 auto; }
+  .row::after { content: ""; order: 1; flex: 1 1 1rem; min-width: 1rem; border-bottom: 2px dotted var(--color-border-subtle); translate: 0 -.3rem; }
+  .row dd { order: 2; margin: 0; font-weight: 800; font-size: 1.25rem; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .total { margin-top: .5rem; padding-top: 1.1rem; border-top: 2px dashed var(--color-border-subtle); }
+  .total dt { color: var(--color-text-primary); font-weight: 700; }
+  .total dd { font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem); color: var(--color-accent-text); letter-spacing: -.03em; }
+
+  .dots-box { margin-top: 1.25rem; padding: 1.1rem; border-radius: var(--radius-base); background: var(--color-surface-sunken); }
+  .dots-title { font-size: .9375rem; line-height: 1.4; }
+  .dots-title strong { font-variant-numeric: tabular-nums; }
+  .dots { margin-top: .9rem; display: grid; grid-template-columns: repeat(20, 1fr); gap: .3rem; }
+  .dots i { display: block; aspect-ratio: 1; border-radius: 9999px; background: var(--color-border-subtle); }
+  .dots i.on { background: var(--color-accent-solid); box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-accent-solid) 25%, transparent); }
+  .legend { margin-top: .75rem; display: flex; align-items: center; gap: .4rem; font-size: .8125rem; color: var(--color-text-secondary); }
+  .k { width: .65rem; height: .65rem; border-radius: 9999px; background: var(--color-border-subtle); }
+  .k.on { background: var(--color-accent-solid); }
+  .k:not(:first-child) { margin-left: .75rem; }
+  .note { font-size: .8125rem; color: var(--color-text-secondary); }
+  .closing { font-size: var(--text-h3); line-height: 1.3; font-weight: 700; letter-spacing: -.015em; max-width: 36ch; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .dots i { transition: background-color 300ms var(--ease-out), scale 300ms var(--ease-expo); transition-delay: calc(var(--d) * 4ms); }
+    .dots i.on { animation: dot-on 500ms var(--ease-expo) backwards; animation-delay: calc(var(--d) * 4ms); }
+    @keyframes dot-on { from { scale: .3; } }
+  }
+  /* the receipt prints as it scrolls in */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      .tl::before { animation: draw linear both; animation-timeline: view(); animation-range: entry 15% cover 45%; }
-      .st { animation: step linear both; animation-timeline: view(); animation-range: entry calc(5% + var(--i) * 9%) entry calc(45% + var(--i) * 9%); }
-      .end .phone { animation: drain linear both; animation-timeline: view(); animation-range: entry 40% cover 50%; }
-      @keyframes draw { from { transform: scaleY(0); } to { transform: none; } }
-      @keyframes step { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-      @keyframes drain { from { opacity: 1; } to { opacity: .45; } }
-      @media (min-width: 64rem) {
-        .tl::before { animation-name: draw-x; }
-        @keyframes draw-x { from { transform: scaleX(0); } to { transform: none; } }
-      }
+      .receipt { animation: print linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
+      @keyframes print { from { clip-path: inset(0 0 100% 0); translate: 0 -1rem; } to { clip-path: inset(0 0 0 0); translate: none; } }
     }
   }
 </style>

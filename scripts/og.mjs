@@ -8,7 +8,8 @@ import sharp from "sharp";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const out = resolve(root, "public/og/home.png");
 const BLUE = "#2844bd";
-const headline = "Per chi fa Meta Ads: più messaggi dai click che già paghi.";
+const headline = "Più messaggi dai click che già paghi.";
+const kicker = "Landing page per chi fa Meta Ads";
 
 const b64 = (p) => readFileSync(resolve(root, p)).toString("base64");
 const html = `<!doctype html><meta charset="utf-8"><style>
@@ -16,8 +17,9 @@ const html = `<!doctype html><meta charset="utf-8"><style>
 *{margin:0;box-sizing:border-box}
 body{width:1200px;height:630px;background:${BLUE};color:#fff;font-family:Inter,sans-serif;padding:72px 80px;display:flex;flex-direction:column;justify-content:space-between}
 img{height:96px;width:auto;align-self:flex-start}
-h1{font-weight:800;font-size:84px;line-height:1.02;letter-spacing:-0.035em;max-width:1000px;text-wrap:balance}
-</style><img src="data:image/png;base64,${b64("src/assets/logo-white.png")}"><h1>${headline}</h1>`;
+p{font-weight:700;font-size:30px;opacity:.85;margin-bottom:20px}
+h1{font-weight:800;font-size:96px;line-height:1.02;letter-spacing:-0.035em;max-width:1000px;text-wrap:balance}
+</style><img src="data:image/png;base64,${b64("src/assets/logo-white.png")}"><div><p>${kicker}</p><h1>${headline}</h1></div>`;
 
 try {
   const { chromium } = await import("playwright");

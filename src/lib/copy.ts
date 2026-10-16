@@ -11,7 +11,7 @@ export const copy = {
   nav: {
     cta: "Invia annuncio",
     links: [
-      { label: "Il problema", href: "#problema" },
+      { label: "Fai due conti", href: "#problema" },
       { label: "Come funziona", href: "#come-funziona" },
       { label: "Cosa include", href: "#cosa-include" },
       { label: "Piani", href: "#piani" },
@@ -21,93 +21,52 @@ export const copy = {
   },
 
   hero: {
-    headline: "Per chi fa Meta Ads: {em}più messaggi dai click che già paghi{/em}.",
-    lead: "Se le tue inserzioni su Facebook e Instagram portano a un profilo o a un sito generico, chi clicca si guarda intorno e se ne va. Noi costruiamo una landing page per quel preciso annuncio, con un solo pulsante: scrivere a te.",
+    kicker: "Landing page per chi fa Meta Ads",
+    headline: "Più messaggi dai click {em}che già paghi{/em}.",
+    lead: "Mandaci il link del tuo annuncio Facebook o Instagram: costruiamo la pagina che porta chi clicca a scriverti.",
     cta: "Mandaci il tuo annuncio",
     note: "Ci basta un link. Il resto lo facciamo noi.",
-    slogan: "Veloce. Pratico. Funzionale.",
-    annotations: {
-      ad: "Il tuo annuncio",
-      profile: "Qui l’utente atterra: un profilo, niente da fare",
-      landing: "Qui atterra con la landing: una cosa sola da fare",
-    },
-    diagram: {
-      label: "Esempio illustrativo, non sono dati reali",
-      before: {
-        title: "Oggi",
-        steps: [
-          { label: "Annuncio", text: "Tocca “Scopri di più”" },
-          { label: "Profilo o sito generico", text: "Mille cose, nessuna domanda" },
-          { label: "“Non so cosa fare”", text: "Cerca, scorre, esita" },
-          { label: "Esce", text: "Il click è pagato, il contatto no" },
-        ],
-      },
-      after: {
-        title: "Con BESA",
-        steps: [
-          { label: "Annuncio", text: "Lo stesso di prima, non cambia" },
-          { label: "Landing coerente", text: "Stessa offerta, stesse parole" },
-          { label: "Un pulsante", text: "Un’azione sola" },
-          { label: "Messaggio WhatsApp", text: "Arriva a te, già pronto" },
-        ],
-      },
+    chips: ["Non cambi annuncio", "La provi prima di decidere", "Un solo pulsante: scrivere a te"],
+    compare: {
+      legend: "Dove arriva chi clicca il tuo annuncio",
+      before: "Oggi",
+      after: "Con BESA",
+      captionBefore: "Atterra sul profilo: mille cose, nessuna domanda. Guarda, non trova, se ne va.",
+      captionAfter: "Atterra su una pagina fatta per quell’annuncio: stessa offerta, un pulsante. E ti scrive.",
+      note: "Esempio illustrativo",
+      ad: { name: "La tua attività", sponsored: "Sponsorizzato", offer: "La tua offerta", cta: "Scopri di più" },
+      profile: { handle: "latuaattivita", link: "link in bio", doubts: ["Dove scrivo?", "Quanto costa?", "Era questa l’offerta?"] },
+      landing: { title: "La tua offerta, come nell’annuncio", text: "Due righe chiare su cosa ottieni.", button: "Scrivici su WhatsApp" },
+      toast: { app: "WhatsApp", text: "Ciao! Ho visto l’annuncio, vorrei sapere di più." },
     },
   },
 
   problem: {
-    headline: "Paghi per portare gente su una pagina che {em}non chiede nulla{/em}.",
-    paragraphs: [
-      "Una persona vede il tuo annuncio sul telefono, tocca, e finisce sul tuo profilo Instagram, su un post o sulla home del sito. Trova mille cose e nessuna domanda: dove clicco? Cosa devo fare?",
-      "Tu hai pagato il click. Chi ha cliccato non ha lasciato niente: né un messaggio, né un numero. E non è colpa dell’annuncio: è che la pagina dopo non gli ha detto cosa fare.",
-    ],
-    points: [
-      "Il profilo mostra tutto, ma non chiede un’azione sola.",
-      "Il sito generico parla a tutti, quindi non convince nessuno.",
-      "Dal telefono, ogni passaggio in più è una persona in meno.",
-    ],
-    scenarioLabel: "Immagina:",
-    scenarioNote: "Scenario illustrativo di come può andare un click. I tempi sono un esempio, non una statistica.",
-    timeline: [
-      {
-        time: "0 s",
-        title: "Tocca l’annuncio",
-        text: "Ha visto la tua offerta mentre scorreva il telefono. Ha deciso di saperne di più.",
-      },
-      {
-        time: "3 s",
-        title: "Atterra sul profilo",
-        text: "Foto, storie, post vecchi, link in bio. L’offerta che l’ha incuriosito non si vede più.",
-      },
-      {
-        time: "8 s",
-        title: "Non sa cosa fare",
-        text: "Scrivere? Chiamare? Cercare il sito? Nessuno glielo dice, e decidere costa fatica.",
-      },
-      {
-        time: "Poi",
-        title: "Torna indietro",
-        text: "Chiude e torna a quello che stava guardando. Tu non lo saprai mai.",
-      },
-    ],
+    headline: "Quanto ti costa {em}chi clicca e se ne va{/em}?",
+    lead: "Metti i tuoi numeri. Il conto si fa qui, nel tuo browser: non salviamo niente.",
+    defaultsNote: "Valori di esempio: metti i tuoi.",
+    inputs: {
+      budget: { label: "Spendi in inserzioni al mese", min: 50, max: 5000, step: 50, value: 300 },
+      cpc: { label: "Paghi ogni click, più o meno", min: 0.1, max: 3, step: 0.05, value: 0.5 },
+      msgs: { label: "Messaggi che ricevi al mese", min: 0, max: 300, step: 1, value: 6 },
+    },
+    results: {
+      clicks: "click pagati al mese",
+      title: "Il tuo mese di inserzioni",
+      gone: "se ne vanno senza scriverti",
+      perMsg: "ti costa ogni messaggio",
+      perMsgNone: "nessun messaggio: ogni euro va via così",
+      dotsPre: "Su 100 persone che cliccano, oggi ti scrivono",
+      dotsLegendWrote: "ti scrive",
+      dotsLegendGone: "se ne va",
+    },
+    closing: "Di solito il problema non è l’annuncio: è la pagina dove arriva chi clicca. Lì lavoriamo noi.",
+    note: "Solo aritmetica sui numeri che inserisci. Non è una previsione.",
   },
 
   fix: {
     headline: "Un annuncio, una pagina, {em}un’azione{/em}.",
-    lead: "La landing page fa una cosa: prende chi arriva dal tuo annuncio e lo porta a contattarti. Stesso messaggio dell’inserzione, stessa offerta, un solo pulsante. Niente menu, niente altre strade, niente da cercare.",
-    points: [
-      {
-        title: "Coerente con l’annuncio",
-        text: "Chi clicca ritrova quello che ha visto: stesse parole, stessa promessa. Non deve chiedersi se è nel posto giusto.",
-      },
-      {
-        title: "Pensata per il telefono",
-        text: "Si legge con il pollice e il pulsante resta sempre a portata.",
-      },
-      {
-        title: "Un obiettivo solo",
-        text: "Messaggio WhatsApp, chiamata, richiesta di preventivo: scegliamo con te quello che usi davvero per rispondere, e togliamo tutto il resto.",
-      },
-    ],
+    lead: "Stesse parole dell’inserzione, un solo pulsante, niente da cercare.",
   },
 
   howItWorks: {
@@ -115,19 +74,22 @@ export const copy = {
     steps: [
       {
         title: "Mandi il link del tuo annuncio",
-        text: "Compili il modulo: nome, WhatsApp o email, link all’inserzione (o al tuo profilo). Sono tre campi.",
+        text: "Nome, WhatsApp o email, link all’inserzione (o al profilo). Tre campi.",
       },
       {
         title: "Costruiamo la landing da lì",
-        text: "Guardiamo cosa prometti e a chi parli, poi scriviamo i testi e prepariamo la pagina partendo dal tuo annuncio. Prima di andare online la vedi e ci dici cosa cambiare. [TODO: tempi di consegna dichiarati, da confermare con Benito]",
+        text: "Partiamo da cosa prometti nell’annuncio: scriviamo i testi e prepariamo la pagina. Prima di andare online la vedi tu. [TODO: tempi di consegna dichiarati, da confermare con Benito]",
       },
       {
         title: "La pagina va online",
-        text: "Ti diciamo dove collegarla alle tue inserzioni. Poi ne parliamo insieme: cosa è successo e cosa fare dopo.",
+        text: "Ti diciamo dove collegarla alle inserzioni. Poi guardiamo insieme com’è andata e cosa fare dopo.",
       },
     ],
+    demoTitle: "Prova prima di decidere",
     demoNote:
       "All’inizio la pagina vive su un indirizzo di prova, non sul tuo dominio. Così puoi vederla e provarla dal telefono prima di decidere.",
+    demoUrl: "indirizzo-di-prova/la-tua-pagina",
+    demoIllustrative: "Indirizzo illustrativo: quello vero ti arriva con la pagina.",
   },
 
   inside: {
@@ -212,8 +174,7 @@ export const copy = {
   proof: {
     headline: "Questo sito è {em}la nostra prova{/em}.",
     paragraphs: [
-      "Questo sito è costruito come le nostre pagine: veloce, chiaro, con una sola richiesta da fare.",
-      "Non ti mostriamo numeri inventati né recensioni di comodo. Ti mostriamo il lavoro: guarda quanto si carica in fretta, quanto è chiaro cosa fare, e giudica tu.",
+      "È costruito come le nostre pagine: veloce, chiaro, una sola richiesta. Niente numeri inventati né recensioni di comodo: guarda come si carica e quanto è chiaro cosa fare, poi giudica tu.",
     ],
     how: [
       "Partiamo sempre dal tuo annuncio, non da un modello già pronto.",

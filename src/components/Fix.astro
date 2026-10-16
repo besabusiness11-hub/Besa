@@ -1,18 +1,41 @@
 ---
 import { copy } from "../lib/copy";
-import { em } from "../lib/em";
 const f = copy.fix;
+// One span per word so each can light up on scroll; {em} runs keep the accent.
+const words: { t: string; em: boolean }[] = [];
+let inEm = false;
+for (const raw of f.headline.split(" ")) {
+  let t = raw;
+  const open = t.includes("{em}");
+  const close = t.includes("{/em}");
+  t = t.replace("{em}", "").replace("{/em}", "");
+  if (open) inEm = true;
+  words.push({ t, em: inEm });
+  if (close) inEm = false;
+}
 ---
-<section class="section bg-surface-subtle overflow-hidden" aria-labelledby="fix-title">
+<section class="statement section" aria-labelledby="fix-title">
   <div class="wrap">
-    <div class="reveal">
-      <h2 id="fix-title" class="t2 fix-h" set:html={em(f.headline)} />
-      <p class="lead mt-6 text-text-secondary">{f.lead}</p>
-    </div>
+    <h2 id="fix-title" class="big">
+      {words.map((w, i) => (
+        <Fragment><span class:list={["w", { em: w.em }]} style={`--i:${i}`}>{w.t}</span>{" "}</Fragment>
+      ))}
+    </h2>
+    <p class="lead sub reveal">{f.lead}</p>
   </div>
 </section>
 
 <style>
-  .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; }
-  .fix-h { max-width: 16ch; font-size: var(--text-display); line-height: 1; letter-spacing: -0.035em; }
+  .statement { background: var(--color-surface-subtle); }
+  .big { font-size: clamp(2.75rem, 1.4rem + 6vw, 6rem); line-height: .98; letter-spacing: -0.04em; max-width: 13ch; }
+  .w { display: inline-block; }
+  .sub { margin-top: 2rem; color: var(--color-text-secondary); max-width: 36ch; }
+
+  /* words go from faint to full as the line scrolls through the viewport */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .w { animation: lit linear both; animation-timeline: view(); animation-range: cover calc(12% + var(--i) * 5%) cover calc(26% + var(--i) * 5%); }
+      @keyframes lit { from { opacity: .14; translate: 0 .15em; } to { opacity: 1; translate: none; } }
+    }
+  }
 </style>
