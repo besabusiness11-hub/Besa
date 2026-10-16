@@ -138,6 +138,13 @@ const kindOf = (i: number) => kinds[i];
     .tag-r { grid-column: 3; }
   }
 
+  /* phones: the anatomy phone scaled down, so the list it explains starts within the same screen */
+  @media (max-width: 47.99rem), (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+    .anatomy-wrap { margin-top: 1.5rem; }
+    .anatomy { zoom: .8; padding-block: .5rem 1rem; }
+    .list li { padding-block: 1rem; }
+  }
+
   :global(.todo) {
     display: inline; font-size: .8125rem; font-weight: 600; font-style: normal; color: var(--color-text-primary);
     background: transparent; padding: .05rem .4rem; border: 1.5px dashed var(--color-accent-solid-hover); border-radius: .35rem;

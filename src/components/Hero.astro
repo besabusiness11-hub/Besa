@@ -127,6 +127,8 @@ const c = h.compare;
 
 <style>
   .hero { position: relative; overflow: clip; isolation: isolate; }
+  /* with JS the header is transparent over the hero: the hero slides up under it */
+  :global(.js) .hero { margin-top: calc(-1 * var(--hdr-h)); padding-top: var(--hdr-h); }
   .grid-h { position: relative; z-index: 1; }
   .grid-h { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "stage"; gap: 2.25rem; padding-block: 2.25rem 3rem; align-items: center; }
   .copy { grid-area: copy; }
@@ -304,6 +306,28 @@ const c = h.compare;
   .stage:has(#cmp-after:checked) .cap-a { opacity: 1; visibility: visible; }
   .stage:has(#cmp-after:checked) .cap-b { opacity: 0; visibility: hidden; }
   .cap-note { margin-top: .5rem; font-size: .75rem; color: var(--color-text-on-accent-muted); }
+
+  /* ---- phones ---- */
+  @media (max-width: 47.99rem) {
+    .grid-h { gap: 2rem; padding-block: 2rem 2.5rem; }
+    /* the caption reads under the phone, in the same column as the copy above */
+    .cap { justify-self: stretch; justify-items: start; text-align: left; max-width: none; }
+    .cap-b, .cap-a { max-width: 36ch; }
+  }
+  /* very narrow phones: the ad card and the phone overlap less when the scene is scaled down as a whole */
+  @media (max-width: 23.5rem) { .scene { zoom: .86; } }
+  /* phones held sideways: copy and scene side by side, like desktop but scaled to a ~380px tall screen */
+  @media (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+    .grid-h { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "copy stage"; column-gap: 2rem; padding-block: 1.75rem 2rem; align-items: center; }
+    .h1 { font-size: clamp(2rem, 1rem + 3.4vw, 2.75rem); }
+    .lead { margin-top: .875rem; font-size: 1.0625rem; }
+    .actions { margin-top: 1.25rem; }
+    .stage { gap: .5rem; }
+    .scene { zoom: .66; }
+    .seg-legend { margin-bottom: .25rem; }
+    .cap { justify-self: center; justify-items: center; text-align: center; max-width: 18rem; }
+    .cap-b, .cap-a { font-size: .8125rem; }
+  }
 
   /* ---- motion: entrance (never the H1: it is the LCP), the tap on the ad, doubts popping, the button pulse ---- */
   @media (prefers-reduced-motion: no-preference) {

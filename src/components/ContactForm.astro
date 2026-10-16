@@ -225,6 +225,15 @@ const labels = JSON.stringify({
   .rail:not(.last)::before { content: ""; position: absolute; left: .8125rem; top: 2.1rem; bottom: -1.2rem; width: 2px; border-radius: 2px; background: var(--color-border-subtle); }
   .rail.is-done:not(.last)::before { background: color-mix(in oklab, var(--color-status-success) 55%, var(--color-border-subtle)); }
   @media (max-width: 26rem) { .q.rail { padding-left: 2.4rem; } }
+  /* phones: the step number moves inline with its question, so the fields get the full card width */
+  @media (max-width: 47.99rem), (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+    .layout { gap: 2rem; }
+    .q.rail { padding-left: 0; }
+    .rail .n { position: static; }
+    .rail:not(.last)::before { display: none; }
+    .q { margin-bottom: 1.75rem; }
+    .prog { margin: .875rem 0 1.5rem; }
+  }
   .prog-bar { flex: 1; height: .375rem; border-radius: 9999px; background: var(--color-surface-sunken); overflow: hidden; }
   .prog-bar i { display: block; height: 100%; width: 100%; border-radius: inherit; background: var(--color-accent-solid); transform: scaleX(var(--done, 0)); transform-origin: left; transition: transform 500ms var(--ease-expo); }
   .prog-t { font-size: .8125rem; font-weight: 700; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }

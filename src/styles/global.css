@@ -54,6 +54,10 @@
 }
 
 @layer base {
+  /* height of the site header bar (Header.astro .bar min-height) */
+  :root { --hdr-h: 3.5rem; }
+  @media (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) { :root { --hdr-h: 3rem; } }
+  @media (min-width: 64rem) { :root { --hdr-h: 3.75rem; } }
   html {
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
@@ -91,6 +95,10 @@
   .on-blue .em { color: var(--color-text-on-accent); }
   .wrap { width: min(100% - 2rem, 75rem); margin-inline: auto; }
   .section { padding-block: clamp(4rem, 3rem + 5vw, 8rem); }
+  /* phones: same query as the phone block at the end of this file */
+  @media (max-width: 47.99rem), (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+    .section { padding-block: 3.5rem; }
+  }
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
     min-height: 3rem; padding: .75rem 1.5rem; border-radius: var(--radius-base);
@@ -105,6 +113,12 @@
   }
   /* 1px inner outline for photos, never a border (concentric with the image radius) */
   .img-outline { outline: 1px solid rgb(0 0 0 / 0.08); outline-offset: -1px; }
+}
+
+/* Phones only (portrait < 48rem, or a short landscape screen below the desktop breakpoint).
+   Desktop (>= 64rem) never matches; every phone-specific rule in the components uses the same query. */
+@media (max-width: 47.99rem), (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+  html { -webkit-tap-highlight-color: transparent; }
 }
 
 /* Shared reveal: content is visible by default; scroll-driven enhancement only where supported. */

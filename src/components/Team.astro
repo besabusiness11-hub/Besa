@@ -81,6 +81,19 @@ const photos = [leo, benito];
     .r { margin-top: 6rem; }
     .frame { width: min(100%, 24rem); }
   }
+  /* phones: the two portraits sit side by side, still facing each other, same size */
+  @media (max-width: 47.99rem), (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+    .duo { --tilt: 9deg; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2.5rem; }
+    .r { margin-top: 2.5rem; }
+    .stage { width: 100%; }
+    .frame, .r .frame { width: 100%; border-radius: var(--radius-lg); }
+    .name { font-size: clamp(1.5rem, 1rem + 2.5vw, 2rem); }
+    .role { font-size: .9375rem; line-height: 1.35; margin-top: .35rem; }
+    .bio { margin-top: .5rem; }
+  }
+  @media (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+    .duo { max-width: 32rem; }
+  }
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .person:hover .frame { transform: rotateY(calc(var(--tilt) * .25)); }
     .r:hover .frame { transform: rotateY(calc(var(--tilt) * -.25)); }

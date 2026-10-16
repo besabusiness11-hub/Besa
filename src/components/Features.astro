@@ -188,6 +188,22 @@ const arrow = `<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true
     }
   }
   @property --fill { syntax: "<percentage>"; inherits: false; initial-value: 100%; }
+
+  /* phones: the six cards become one swipeable row (next card peeks) instead of a 2,700px stack.
+     The row is a scroll container, so the view() timelines inside it would have nothing to track: they rest at their end state. */
+  @media (max-width: 47.99rem), (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+    .head { margin-bottom: 1.75rem; }
+    .bento {
+      grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(84%, 22rem); gap: .75rem;
+      margin-inline: calc(50% - 50vw); padding: .5rem max(1rem, calc(50vw - 50%)) 1.75rem;
+      overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: max(1rem, calc(50vw - 50%));
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .bento::-webkit-scrollbar { display: none; }
+    .card { min-height: 0; scroll-snap-align: start; }
+    .viz { min-height: 8.5rem; }
+    .card, .track li:not(:last-child)::after, .typed, .msg, .mini-phone { animation: none !important; }
+  }
   @media (prefers-reduced-motion: no-preference) {
     .card:hover .big-btn { animation: tap 900ms var(--ease-out); }
     .card:hover .avatars span:last-child { animation: nudge 600ms var(--ease-expo); }

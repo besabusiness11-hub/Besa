@@ -87,5 +87,11 @@ const f = copy.faq;
   .panel { overflow: hidden; }
   .a { color: var(--color-text-secondary); padding: 0 3rem 1.5rem 0; max-width: 62ch; line-height: 1.6; }
   .faq :global(mark.todo) { background: var(--color-surface-page); }
+  /* phones: answers use the full width; questions a touch smaller so most fit on one or two lines */
+  @media (max-width: 47.99rem), (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+    summary { min-height: 3.5rem; font-size: 1.0625rem; }
+    .chev { width: 2.25rem; height: 2.25rem; }
+    .a { padding-right: 0; }
+  }
   @media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
 </style>

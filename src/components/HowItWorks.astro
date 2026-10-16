@@ -95,6 +95,15 @@ const h = copy.howItWorks;
     .step:nth-child(3) { margin-left: 16%; }
   }
 
+  /* phones: the numeral sits beside its title instead of a 140px block above it */
+  @media (max-width: 47.99rem), (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
+    .steps { margin-top: 2.25rem; gap: 2.25rem; }
+    .step { grid-template-columns: 3rem minmax(0, 1fr); column-gap: .875rem; row-gap: 1.25rem; align-items: start; }
+    .num::before { font-size: 3.75rem; line-height: .82; }
+    .live-viz { grid-column: 1 / -1; }
+    .demo { margin-top: 2.5rem; }
+  }
+
   .viz { display: flex; }
   /* on phones the step 2/3 mockups only add scroll; the text carries the step */
   @media (max-width: 55.99rem) { .viz:not(.live-viz) { display: none; } }
