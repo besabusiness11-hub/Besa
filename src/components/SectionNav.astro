@@ -1,207 +1,245 @@
 ---
-// Section navigation, always white whatever the section behind it.
-// Desktop: a slim rail of ticks on the right edge; hover or keyboard focus opens it into numbered labels.
-// Phones/tablets: a pill at the bottom with the current section; a tap opens the list above it.
+// Section dock: one small white pill at the bottom, on every screen size.
+// Closed: the current section, and its border fills as you read through that section.
+// Open (click or tap): the pill morphs into a card listing every section.
 import { copy } from "../lib/copy";
 const links = copy.nav.links;
 const s = copy.nav.sections;
 const pad = (n: number) => String(n).padStart(2, "0");
-const arrow = `<svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 ---
-<nav class="snav" aria-label={s.label}>
-  <button class="pill" type="button" aria-expanded="false" aria-controls="snav-card" aria-label={s.open} data-open-label={s.open} data-close-label={s.close}>
-    <span class="segs" aria-hidden="true">{links.map(() => <i></i>)}</span>
-    <span class="now" aria-hidden="true">
-      <span class="now-k">00</span>
-      <span class="now-t" data-top={s.top}>{s.top}</span>
-    </span>
-    <svg class="chev" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m4 10 4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-  </button>
+<nav class="dock" aria-label={s.label} data-away>
+  <div class="shell">
+    <svg class="ring" aria-hidden="true"><rect class="ring-track" pathLength="100" /><rect class="ring-fill" pathLength="100" /></svg>
 
-  <div class="card" id="snav-card">
-    <ol class="list">
-      {links.map((l, i) => (
-        <li style={`--i:${i}`}>
-          <a class="row" href={l.href} data-i={i}>
-            <span class="tick" aria-hidden="true"></span>
-            <span class="lbl"><span class="lbl-in"><span class="num" aria-hidden="true">{pad(i + 1)}</span><span class="txt">{l.label}</span></span></span>
-          </a>
-        </li>
-      ))}
-    </ol>
-    <div class="foot">
-      <div class="foot-in">
-        <span class="count"><span class="count-t">{s.title}</span> <b class="count-n">0</b> {s.of} {links.length}</span>
-        <a class="go" href="#contatto"><span>{copy.nav.cta}</span><Fragment set:html={arrow} /></a>
+    <div class="panel" id="dock-panel">
+      <div class="p-head">
+        <span>{s.title}</span>
+        <span class="p-count"><b class="p-n">0</b> {s.of} {links.length}</span>
       </div>
+      <ol class="list">
+        {links.map((l, i) => (
+          <li style={`--i:${i}`}>
+            <a class="row" href={l.href} data-i={i}>
+              <span class="num">{pad(i + 1)}</span>
+              <span class="txt">{l.label}</span>
+              <span class="state" aria-hidden="true">
+                <svg class="done" viewBox="0 0 16 16" width="14" height="14"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                <i class="meter"><i></i></i>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <a class="go" href="#contatto">
+        <span>{copy.nav.cta}</span>
+        <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </a>
     </div>
+
+    <button class="bar" type="button" aria-expanded="false" aria-controls="dock-panel" aria-label={s.open} data-open-label={s.open} data-close-label={s.close}>
+      <span class="bar-in">
+        <span class="k" aria-hidden="true">00</span>
+        <span class="t-wrap" aria-hidden="true"><span class="t" data-top={s.top}>{s.top}</span></span>
+        <svg class="chev" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m4 10 4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </span>
+    </button>
   </div>
 </nav>
 
 <script>
-  const nav = document.querySelector<HTMLElement>(".snav")!;
-  const pill = nav.querySelector<HTMLButtonElement>(".pill")!;
-  const rows = Array.from(nav.querySelectorAll<HTMLAnchorElement>(".row"));
+  const dock = document.querySelector<HTMLElement>(".dock")!;
+  const shell = dock.querySelector<HTMLElement>(".shell")!;
+  const bar = dock.querySelector<HTMLButtonElement>(".bar")!;
+  const barIn = dock.querySelector<HTMLElement>(".bar-in")!;
+  const panel = dock.querySelector<HTMLElement>(".panel")!;
+  const k = dock.querySelector<HTMLElement>(".k")!;
+  const t = dock.querySelector<HTMLElement>(".t")!;
+  const tWrap = dock.querySelector<HTMLElement>(".t-wrap")!;
+  const chev = dock.querySelector<SVGElement>(".chev")!;
+  const pN = dock.querySelector<HTMLElement>(".p-n")!;
+  const rows = Array.from(dock.querySelectorAll<HTMLAnchorElement>(".row"));
   const targets = rows.map((a) => document.getElementById(a.hash.slice(1)));
-  const nowK = nav.querySelector<HTMLElement>(".now-k")!;
-  const nowT = nav.querySelector<HTMLElement>(".now-t")!;
-  const countN = nav.querySelector<HTMLElement>(".count-n")!;
-  const segs = Array.from(nav.querySelectorAll<HTMLElement>(".segs i"));
   const contact = document.getElementById("contatto");
-  const wide = matchMedia("(min-width: 64rem)");
 
-  // open/close (phones by tap; on desktop hover/focus does it in CSS, data-open only pins it)
-  const setOpen = (open: boolean, restoreFocus = false) => {
-    nav.toggleAttribute("data-open", open);
-    pill.setAttribute("aria-expanded", String(open));
-    pill.setAttribute("aria-label", open ? pill.dataset.closeLabel! : pill.dataset.openLabel!);
-    if (!open && restoreFocus) pill.focus();
+  // ---- size: the shell is sized explicitly so width/height can animate between pill and card ----
+  let open = false;
+  const size = () => {
+    const pad = 2 * parseFloat(getComputedStyle(bar).paddingLeft);
+    // computed from the parts' final sizes, not measured mid-transition (label and number glide)
+    const gap = parseFloat(getComputedStyle(barIn).columnGap) || 0;
+    const kW = dock.hasAttribute("data-at-top") ? 0 : k.offsetWidth + gap;
+    const closedW = Math.ceil(kW + t.offsetWidth + gap + chev.getBoundingClientRect().width + pad);
+    const openW = Math.max(closedW, panel.offsetWidth);
+    shell.style.width = `${open ? openW : closedW}px`;
+    shell.style.height = `${open ? panel.offsetHeight + bar.offsetHeight : bar.offsetHeight}px`;
   };
-  pill.addEventListener("click", (e) => {
-    const open = !nav.hasAttribute("data-open");
-    setOpen(open);
-    if (open && e.detail === 0) rows[0]?.focus();
-  });
-  nav.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && nav.hasAttribute("data-open")) setOpen(false, nav.contains(document.activeElement)); });
-  document.addEventListener("pointerdown", (e) => { if (!nav.contains(e.target as Node)) setOpen(false); });
-  wide.addEventListener("change", () => setOpen(false));
+  const setOpen = (next: boolean, restoreFocus = false) => {
+    if (next === open) return;
+    open = next;
+    dock.toggleAttribute("data-open", open);
+    bar.setAttribute("aria-expanded", String(open));
+    bar.setAttribute("aria-label", open ? bar.dataset.closeLabel! : bar.dataset.openLabel!);
+    size();
+    if (!open && restoreFocus) bar.focus();
+  };
 
-  // current section = the last one whose top has passed 40% of the viewport
+  bar.addEventListener("click", (e) => {
+    setOpen(!open);
+    if (open && e.detail === 0) rows[Math.max(current, 0)]?.focus();
+  });
+  rows.forEach((a) => a.addEventListener("click", () => setOpen(false)));
+  dock.querySelector(".go")!.addEventListener("click", () => setOpen(false));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && open) setOpen(false, dock.contains(document.activeElement)); });
+  document.addEventListener("pointerdown", (e) => { if (open && !dock.contains(e.target as Node)) setOpen(false); });
+  dock.addEventListener("focusout", (e) => { const to = e.relatedTarget as Node | null; if (to && !dock.contains(to)) setOpen(false); });
+
+  // ---- tracking: current section + how far through it you are ----
   let current = -2;
   let queued = false;
+  const docTop = (el: Element) => el.getBoundingClientRect().top + scrollY;
   const update = () => {
     queued = false;
-    const line = innerHeight * 0.4;
+    const line = scrollY + innerHeight * 0.4;
+    const tops = targets.map((el) => (el ? docTop(el) : Infinity));
     let active = -1;
-    targets.forEach((t, i) => { if (t && t.getBoundingClientRect().top <= line) active = i; });
-    // the contact form is the destination: the navigation steps aside there
-    nav.toggleAttribute("data-away", !!contact && contact.getBoundingClientRect().top < innerHeight * 0.55);
+    tops.forEach((top, i) => { if (top <= line) active = i; });
+    const start = active < 0 ? 0 : tops[active];
+    const end = tops[active + 1] ?? (contact ? docTop(contact) : document.documentElement.scrollHeight);
+    const p = Math.min(1, Math.max(0, (line - start) / Math.max(1, end - start)));
+    dock.style.setProperty("--p", p.toFixed(4));
+
+    // hidden over the hero (it appears once the first section takes over) and at the contact form, the destination
+    const away = active < 0 || (!!contact && contact.getBoundingClientRect().top < innerHeight * 0.6);
+    if (away && open) setOpen(false);
+    dock.toggleAttribute("data-away", away);
+
     if (active === current) return;
+    const dir = active > current ? 1 : -1;
     current = active;
-    nav.toggleAttribute("data-at-top", active < 0);
-    segs.forEach((g, i) => { g.classList.toggle("is-on", i === active); g.classList.toggle("is-past", i < active); });
+    dock.toggleAttribute("data-at-top", active < 0);
     rows.forEach((a, i) => {
       if (i === active) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
       a.classList.toggle("is-past", i < active);
     });
-    nowK.textContent = String(Math.max(active + 1, 0)).padStart(2, "0");
-    nowT.textContent = active >= 0 ? rows[active].querySelector(".txt")!.textContent : nowT.dataset.top!;
-    countN.textContent = String(active + 1);
-    // re-trigger the label swap animation on the pill
-    nowT.classList.remove("swap"); void nowT.offsetWidth; nowT.classList.add("swap");
+    pN.textContent = String(active + 1);
+    k.textContent = String(Math.max(active + 1, 0)).padStart(2, "0");
+
+    // label swap: the new name slides in (direction follows the scroll) while the width glides
+    const next = active >= 0 ? rows[active].querySelector(".txt")!.textContent! : t.dataset.top!;
+    if (t.textContent !== next) {
+      t.textContent = next;
+      t.style.setProperty("--dir", String(dir));
+      t.classList.remove("swap"); void t.offsetWidth; t.classList.add("swap");
+    }
+    tWrap.style.width = `${t.offsetWidth}px`;
+    size();
   };
   const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
   addEventListener("scroll", schedule, { passive: true });
-  addEventListener("resize", schedule);
+  addEventListener("resize", () => { size(); schedule(); });
+  document.fonts?.ready.then(() => { tWrap.style.width = `${t.offsetWidth}px`; size(); });
   update();
+  requestAnimationFrame(() => dock.classList.add("is-ready"));
 </script>
 
 <style>
-  .snav { --row: 2.25rem; position: fixed; z-index: 15; color: var(--color-text-primary); }
-  .snav[data-away] { opacity: 0; visibility: hidden; pointer-events: none; }
-  .snav { transition: opacity 300ms var(--ease-out), visibility 0s linear 300ms; }
-  .snav:not([data-away]) { transition: opacity 300ms var(--ease-out), visibility 0s; }
-
-  .card {
-    background: var(--color-surface-page); border-radius: 1.25rem;
-    box-shadow: 0 0 0 1px oklch(0.2 0.04 266 / .06), 0 10px 30px -10px oklch(0.2 0.06 266 / .28);
+  .dock {
+    --h: 2.875rem;
+    position: fixed; z-index: 15; left: 50%; bottom: max(1rem, calc(env(safe-area-inset-bottom) + .5rem));
+    translate: -50% 0; color: var(--color-text-primary);
   }
+  @media (min-width: 64rem) { .dock { bottom: 1.5rem; } }
+  :global(html:not(.js)) .dock { display: none; }
+  .dock[data-away] { translate: -50% calc(100% + 2rem); scale: .9; opacity: 0; visibility: hidden; transition: translate 500ms var(--ease-expo), scale 500ms var(--ease-expo), opacity 300ms var(--ease-out), visibility 0s linear 500ms; }
+  /* entrance: rises from below with a slight overshoot */
+  .dock:not([data-away]) { transition: translate 650ms cubic-bezier(.34, 1.36, .64, 1), scale 650ms cubic-bezier(.34, 1.36, .64, 1), opacity 300ms var(--ease-out), visibility 0s; }
+
+  /* the morphing white container */
+  .shell {
+    position: relative; width: 9rem; height: var(--h); overflow: hidden;
+    border-radius: calc(var(--h) / 2); background: var(--color-surface-page);
+    box-shadow: 0 0 0 1px oklch(0.2 0.04 266 / .05), 0 12px 32px -12px oklch(0.2 0.06 266 / .45), 0 2px 6px oklch(0.2 0.06 266 / .08);
+  }
+  .dock.is-ready .shell {
+    transition: width 520ms var(--ease-expo), height 520ms var(--ease-expo), border-radius 420ms var(--ease-expo), box-shadow 300ms var(--ease-out);
+  }
+  .dock[data-open] .shell { border-radius: 1.375rem; box-shadow: 0 0 0 1px oklch(0.2 0.04 266 / .06), 0 28px 60px -18px oklch(0.2 0.06 266 / .5), 0 2px 6px oklch(0.2 0.06 266 / .08); }
+
+  /* progress ring: the border fills as you read through the current section */
+  .ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 2; transition: opacity 250ms var(--ease-out); }
+  .ring rect { x: 1px; y: 1px; width: calc(100% - 2px); height: calc(100% - 2px); rx: calc(var(--h) / 2 - 1px); fill: none; stroke-width: 2; }
+  .ring-track { stroke: var(--color-border-subtle); }
+  .ring-fill { stroke: var(--color-accent-solid); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: calc(100 - var(--p, 0) * 100); }
+  .dock[data-open] .ring { opacity: 0; }
+
+  /* the pill row (always at the bottom of the shell) */
+  .bar {
+    position: absolute; left: 0; right: 0; bottom: 0; height: var(--h); padding: 0 .9rem 0 1.05rem;
+    display: flex; align-items: center; justify-content: center; border: 0; background: none; color: inherit; font: inherit; cursor: pointer;
+    border-radius: calc(var(--h) / 2);
+  }
+  .bar:focus-visible { outline-offset: -4px; border-radius: calc(var(--h) / 2); }
+  .bar-in { display: inline-flex; align-items: center; gap: .55rem; white-space: nowrap; }
+  .k { font-size: .6875rem; font-weight: 800; letter-spacing: .02em; color: var(--color-accent-text); font-variant-numeric: tabular-nums; transition: opacity 250ms var(--ease-out), margin 400ms var(--ease-expo); }
+  .dock[data-at-top] .k { opacity: 0; margin-right: -1.75rem; }
+  .t-wrap { display: inline-block; overflow: hidden; height: 1.4em; transition: width 450ms var(--ease-expo); }
+  .t { display: inline-block; font-size: .9375rem; font-weight: 700; line-height: 1.4; letter-spacing: -.01em; }
+  .chev { flex: none; color: var(--color-text-secondary); transition: rotate 450ms var(--ease-expo); }
+  .dock[data-open] .chev { rotate: 180deg; }
+  @media (hover: hover) { .bar:hover .chev { color: var(--color-text-primary); } }
+
+  /* the card content, revealed by the shell growing upwards */
+  .panel {
+    position: absolute; left: 50%; top: 0; translate: -50% 0; width: min(calc(100vw - 2rem), 19rem); padding: .9rem .5rem .25rem;
+    opacity: 0; transition: opacity 200ms var(--ease-out);
+  }
+  .dock[data-open] .panel { opacity: 1; transition: opacity 300ms var(--ease-out) 120ms; }
+  .dock:not([data-open]) .panel { visibility: hidden; transition: opacity 150ms var(--ease-out), visibility 0s linear 150ms; }
+  .p-head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 .65rem .55rem; font-size: .75rem; font-weight: 700; letter-spacing: .02em; color: var(--color-text-secondary); }
+  .p-count { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .p-count b { color: var(--color-text-primary); }
   .list { list-style: none; margin: 0; padding: 0; display: grid; }
-
-  /* a row: tick + (collapsible) number and label */
   .row {
-    position: relative; display: flex; align-items: center;
-    min-height: var(--row); padding-inline: .5rem; border-radius: .75rem; text-decoration: none; color: inherit;
-    transition: background-color 200ms var(--ease-out);
+    display: grid; grid-template-columns: 1.6rem minmax(0, 1fr) auto; align-items: center; gap: .4rem;
+    min-height: 2.75rem; padding: 0 .65rem; border-radius: .85rem; color: inherit; text-decoration: none;
+    transition: background-color 200ms var(--ease-out), translate 250ms var(--ease-out);
   }
-  .tick { flex: none; margin-inline: calc((1.5rem - .625rem) / 2); width: .625rem; height: 2px; border-radius: 2px; background: color-mix(in oklab, var(--color-text-secondary) 35%, transparent); transition: width 300ms var(--ease-expo), background-color 250ms var(--ease-out), height 300ms var(--ease-out); }
-  .row.is-past .tick { background: color-mix(in oklab, var(--color-accent-solid) 45%, transparent); }
-  .row[aria-current] .tick { width: 1.25rem; margin-inline: .125rem; height: 3px; background: var(--color-accent-solid); }
-  /* collapsed = max-width 0 (shrink-to-fit cards ignore fr tracks, max-width really collapses) */
-  .lbl { overflow: hidden; min-width: 0; max-width: 0; transition: max-width 420ms var(--ease-expo); }
-  .lbl-in { display: flex; align-items: baseline; gap: .6rem; padding-left: .35rem; padding-right: .5rem; white-space: nowrap; opacity: 0; translate: .5rem 0; transition: opacity 200ms var(--ease-out), translate 300ms var(--ease-expo); }
-  .num { font-size: .6875rem; font-weight: 700; letter-spacing: .02em; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; }
-  .txt { font-size: .9375rem; font-weight: 600; }
+  .num { font-size: .6875rem; font-weight: 700; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; }
+  .txt { font-size: .9375rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row[aria-current] { background: var(--color-accent-subtle); }
   .row[aria-current] .txt { color: var(--color-accent-text); font-weight: 800; }
   .row[aria-current] .num { color: var(--color-accent-text); }
   .row:focus-visible { outline-offset: -2px; }
-
-  .foot { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 380ms var(--ease-expo); }
-  .foot-in { overflow: hidden; min-height: 0; display: grid; gap: .5rem; }
-  .count { display: block; margin: .5rem .85rem 0; padding-top: .7rem; border-top: 1px solid var(--color-border-subtle); font-size: .75rem; font-weight: 600; color: var(--color-text-secondary); white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .count b { color: var(--color-text-primary); }
-  .go { display: inline-flex; align-items: center; justify-content: space-between; gap: .5rem; min-height: 2.75rem; margin: 0 .5rem .5rem; padding: .5rem .85rem; border-radius: .75rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); font-size: .875rem; font-weight: 700; white-space: nowrap; text-decoration: none; }
-  .go :global(svg) { transition: translate 250ms var(--ease-out); }
-  @media (hover: hover) { .go:hover { background: var(--color-accent-solid-hover); } .go:hover :global(svg) { translate: 3px 0; } }
-
-  /* ---------- desktop: the rail ---------- */
-  @media (min-width: 64rem) {
-    .pill { display: none; }
-    .snav { right: .75rem; top: calc(50% - (6 * var(--row) + 1rem) / 2); }
-    .card { padding: .5rem 0; }
-    .row { padding-inline: .375rem; }
-    /* over the hero (before the first section): just white ticks on the blue, no card over the illustration */
-    .snav[data-at-top]:not(:hover):not(:focus-within) .card { background: transparent; box-shadow: none; }
-    .snav[data-at-top]:not(:hover):not(:focus-within) .tick { background: color-mix(in oklab, var(--color-text-on-accent) 70%, transparent); }
-    .card { transition: background-color 250ms var(--ease-out), box-shadow 300ms var(--ease-out); }
-
-    /* open: hover (with a short grace period on leave), keyboard focus, or pinned */
-    .snav:hover .lbl, .snav:focus-within .lbl, .snav[data-open] .lbl { max-width: 13rem; }
-    .snav:hover .lbl-in, .snav:focus-within .lbl-in, .snav[data-open] .lbl-in { opacity: 1; translate: none; transition-delay: calc(60ms + var(--i) * 25ms); }
-    .foot { max-width: 0; transition: grid-template-rows 380ms var(--ease-expo), max-width 420ms var(--ease-expo); }
-    .snav:hover .foot, .snav:focus-within .foot, .snav[data-open] .foot { grid-template-rows: 1fr; max-width: 16rem; }
-    .snav:hover .card, .snav:focus-within .card { box-shadow: 0 0 0 1px oklch(0.2 0.04 266 / .06), 0 24px 50px -16px oklch(0.2 0.06 266 / .35); }
-    .snav:not(:hover):not(:focus-within) .lbl { transition-delay: 220ms; }
-    .snav:not(:hover):not(:focus-within) .foot { transition-delay: 220ms, 220ms; }
-    .lbl-in { transition-delay: 0s; }
-    @media (hover: hover) {
-      .row:hover { background: var(--color-surface-sunken); }
-      .row:hover .tick { background: var(--color-text-primary); }
-      .row[aria-current]:hover .tick { background: var(--color-accent-solid); }
-    }
+  @media (hover: hover) {
+    .row:hover { background: var(--color-surface-sunken); translate: 2px 0; }
+    .row[aria-current]:hover { background: var(--color-accent-subtle); }
   }
+  .state { display: grid; place-items: center; width: 1.75rem; }
+  .done, .meter { grid-area: 1 / 1; }
+  .done { color: color-mix(in oklab, var(--color-accent-solid) 60%, transparent); opacity: 0; scale: .6; transition: opacity 250ms var(--ease-out), scale 350ms var(--ease-expo); }
+  .row.is-past .done { opacity: 1; scale: 1; }
+  .meter { display: block; width: 1.5rem; height: 4px; border-radius: 9999px; background: color-mix(in oklab, var(--color-accent-solid) 18%, transparent); overflow: hidden; opacity: 0; transition: opacity 250ms var(--ease-out); }
+  .meter i { display: block; height: 100%; border-radius: inherit; background: var(--color-accent-solid); transform: scaleX(var(--p, 0)); transform-origin: left; }
+  .row[aria-current] .meter { opacity: 1; }
 
-  /* ---------- phones and tablets: the bottom pill ---------- */
-  @media (max-width: 63.99rem) {
-    .snav { left: 50%; bottom: max(1rem, env(safe-area-inset-bottom)); translate: -50% 0; display: grid; justify-items: center; }
-    :global(html:not(.js)) .snav { display: none; }
-    .pill {
-      display: inline-flex; align-items: center; gap: .65rem; min-height: 2.75rem; max-width: calc(100vw - 2rem);
-      padding: .4rem .7rem .4rem .85rem; border: 0; border-radius: 9999px; background: var(--color-surface-page); color: inherit; font: inherit; cursor: pointer;
-      box-shadow: 0 0 0 1px oklch(0.2 0.04 266 / .06), 0 10px 28px -10px oklch(0.2 0.06 266 / .4);
-      transition: scale 200ms var(--ease-out);
-    }
-    .pill:active { scale: .97; }
-    .segs { display: flex; gap: 3px; }
-    .segs i { display: block; width: .5rem; height: 3px; border-radius: 2px; background: color-mix(in oklab, var(--color-text-secondary) 28%, transparent); transition: background-color 250ms var(--ease-out), width 300ms var(--ease-expo); }
-    .segs i.is-past { background: color-mix(in oklab, var(--color-accent-solid) 45%, transparent); }
-    .segs i.is-on { width: 1rem; background: var(--color-accent-solid); }
-    .now { display: flex; align-items: baseline; gap: .4rem; min-width: 0; font-size: .875rem; font-weight: 700; white-space: nowrap; }
-    .now-k { font-size: .6875rem; color: var(--color-accent-text); font-variant-numeric: tabular-nums; }
-    .now-t { overflow: hidden; text-overflow: ellipsis; }
-    .snav[data-at-top] .now-k { display: none; }
-    .chev { flex: none; color: var(--color-text-secondary); transition: rotate 300ms var(--ease-out); }
-    .snav[data-open] .chev { rotate: 180deg; }
+  .go {
+    display: flex; align-items: center; justify-content: space-between; gap: .5rem; min-height: 2.75rem; margin: .5rem .15rem .15rem; padding: 0 .9rem 0 1rem;
+    border-radius: .95rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); font-size: .9375rem; font-weight: 700; text-decoration: none;
+    transition: background-color 150ms var(--ease-out);
+  }
+  .go svg { transition: translate 250ms var(--ease-out); }
+  @media (hover: hover) { .go:hover { background: var(--color-accent-solid-hover); } .go:hover svg { translate: 3px 0; } }
 
-    /* the list rises above the pill */
-    .card {
-      position: absolute; bottom: calc(100% + .6rem); left: 50%; width: min(calc(100vw - 2rem), 19rem); padding: .4rem 0 0;
-      translate: -50% .5rem; scale: .96; transform-origin: 50% 100%; opacity: 0; visibility: hidden;
-      transition: opacity 220ms var(--ease-out), translate 350ms var(--ease-expo), scale 350ms var(--ease-expo), visibility 0s linear 350ms;
-    }
-    .snav[data-open] .card { opacity: 1; translate: -50% 0; scale: 1; visibility: visible; transition-delay: 0s; }
-    .row { min-height: 2.75rem; margin-inline: .35rem; }
-    .lbl { max-width: none; }
-    .lbl-in { opacity: 1; translate: none; }
-    .snav[data-open] li { animation: row-in 380ms var(--ease-expo) backwards; animation-delay: calc(var(--i) * 30ms); }
-    .foot { grid-template-rows: 1fr; }
-    .count { margin-top: .35rem; }
-    .go { margin-top: .1rem; }
-    @keyframes row-in { from { opacity: 0; translate: 0 .5rem; } }
-    @media (prefers-reduced-motion: no-preference) {
-      .now-t.swap { animation: swap 400ms var(--ease-expo); }
-      @keyframes swap { from { opacity: 0; translate: 0 .35rem; } }
-    }
+  /* separator between the list and the pill row */
+  .dock[data-open] .bar::before { content: ""; position: absolute; left: 1rem; right: 1rem; top: 0; height: 1px; background: var(--color-border-subtle); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .dock[data-open] .list li, .dock[data-open] .go, .dock[data-open] .p-head { animation: rise 420ms var(--ease-expo) backwards; }
+    .dock[data-open] .p-head { animation-delay: 90ms; }
+    .dock[data-open] .list li { animation-delay: calc(110ms + var(--i) * 28ms); }
+    .dock[data-open] .go { animation-delay: 300ms; }
+    @keyframes rise { from { opacity: 0; translate: 0 .6rem; } }
+    .t.swap { animation: swap 450ms var(--ease-expo); }
+    @keyframes swap { from { opacity: 0; translate: 0 calc(var(--dir, 1) * 0.9em); filter: blur(2px); } }
   }
 </style>

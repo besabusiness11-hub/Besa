@@ -9,6 +9,8 @@ export default defineConfig({
   adapter: node({ mode: "standalone" }),
   trailingSlash: "never",
   compressHTML: true,
+  // the dev toolbar sits bottom-centre, exactly where the section dock lives (dev-only setting)
+  devToolbar: { enabled: false },
   build: { format: "file", assets: "_astro", inlineStylesheets: "always" },
   vite: { plugins: [tailwindcss()], build: { cssMinify: "esbuild" } },
   image: { service: { entrypoint: "astro/assets/services/sharp" } },
