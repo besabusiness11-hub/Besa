@@ -54,10 +54,14 @@ const labels = JSON.stringify({
         widget cannot load, so in production a no-JS submit fails the anti-spam check. JS is the main path.
       */}
       <form id="lead-form" class="card" method="post" action="/api/lead" novalidate data-msg={msgs} data-buttons={buttons} data-labels={labels} data-sitekey={sitekey ? "1" : undefined}>
-        <div class="prog" aria-hidden="true">
-          <span class="prog-bar"><i></i></span>
-          <span class="prog-t" id="prog-t">0 {f.progress.of}</span>
-        </div>
+        <header class="card-head">
+          <div>
+            <h3 class="card-t">{f.cardTitle}</h3>
+            <p class="card-sub">{f.cardSub}</p>
+          </div>
+          <span class="prog-t" id="prog-t" aria-hidden="true">0 {f.progress.of}</span>
+        </header>
+        <div class="prog" aria-hidden="true"><span class="prog-bar"><i></i></span></div>
 
         <div class="calc plan" id="plan-chip" hidden>
           <input type="hidden" name="piano" id="f-piano" value="" />
@@ -67,8 +71,8 @@ const labels = JSON.stringify({
           </button>
         </div>
 
-        <div class="q">
-          <p class="q-h"><span class="n">1</span>{f.steps.link}</p>
+        <div class="q rail" data-q="link">
+          <p class="q-h"><span class="n"><b>1</b><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>{f.steps.link}</p>
           <div class="field">
             <div class="lbl-row"><label for="f-annuncio">{f.fields.link.label}</label><LinkHelp id="help-form" /></div>
             <input id="f-annuncio" name="annuncio" type="url" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder={f.fields.link.placeholder} required maxlength="500" aria-describedby="h-annuncio e-annuncio" />
@@ -77,8 +81,8 @@ const labels = JSON.stringify({
           </div>
         </div>
 
-        <fieldset class="q">
-          <legend class="q-h"><span class="n">2</span>{f.steps.goal} <span class="opt">{f.goal.optional}</span></legend>
+        <fieldset class="q rail" data-q="goal">
+          <legend class="q-h"><span class="n"><b>2</b><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>{f.steps.goal} <span class="opt">{f.goal.optional}</span></legend>
           <div class="goals">
             {f.goal.options.map((o) => (
               <label class="goal">
@@ -97,8 +101,8 @@ const labels = JSON.stringify({
           </button>
         </div>
 
-        <div class="q">
-          <p class="q-h"><span class="n">3</span>{f.steps.contact}</p>
+        <div class="q rail last" data-q="contact">
+          <p class="q-h"><span class="n"><b>3</b><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>{f.steps.contact}</p>
           <div class="pair">
             <div class="field">
               <label for="f-nome">{f.fields.name.label}</label>
@@ -127,6 +131,10 @@ const labels = JSON.stringify({
             <div class="field">
               <label for="f-zona">{mo.zona.label}</label>
               <input id="f-zona" name="zona" type="text" maxlength="120" autocomplete="address-level2" placeholder={mo.zona.placeholder} />
+            </div>
+            <div class="field">
+              <label for="f-sito">{mo.sito.label}</label>
+              <input id="f-sito" name="sito" type="text" inputmode="url" maxlength="300" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder={mo.sito.placeholder} />
             </div>
             <fieldset class="tone">
               <legend>{mo.tono.legend}</legend>
@@ -186,7 +194,8 @@ const labels = JSON.stringify({
   .plan { margin: 0 0 1.5rem; }
 
   /* ---- left: what happens next + live preview ---- */
-  .next { margin-top: 0; }
+  .next { margin-top: 2rem; }
+  @media (max-width: 63.99rem) { .next { margin-top: 0; } }
   .next-t { font-size: 1rem; font-weight: 700; }
   .next ol { list-style: none; counter-reset: nx; margin: .9rem 0 0; padding: 0; display: grid; gap: .75rem; }
   .next li { counter-increment: nx; display: grid; grid-template-columns: 1.75rem 1fr; gap: .75rem; align-items: start; color: var(--color-text-on-accent-muted); line-height: 1.45; }
@@ -198,7 +207,24 @@ const labels = JSON.stringify({
   /* the section is drenched blue: inside the white card, focus rings go back to the dark ring */
   .card :global(:focus-visible) { outline-color: var(--color-focus-ring); }
 
-  .prog { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; }
+  .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .card-t { font-size: 1.5rem; font-weight: 800; line-height: 1.15; letter-spacing: -.025em; }
+  .card-sub { margin-top: .25rem; font-size: .9375rem; color: var(--color-text-secondary); }
+  .card-head .prog-t { margin-top: .35rem; padding: .25rem .6rem; border-radius: 9999px; background: var(--color-surface-sunken); }
+  .card.is-ready .card-head .prog-t { background: color-mix(in oklab, var(--color-status-success) 12%, var(--color-surface-page)); }
+  .prog { display: flex; align-items: center; gap: .75rem; margin: 1rem 0 1.75rem; }
+
+  /* the three questions sit on a rail; a finished step turns its number into a check */
+  .q.rail { position: relative; padding-left: 2.75rem; }
+  .rail .q-h { position: static; }
+  .rail .n { position: absolute; left: 0; top: 0; z-index: 1; transition: background-color 300ms var(--ease-out), color 300ms var(--ease-out), box-shadow 300ms var(--ease-out); }
+  .rail .n svg { display: none; }
+  .rail.is-done .n { background: var(--color-status-success); color: var(--color-text-on-accent); }
+  .rail.is-done .n b { display: none; }
+  .rail.is-done .n svg { display: block; }
+  .rail:not(.last)::before { content: ""; position: absolute; left: .8125rem; top: 2.1rem; bottom: -1.2rem; width: 2px; border-radius: 2px; background: var(--color-border-subtle); }
+  .rail.is-done:not(.last)::before { background: color-mix(in oklab, var(--color-status-success) 55%, var(--color-border-subtle)); }
+  @media (max-width: 26rem) { .q.rail { padding-left: 2.4rem; } }
   .prog-bar { flex: 1; height: .375rem; border-radius: 9999px; background: var(--color-surface-sunken); overflow: hidden; }
   .prog-bar i { display: block; height: 100%; width: 100%; border-radius: inherit; background: var(--color-accent-solid); transform: scaleX(var(--done, 0)); transform-origin: left; transition: transform 500ms var(--ease-expo); }
   .prog-t { font-size: .8125rem; font-weight: 700; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -275,7 +301,7 @@ const labels = JSON.stringify({
     }
   }
   .card-wrap :global(.printer) { margin: 2.5rem auto 0; scroll-margin-top: 4.5rem; }
-  .more :global(.monitor) { margin-bottom: 2.5rem; }
+  .more :global(.monitor) { margin-bottom: .5rem; }
   .ok { position: relative; }
   .ok-check { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: 1rem; border-radius: 9999px; background: var(--color-status-success); color: var(--color-text-on-accent); }
 
@@ -384,8 +410,8 @@ const labels = JSON.stringify({
       setM("slug", slugify(val("attivita") || first));
       setM("brand", val("attivita") || (first ? `${monDefaults.brand.replace(/ te$/, "")} ${first}` : ""));
       setM("title", val("offerta"));
-      const where = [val("attivita"), val("zona")].filter(Boolean).join(" · ");
-      setM("text", where);
+      setM("text", val("attivita") ? `${val("attivita")}${val("zona") ? ` a ${val("zona")}` : ""}: due righe chiare su cosa ottiene chi arriva.` : "");
+      const zone = mon("zone"); if (zone && zone.textContent !== val("zona")) zone.textContent = val("zona");
       const goal = radio("obiettivo");
       setM("btn", goal ? B[goal] : "");
       monitor.dataset.tone = radio("tono");
@@ -394,6 +420,9 @@ const labels = JSON.stringify({
       const done = [isUrl(), val("nome").length >= 2, isContact(val("contatto"))].filter(Boolean).length;
       card.style.setProperty("--done", String(done / 3));
       card.classList.toggle("is-ready", done === 3);
+      form.querySelector('[data-q="link"]')?.classList.toggle("is-done", isUrl());
+      form.querySelector('[data-q="goal"]')?.classList.toggle("is-done", !!radio("obiettivo"));
+      form.querySelector('[data-q="contact"]')?.classList.toggle("is-done", val("nome").length >= 2 && isContact(val("contatto")));
       progT.textContent = done === 3 ? M.ready : `${done} ${M.of}`;
       updateMonitor();
       if (!printer) return;
@@ -404,6 +433,9 @@ const labels = JSON.stringify({
       put(pr("attivita"), val("attivita"));
       put(pr("offerta"), val("offerta"));
       put(pr("zona"), val("zona"));
+      let site = "";
+      try { const n = normalizeAdLink(val("sito")); if (n && isAdLink(n)) site = new URL(n).hostname.replace(/^www\./, ""); } catch {}
+      put(pr("sito"), site || val("sito"));
       const goal = radio("obiettivo");
       put(pr("obiettivo"), goal ? B[goal] : "");
       put(pr("section-btn"), goal ? `${B[goal]}` : (pr("section-btn")?.textContent ?? ""));
@@ -441,8 +473,8 @@ const labels = JSON.stringify({
         const { default: confetti } = await import("canvas-confetti");
         const colors = ["#2844bd", "#ffffff", "#ebedff", "#16a34a", "#0f1729"];
         const base = { colors, zIndex: 60, disableForReducedMotion: true, useWorker: false, ticks: 220 };
-        const r = btn.getBoundingClientRect();
-        confetti({ ...base, particleCount: 90, spread: 75, startVelocity: 42, origin: { x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight } });
+        const r = $("lead-ok").getBoundingClientRect();
+        confetti({ ...base, particleCount: 110, spread: 80, startVelocity: 40, origin: { x: (r.left + r.width / 2) / innerWidth, y: Math.min(0.6, Math.max(0.15, (r.top + 40) / innerHeight)) } });
         setTimeout(() => {
           confetti({ ...base, particleCount: 45, angle: 60, spread: 60, origin: { x: 0, y: 0.7 } });
           confetti({ ...base, particleCount: 45, angle: 120, spread: 60, origin: { x: 1, y: 0.7 } });
@@ -508,7 +540,6 @@ const labels = JSON.stringify({
         if (j?.ok) {
           (window as any).umami?.track("lead_submit");
           status.textContent = "";
-          celebrate();
           form.hidden = true;
           const ok = $("lead-ok"); ok.hidden = false; ok.focus();
           if (monitor) monitor.hidden = true;
@@ -523,7 +554,10 @@ const labels = JSON.stringify({
               setTimeout(() => { printer.dataset.stage = "complete"; st.textContent = st.dataset.complete!; }, reduce ? 0 : 1900);
             };
             // On phones the printer sits under the card: bring it up, and print only once it is on screen.
-            setTimeout(() => printer.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), reduce ? 0 : 600);
+            // glide back up to the confirmation: the card and the printer below it come into view together
+            const top = $("lead-ok").getBoundingClientRect().top + scrollY - 88;
+            scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+            setTimeout(celebrate, reduce ? 0 : 450);
             const io = new IntersectionObserver(([en]) => { if (en.intersectionRatio >= 0.5) { io.disconnect(); print(); } }, { threshold: [0.5] });
             io.observe(printer);
           }

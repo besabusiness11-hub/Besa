@@ -1,6 +1,8 @@
 ---
 // Animated grid background (after Magic UI's AnimatedGridPattern), vanilla SVG + CSS.
-// Lines are static; a few cells fade in and out and then jump elsewhere. Reduced motion: static grid only.
+// Lines are static; a few cells fade in and out and then jump elsewhere, and (on hover devices) the
+// cell under the pointer lights up and fades out slowly, like Magic UI's InteractiveGridPattern.
+// Reduced motion: static grid only.
 interface Props { size?: number; squares?: number }
 const { size = 44, squares = 26 } = Astro.props;
 const id = `gp-${Math.random().toString(36).slice(2, 8)}`;
@@ -13,6 +15,7 @@ const id = `gp-${Math.random().toString(36).slice(2, 8)}`;
   </defs>
   <rect width="100%" height="100%" fill={`url(#${id})`} />
   <g class="cells"></g>
+  <g class="trail"></g>
 </svg>
 
 <script>
@@ -46,6 +49,26 @@ const id = `gp-${Math.random().toString(36).slice(2, 8)}`;
       }
     };
     new ResizeObserver(build).observe(svg);
+    // interactive: light the cell under the pointer; the previous one fades out over a second
+    if (matchMedia("(hover: hover)").matches) {
+      const trail = svg.querySelector<SVGGElement>(".trail")!;
+      const host = svg.parentElement!;
+      let last = "", hot: SVGRectElement | null = null;
+      host.addEventListener("pointermove", (e) => {
+        const b = svg.getBoundingClientRect();
+        const cx = Math.floor((e.clientX - b.left + 1) / size), cy = Math.floor((e.clientY - b.top + 1) / size);
+        const key = cx + ":" + cy;
+        if (key === last) return;
+        last = key;
+        if (hot) { const old = hot; old.classList.add("cool"); setTimeout(() => old.remove(), 1100); }
+        hot = document.createElementNS(NS, "rect");
+        hot.setAttribute("x", String(cx * size)); hot.setAttribute("y", String(cy * size));
+        hot.setAttribute("width", String(size - 1)); hot.setAttribute("height", String(size - 1));
+        trail.appendChild(hot);
+        requestAnimationFrame(() => hot?.classList.add("on"));
+      });
+      host.addEventListener("pointerleave", () => { if (hot) { const old = hot; old.classList.add("cool"); setTimeout(() => old.remove(), 1100); hot = null; last = ""; } });
+    }
     // pause when the hero is off screen
     new IntersectionObserver(([e]) => svg.classList.toggle("paused", !e.isIntersecting)).observe(svg);
   });
@@ -57,5 +80,8 @@ const id = `gp-${Math.random().toString(36).slice(2, 8)}`;
     mask-image: radial-gradient(ellipse 75% 70% at 60% 45%, #000 30%, transparent 85%); }
   .grid-bg :global(.cells rect) { stroke: none; fill: oklch(1 0 0 / 1); opacity: 0; animation: cell ease-in-out infinite both; transform: translate(1px, 1px); }
   .grid-bg.paused :global(.cells rect) { animation-play-state: paused; }
+  .grid-bg :global(.trail rect) { stroke: none; fill: oklch(1 0 0 / 1); opacity: 0; transform: translate(1px, 1px); transition: opacity 100ms ease-out; }
+  .grid-bg :global(.trail rect.on) { opacity: .16; }
+  .grid-bg :global(.trail rect.cool) { opacity: 0; transition-duration: 1000ms; }
   @keyframes cell { 0%, 100% { opacity: 0; } 45%, 55% { opacity: .1; } }
 </style>

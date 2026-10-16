@@ -35,7 +35,7 @@ export const copy = {
       note: "Esempio illustrativo",
       ad: { name: "La tua attività", sponsored: "Sponsorizzato", offer: "La tua offerta", cta: "Scopri di più" },
       profile: { handle: "latuaattivita", link: "link in bio", doubts: ["Dove scrivo?", "Quanto costa?", "Era questa l’offerta?"] },
-      landing: { title: "La tua offerta, come nell’annuncio", text: "Due righe chiare su cosa ottieni.", button: "Scrivici su WhatsApp" },
+      landing: { title: "La tua offerta, come nell’annuncio", text: "Due righe chiare su cosa ottieni.", button: "Scrivici su WhatsApp", badge: "Offerta", facts: ["Dove", "Orari", "Prezzi"] },
       url: "pagina-di-prova",
       tags: { art: "Come nell’annuncio", title: "Stessa promessa", button: "Un solo pulsante" },
       sent: "Messaggio inviato",
@@ -385,12 +385,15 @@ export const copy = {
     plan: { label: "Piano scelto", remove: "Togli il piano scelto" },
     checkoutCta: "Paga e inizia",
     progress: { of: "di 3", ready: "Pronto da inviare", label: "Domande completate" },
+    cardTitle: "La tua pagina di prova",
+    cardSub: "Tre domande. Il resto è facoltativo.",
     more: {
-      summary: "Vuoi una pagina di prova più precisa? Aggiungi qualche dettaglio",
+      summary: "Vuoi una prova più vicina al risultato finale? Qualche dettaglio in più",
       optional: "Tutto facoltativo",
       attivita: { label: "Che attività hai?", placeholder: "Es. palestra, pizzeria, studio dentistico" },
       offerta: { label: "Cosa offri nell’annuncio?", placeholder: "Es. prima lezione gratis, sconto sul primo ordine" },
       zona: { label: "Dove lavori?", placeholder: "Es. Treviso e provincia" },
+      sito: { label: "Sito o pagina con logo e colori", placeholder: "Se ce l’hai: da lì prendiamo logo e colori" },
       tono: {
         legend: "Come vuoi che parli la pagina?",
         options: [
@@ -403,7 +406,10 @@ export const copy = {
     },
     monitor: {
       label: "Anteprima dal vivo",
-      hint: "Si aggiorna mentre compili. È un’anteprima illustrativa: la pagina vera la scriviamo noi.",
+      hint: "Si aggiorna mentre compili.",
+      sticker: "Bozza fatta in 0,2 secondi da un modulo. Quella vera la scriviamo noi, ed è molto meglio.",
+      nav: ["Offerta", "Dove siamo", "Contatti"],
+      perks: ["Risposta rapida", "Nessun impegno", "Vicino a te"],
       fallbackTitle: "La tua offerta, come nell’annuncio",
       fallbackText: "Due righe chiare su cosa ottiene chi arriva.",
       in: "a",
@@ -416,7 +422,7 @@ export const copy = {
       title: "Pagina di prova",
       forName: "per",
       fallbackName: "te",
-      rows: { attivita: "Attività", offerta: "Offerta", zona: "Zona", annuncio: "Annuncio", obiettivo: "Pulsante", tono: "Tono", piano: "Piano" },
+      rows: { attivita: "Attività", offerta: "Offerta", zona: "Zona", annuncio: "Annuncio", sito: "Logo/colori", obiettivo: "Pulsante", tono: "Tono", piano: "Piano" },
       empty: "da capire insieme",
       sections: "Cosa ci sarà",
       sectionList: ["Titolo preso dal tuo annuncio", "La tua offerta, spiegata in breve", "Un solo pulsante"],
@@ -427,7 +433,7 @@ export const copy = {
       thanks: "Grazie!",
       note: "Riepilogo illustrativo di quello che ci hai scritto.",
     },
-    reassure: "Ti rispondiamo noi, su WhatsApp o via email.",
+    reassure: "Pagina di prova entro 1 giorno lavorativo, su WhatsApp o via email.",
     fields: {
       name: {
         label: "Nome",

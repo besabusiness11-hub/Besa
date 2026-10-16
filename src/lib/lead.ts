@@ -44,6 +44,7 @@ export const leadSchema = z.object({
   attivita: z.string().trim().max(120).optional().transform((v) => (v ? v : undefined)),
   offerta: z.string().trim().max(200).optional().transform((v) => (v ? v : undefined)),
   zona: z.string().trim().max(120).optional().transform((v) => (v ? v : undefined)),
+  sito: z.string().trim().max(300).optional().transform((v) => (v ? v : undefined)),
   tono: z.preprocess((v) => (v === "" ? undefined : v), z.enum(["diretto", "amichevole", "elegante"]).optional()),
   note: z.string().trim().max(1000).optional().transform((v) => (v ? v : undefined)),
   calcolo: z
@@ -180,6 +181,7 @@ export function buildEmail(lead: Lead): { subject: string; text: string; html: s
   if (lead.attivita) rows.push(["Attività", oneLine(lead.attivita)]);
   if (lead.offerta) rows.push(["Offerta dell’annuncio", oneLine(lead.offerta)]);
   if (lead.zona) rows.push(["Zona", oneLine(lead.zona)]);
+  if (lead.sito) rows.push(["Sito / logo e colori", oneLine(lead.sito)]);
   if (lead.tono) rows.push(["Tono", lead.tono]);
   if (lead.note) rows.push(["Note", oneLine(lead.note)]);
   if (lead.calcolo) rows.push(["Dal calcolatore", oneLine(lead.calcolo)]);

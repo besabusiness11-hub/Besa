@@ -17,7 +17,7 @@ describe("parseLead", () => {
     expect(parseLead({ ...base, piano: "gratis" }).kind).toBe("error");
   });
   it("accepts the optional context answers and caps their length", () => {
-    const r = parseLead({ ...base, attivita: "Palestra", offerta: "Prima lezione gratis", zona: "Treviso", tono: "amichevole", note: "Aperti fino alle 22" });
+    const r = parseLead({ ...base, attivita: "Palestra", offerta: "Prima lezione gratis", zona: "Treviso", sito: "centroestetico.it", tono: "amichevole", note: "Aperti fino alle 22" });
     expect(r.kind).toBe("ok");
     expect(parseLead({ ...base, note: "x".repeat(1001) }).kind).toBe("error");
     expect(parseLead({ ...base, tono: "urlato" }).kind).toBe("error");

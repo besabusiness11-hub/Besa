@@ -131,7 +131,7 @@ const h = copy.howItWorks;
   .golive { position: relative; width: 19rem; height: 17rem; }
   .g-phone { position: absolute; left: 0; top: 0; width: 9.5rem; height: 17rem; display: flex; flex-direction: column; gap: .45rem; padding: 1.2rem .6rem .7rem; border: 5px solid var(--color-surface-inverse); border-radius: 1.8rem; background: var(--color-surface-page); box-shadow: 0 30px 50px -28px oklch(0.2 0.08 266 / .6); rotate: -3deg; }
   .g-phone .art { height: 4rem; flex: none; }
-  .g-on { align-self: center; display: inline-flex; align-items: center; gap: .3rem; padding: .15rem .55rem; border-radius: 9999px; background: color-mix(in oklab, var(--color-status-success) 14%, var(--color-surface-page)); color: var(--color-status-success); font-size: .5625rem; font-weight: 800; }
+  .g-on { align-self: center; display: inline-flex; align-items: center; gap: .3rem; padding: .15rem .55rem; border-radius: 9999px; background: color-mix(in oklab, var(--color-status-success) 14%, var(--color-surface-page)); color: color-mix(in oklab, var(--color-status-success) 70%, var(--color-text-primary)); font-size: .5625rem; font-weight: 800; }
   .g-on i { width: .4rem; height: .4rem; border-radius: 9999px; background: currentColor; box-shadow: 0 0 0 0 currentColor; }
   .g-talk { position: absolute; right: -1.5rem; top: 7rem; z-index: 1; display: flex; align-items: center; gap: .55rem; padding: .55rem .75rem .55rem .55rem; border-radius: 1rem; background: var(--color-surface-page); box-shadow: 0 0 0 1px var(--color-border-subtle), 0 18px 30px -18px oklch(0.2 0.08 266 / .55); }
   .g-av { display: flex; }
@@ -175,9 +175,11 @@ const h = copy.howItWorks;
       .c1 { animation-range: entry 40% cover 36%; } .c2 { animation-range: entry 55% cover 40%; } .c3 { animation-range: entry 75% cover 46%; }
       .b-wire path:first-child { animation: wire linear both; animation-timeline: view(); animation-range: entry 20% cover 30%; }
       .g-phone { animation: lift linear both; animation-timeline: view(); animation-range: entry 20% cover 40%; }
-      .g-talk { animation: chk linear both; animation-timeline: view(); animation-range: entry 50% cover 45%; }
-      .g-link { animation: chk linear both; animation-timeline: view(); animation-range: entry 65% cover 48%; }
+      .g-talk { animation: chk-soft linear both; animation-timeline: view(); animation-range: entry 50% cover 45%; }
+      .g-link { animation: chk-soft linear both; animation-timeline: view(); animation-range: entry 65% cover 48%; }
       @keyframes chk { from { opacity: 0; translate: -.5rem .3rem; scale: .9; } }
+      @keyframes chk-soft { from { translate: -.75rem .5rem; scale: .9; } }
+      @keyframes chk-soft { from { translate: -.75rem .5rem; scale: .9; } }
       @keyframes wire { from { stroke-dashoffset: 60; opacity: 0; } }
       .num::before { animation: num-in linear both; animation-timeline: view(); animation-range: entry 10% cover 35%; }
       @keyframes build { from { scale: 1 .4; opacity: 0; } }
