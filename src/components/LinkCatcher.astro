@@ -76,18 +76,18 @@ const c = copy.catcher;
 
 <style>
   .lc { display: none; }
-  :global(.js) .lc { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; width: min(100%, 34rem); }
+  :global(.js) .lc { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; width: min(100%, 30rem); }
   :global(.js) .lc-fallback { display: none; }
   .lc-top { display: flex; align-items: center; gap: .5rem; }
   .lc-label { font-size: .9375rem; font-weight: 700; margin: 0; }
-  .lc-field { display: flex; align-items: center; gap: .25rem; min-height: 3.75rem; padding: .375rem .375rem .375rem .875rem; border-radius: 1rem; background: var(--color-surface-page); color: var(--color-text-primary); box-shadow: 0 0 0 2px transparent, 0 14px 34px -16px oklch(0.2 0.1 266 / .55); transition: box-shadow 200ms var(--ease-out); }
+  .lc-field { display: flex; align-items: center; gap: .25rem; min-height: 3.25rem; padding: .3rem .3rem .3rem .8rem; border-radius: .875rem; background: var(--color-surface-page); color: var(--color-text-primary); box-shadow: 0 0 0 2px transparent, 0 14px 34px -16px oklch(0.2 0.1 266 / .55); transition: box-shadow 200ms var(--ease-out); }
   .lc-field:focus-within { box-shadow: 0 0 0 3px var(--color-focus-ring), 0 14px 34px -16px oklch(0.2 0.1 266 / .55); }
   .blue .lc-field:focus-within { box-shadow: 0 0 0 3px var(--color-focus-ring-on-accent), 0 0 0 7px color-mix(in oklab, var(--color-text-on-accent) 30%, transparent); }
   .lc-ic { flex: none; color: var(--color-accent-text); }
-  input { flex: 1; min-width: 0; width: 100%; height: 3rem; border: 0; background: transparent; font: inherit; font-size: 1.0625rem; color: inherit; padding-inline: .25rem; }
+  input { flex: 1; min-width: 0; width: 100%; height: 2.6rem; border: 0; background: transparent; font: inherit; font-size: 1.0625rem; color: inherit; padding-inline: .25rem; }
   input:focus { outline: none; }
   input::placeholder { color: var(--color-text-secondary); opacity: 1; }
-  .lc-btn { flex: none; display: inline-flex; align-items: center; gap: .375rem; min-height: 3rem; padding-inline: 1.1rem .9rem; border: 0; border-radius: .75rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); font: inherit; font-weight: 700; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  .lc-btn { flex: none; display: inline-flex; align-items: center; gap: .375rem; min-height: 2.6rem; padding-inline: .95rem .8rem; border: 0; border-radius: .625rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); font: inherit; font-size: .9375rem; font-weight: 700; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
   .lc-btn svg { transition: translate 250ms var(--ease-out); }
   .lc-btn:active { scale: .97; }
   .lc-btn:focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }

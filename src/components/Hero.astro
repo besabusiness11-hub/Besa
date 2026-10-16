@@ -264,6 +264,17 @@ const c = h.compare;
   }
 
 
+  /* hover: the mockups answer the pointer, quietly */
+  .ad, .phone { transition: translate 500ms var(--ease-expo), rotate 500ms var(--ease-expo), box-shadow 500ms var(--ease-out); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .ad:hover { translate: 0 -6px; rotate: -1.5deg; box-shadow: 0 30px 50px -18px oklch(0.15 0.08 266 / .7); }
+    .phone:hover { translate: 0 -6px; rotate: .6deg; box-shadow: 0 40px 70px -22px oklch(0.15 0.08 266 / .75), inset 0 0 0 1.5px oklch(1 0 0 / .14); }
+    .ad:hover .ad-cta { background: var(--color-accent-subtle); }
+    .phone:hover .lp-btn { scale: 1.02; }
+  }
+  .ad-cta, .lp-btn { transition: background-color 300ms var(--ease-out), scale 300ms var(--ease-expo); }
+  .scene { pointer-events: auto; }
+
   /* ---- states ---- */
   .stage:has(#cmp-after:checked) .after { clip-path: inset(0 0 0 0 round 1.8rem); }
   .stage:has(#cmp-after:checked) .before { scale: .94; opacity: .3; }
