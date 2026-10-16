@@ -4,7 +4,7 @@ import { em } from "../lib/em";
 import { splitTodo } from "../lib/todo";
 import LinkHelp from "./LinkHelp.astro";
 import ReceiptPrinter from "./ReceiptPrinter.astro";
-import Stamp from "./Stamp.astro";
+import DemoMonitor from "./DemoMonitor.astro";
 
 const c = copy.finalCta;
 const f = copy.form;
@@ -36,6 +36,7 @@ const labels = JSON.stringify({
 
     </div>
     <div class="intro more">
+      <DemoMonitor />
       <ReceiptPrinter />
       <div class="next">
         <h3 class="next-t">{c.next.title}</h3>
@@ -166,9 +167,7 @@ const labels = JSON.stringify({
       </form>
 
       <div id="lead-ok" class="card ok" role="status" tabindex="-1" hidden>
-        <Stamp class="ok-stamp" tilt={7} width="5.5rem" depth={3} h={8} v={10}>
-          <span class="ok-st"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg><strong>{f.success.stamp}</strong></span>
-        </Stamp>
+        <span class="ok-check" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
         <h3 class="t-h3">{f.success.title}</h3>
         <p class="mt-2">{splitTodo(f.success.text).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}</p>
       </div>
@@ -275,14 +274,10 @@ const labels = JSON.stringify({
       .more-q[open]::details-content { block-size: auto; }
     }
   }
-  .more :global(.printer) { margin-bottom: 2.5rem; scroll-margin-top: 4.5rem; }
-  @media (min-width: 64rem) { .more :global(.printer) { margin-top: 2.5rem; } }
-  @media (max-width: 63.99rem) { .more :global(.printer) { margin-inline: auto; } }
+  .card-wrap :global(.printer) { margin: 2.5rem auto 0; scroll-margin-top: 4.5rem; }
+  .more :global(.monitor) { margin-bottom: 2.5rem; }
   .ok { position: relative; }
-  .ok :global(h3), .ok p { padding-right: 5.5rem; }
-  .ok :global(.ok-stamp) { position: absolute; top: -1.25rem; right: 1.25rem; }
-  .ok-st { display: grid; justify-items: center; gap: .2rem; color: var(--color-accent-text); }
-  .ok-st strong { font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+  .ok-check { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: 1rem; border-radius: 9999px; background: var(--color-status-success); color: var(--color-text-on-accent); }
 
   .check { display: flex; gap: .75rem; align-items: flex-start; min-height: 2.75rem; font-weight: 400; font-size: .9375rem; line-height: 1.45; color: var(--color-text-secondary); margin: 0; padding-block: .25rem; }
   .check input { flex: none; appearance: none; width: 1.375rem; height: 1.375rem; margin: .1rem 0 0; border: 2px solid var(--color-text-secondary); border-radius: .375rem; background: var(--color-surface-page); display: grid; place-content: center; cursor: pointer; }
@@ -312,9 +307,9 @@ const labels = JSON.stringify({
 
   @media (prefers-reduced-motion: no-preference) {
     .ok:not([hidden]) { animation: ok-in 600ms var(--ease-expo) backwards; }
-    .ok:not([hidden]) :global(.ok-stamp) { animation: stamp-in 500ms var(--ease-expo) 200ms backwards; }
+    .ok:not([hidden]) .ok-check { animation: stamp-in 500ms var(--ease-expo) 200ms backwards; }
     @keyframes ok-in { from { opacity: 0; translate: 0 1rem; scale: .98; } }
-    @keyframes stamp-in { from { opacity: 0; scale: 1.4; rotate: 20deg; } }
+    @keyframes stamp-in { from { opacity: 0; scale: .6; } }
   }
 </style>
 
@@ -372,11 +367,35 @@ const labels = JSON.stringify({
     const nameEl = pr("nome");
     const fallbackName = nameEl?.textContent ?? "";
     const radio = (n: string) => form.querySelector<HTMLInputElement>(`input[name=${n}]:checked`)?.value ?? "";
+    const monitor = document.getElementById("monitor");
+    const mon = (k: string) => monitor?.querySelector<HTMLElement>(`[data-m="${k}"]`) ?? null;
+    const monDefaults = Object.fromEntries(["slug", "brand", "title", "text", "btn"].map((k) => [k, mon(k)?.textContent ?? ""]));
+    const setM = (k: string, text: string) => {
+      const el = mon(k); if (!el) return;
+      const next = text || monDefaults[k];
+      if (el.textContent === next) return;
+      el.textContent = next;
+      el.classList.remove("is-new"); void el.offsetWidth; el.classList.add("is-new");
+    };
+    const slugify = (t: string) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 28);
+    const updateMonitor = () => {
+      if (!monitor) return;
+      const first = val("nome").split(/\s+/)[0];
+      setM("slug", slugify(val("attivita") || first));
+      setM("brand", val("attivita") || (first ? `${monDefaults.brand.replace(/ te$/, "")} ${first}` : ""));
+      setM("title", val("offerta"));
+      const where = [val("attivita"), val("zona")].filter(Boolean).join(" · ");
+      setM("text", where);
+      const goal = radio("obiettivo");
+      setM("btn", goal ? B[goal] : "");
+      monitor.dataset.tone = radio("tono");
+    };
     const refresh = () => {
       const done = [isUrl(), val("nome").length >= 2, isContact(val("contatto"))].filter(Boolean).length;
       card.style.setProperty("--done", String(done / 3));
       card.classList.toggle("is-ready", done === 3);
       progT.textContent = done === 3 ? M.ready : `${done} ${M.of}`;
+      updateMonitor();
       if (!printer) return;
       put(nameEl, val("nome").split(/\s+/)[0] || fallbackName);
       let host = "";
@@ -413,6 +432,38 @@ const labels = JSON.stringify({
     $("calc-x").addEventListener("click", () => {
       calcRemoved = true; calcIn.value = ""; chip.hidden = true;
       (form.querySelector("input[name=obiettivo]") as HTMLElement | null)?.focus();
+    });
+
+    // Confetti while the receipt prints: loaded only now (never on page load), off with reduced motion.
+    const celebrate = async () => {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      try {
+        const { default: confetti } = await import("canvas-confetti");
+        const colors = ["#2844bd", "#ffffff", "#ebedff", "#16a34a", "#0f1729"];
+        const base = { colors, zIndex: 60, disableForReducedMotion: true, useWorker: false, ticks: 220 };
+        const r = btn.getBoundingClientRect();
+        confetti({ ...base, particleCount: 90, spread: 75, startVelocity: 42, origin: { x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight } });
+        setTimeout(() => {
+          confetti({ ...base, particleCount: 45, angle: 60, spread: 60, origin: { x: 0, y: 0.7 } });
+          confetti({ ...base, particleCount: 45, angle: 120, spread: 60, origin: { x: 1, y: 0.7 } });
+        }, 350);
+      } catch {}
+    };
+
+    // Download the printed summary as a plain text file (built from the receipt, not from raw input).
+    $("printer-dl")?.addEventListener("click", () => {
+      if (!printer) return;
+      const line = (el: Element | null) => (el?.textContent ?? "").replace(/\s+/g, " ").trim();
+      const out = [line(printer.querySelector(".r-title")), line(printer.querySelector(".r-for")), ""];
+      printer.querySelectorAll(".r-row").forEach((row) => out.push(`${line(row.querySelector("dt"))}: ${line(row.querySelector("dd"))}`));
+      out.push("", line(printer.querySelector(".r-sub")));
+      printer.querySelectorAll(".r-list li").forEach((li, i) => out.push(`${i + 1}. ${line(li)}`));
+      out.push("", line(printer.querySelector(".r-foot")), line(printer.querySelector(".r-eta")), "", "BESA · besaweb.com");
+      const url = URL.createObjectURL(new Blob([out.join("\n")], { type: "text/plain;charset=utf-8" }));
+      const a = document.createElement("a");
+      a.href = url; a.download = ($("printer-dl") as HTMLElement).dataset.file || "riepilogo.txt";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
 
     // Plan buttons in "Piani" carry the choice into the form (visible, removable).
@@ -457,9 +508,14 @@ const labels = JSON.stringify({
         if (j?.ok) {
           (window as any).umami?.track("lead_submit");
           status.textContent = "";
+          celebrate();
           form.hidden = true;
           const ok = $("lead-ok"); ok.hidden = false; ok.focus();
+          if (monitor) monitor.hidden = true;
           if (printer) {
+            // The receipt prints right under the confirmation, on every screen size.
+            $("lead-ok").after(printer);
+            printer.hidden = false;
             const st = $("printer-status");
             const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
             const print = () => {
@@ -467,9 +523,7 @@ const labels = JSON.stringify({
               setTimeout(() => { printer.dataset.stage = "complete"; st.textContent = st.dataset.complete!; }, reduce ? 0 : 1900);
             };
             // On phones the printer sits under the card: bring it up, and print only once it is on screen.
-            if (!matchMedia("(min-width: 64rem)").matches) {
-              setTimeout(() => printer.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }), reduce ? 0 : 600);
-            }
+            setTimeout(() => printer.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), reduce ? 0 : 600);
             const io = new IntersectionObserver(([en]) => { if (en.intersectionRatio >= 0.5) { io.disconnect(); print(); } }, { threshold: [0.5] });
             io.observe(printer);
           }

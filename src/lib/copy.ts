@@ -25,7 +25,7 @@ export const copy = {
     lead: "Landing page per le tue inserzioni Facebook e Instagram. Ci mandi il link, al resto pensiamo noi.",
     cta: "Mandaci il tuo annuncio",
     note: "Ci basta un link. Il resto lo facciamo noi.",
-    keep: "Il tuo annuncio resta com’è: cambia solo dove arriva chi clicca.",
+    keep: "Il tuo annuncio resta com’è, e la pagina la provi prima di decidere.",
     compare: {
       legend: "Dove arriva chi clicca il tuo annuncio",
       before: "Oggi",
@@ -39,7 +39,6 @@ export const copy = {
       url: "pagina-di-prova",
       tags: { art: "Come nell’annuncio", title: "Stessa promessa", button: "Un solo pulsante" },
       sent: "Messaggio inviato",
-      stamp: { top: "Prima", main: "la provi", bottom: "pagina di prova" },
     },
   },
 
@@ -55,33 +54,39 @@ export const copy = {
   linkHelp: {
     button: "Dove trovo il link?",
     title: "Dove trovo il link dell’annuncio?",
+    subtitle: "Scegli da dove lo cerchi: bastano tre passaggi.",
+    close: "Chiudi",
     sources: [
       {
-        title: "Dal telefono",
+        id: "phone",
+        tab: "Telefono",
         steps: [
           "Apri l’annuncio su Instagram o Facebook.",
           "Tocca l’icona di condivisione o i tre puntini.",
-          "Scegli «Copia link» e incollalo qui.",
+          "Scegli «Copia link» e incollalo nel campo.",
         ],
       },
       {
-        title: "Da Gestione inserzioni (computer)",
+        id: "manager",
+        tab: "Gestione inserzioni",
         steps: [
           "Seleziona l’inserzione e apri l’anteprima.",
-          "Clicca l’icona di condivisione e scegli l’opzione per condividere un link.",
-          "Copia il link e incollalo qui.",
+          "Clicca l’icona di condivisione e scegli di condividere un link.",
+          "Copia il link e incollalo nel campo.",
         ],
       },
       {
-        title: "Dalla Libreria inserzioni di Meta",
+        id: "library",
+        tab: "Libreria inserzioni",
         steps: [
-          "Cerca il nome della tua pagina nella Libreria inserzioni.",
-          "Apri l’annuncio attivo e copia l’indirizzo dal browser.",
+          "Apri la Libreria inserzioni di Meta.",
+          "Cerca il nome della tua pagina e apri l’annuncio attivo.",
+          "Copia l’indirizzo dal browser e incollalo nel campo.",
         ],
       },
     ],
-    alt: "Ancora niente? Scrivi il tuo @profilo: lo cerchiamo noi.",
-    close: "Ho capito",
+    alt: "Non lo trovi? Scrivi il tuo @profilo: l’annuncio lo cerchiamo noi.",
+    done: "Ho capito",
   },
 
   problem: {
@@ -231,7 +236,6 @@ export const copy = {
       "Scriviamo noi i testi, con te che controlli prima di andare online.",
       "Dopo la messa online guardiamo insieme cosa succede.",
     ],
-    stamp: { big: "0", small: "recensioni inventate" },
     caseStudies: "[TODO: casi reali con permesso del cliente, quando ci saranno]",
   },
 
@@ -310,7 +314,7 @@ export const copy = {
 
   finalCta: {
     headline: "Mandaci il link. {em}Ti rispondiamo noi{/em}.",
-    lead: "Guardiamo il tuo annuncio e prepariamo una pagina di prova da aprire sul telefono. Ti rispondiamo su WhatsApp o via email. [TODO: tempo di risposta promesso]",
+    lead: "Guardiamo il tuo annuncio e prepariamo una pagina di prova da aprire sul telefono. Te la mandiamo su WhatsApp o via email entro 1 giorno lavorativo.",
     next: {
       title: "Cosa succede dopo",
       steps: [
@@ -354,6 +358,14 @@ export const copy = {
       },
       note: { label: "Altro che dobbiamo sapere?", placeholder: "Orari, cosa ti distingue, cosa non vuoi vedere…" },
     },
+    monitor: {
+      label: "Anteprima dal vivo",
+      hint: "Si aggiorna mentre compili. È un’anteprima illustrativa: la pagina vera la scriviamo noi.",
+      fallbackTitle: "La tua offerta, come nell’annuncio",
+      fallbackText: "Due righe chiare su cosa ottiene chi arriva.",
+      in: "a",
+      by: "Pagina di prova per",
+    },
     printer: {
       label: "Riepilogo della tua pagina di prova",
       brand: "BESA",
@@ -366,6 +378,9 @@ export const copy = {
       sections: "Cosa ci sarà",
       sectionList: ["Titolo preso dal tuo annuncio", "La tua offerta, spiegata in breve", "Un solo pulsante"],
       delivery: "Arriva su un indirizzo di prova",
+      eta: "Consegna: entro 1 giorno lavorativo",
+      download: "Scarica il riepilogo",
+      file: "besa-riepilogo-pagina-di-prova.txt",
       thanks: "Grazie!",
       note: "Riepilogo illustrativo di quello che ci hai scritto.",
     },
@@ -397,8 +412,7 @@ export const copy = {
     submitting: "Invio in corso…",
     success: {
       title: "Ricevuto, grazie.",
-      stamp: "Ricevuto",
-      text: "Guardiamo il tuo annuncio, prepariamo la pagina di prova e te la mandiamo. [TODO: tempo di risposta promesso]",
+      text: "Guardiamo il tuo annuncio, prepariamo la pagina di prova e te la mandiamo entro 1 giorno lavorativo. Intanto stampiamo il riepilogo di quello che ci hai scritto.",
     },
     errors: {
       generic: "Non siamo riusciti a inviare. Riprova tra poco o scrivici a info@besaweb.com.",

@@ -49,7 +49,7 @@ const c = copy.catcher;
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   document.querySelectorAll<HTMLFormElement>("form[data-catcher]").forEach((form) => {
-    const input = form.querySelector("input")!;
+    const input = form.querySelector<HTMLInputElement>("input[type=text]")!;
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const target = document.getElementById("f-annuncio") as HTMLInputElement | null;

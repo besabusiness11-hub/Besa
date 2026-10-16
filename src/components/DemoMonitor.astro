@@ -1,0 +1,80 @@
+---
+// Desktop "monitor" with a live sketch of the trial landing, filled from the form answers.
+// Decorative (aria-hidden): the form fields are the source of truth. ContactForm writes [data-m] via textContent.
+import { copy } from "../lib/copy";
+const m = copy.form.monitor;
+const goal0 = copy.form.goal.options[0].button;
+---
+<figure class="monitor" id="monitor" data-tone="">
+  <figcaption class="mon-cap"><span class="live" aria-hidden="true"></span>{m.label}</figcaption>
+  <div class="mon" aria-hidden="true">
+    <div class="bezel">
+      <div class="scr">
+        <div class="chrome">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="url"><svg viewBox="0 0 12 12" width="9" height="9"><rect x="2.5" y="5.5" width="7" height="5" rx="1" fill="currentColor" /><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5" fill="none" stroke="currentColor" stroke-width="1.3" /></svg>pagina-di-prova/<b data-m="slug">la-tua-pagina</b></span>
+        </div>
+        <div class="page">
+          <div class="pg-copy">
+            <p class="pg-brand"><i></i><span data-m="brand">{m.by} te</span></p>
+            <p class="pg-title" data-m="title">{m.fallbackTitle}</p>
+            <p class="pg-text" data-m="text">{m.fallbackText}</p>
+            <span class="pg-btn" data-m="btn">{goal0}</span>
+          </div>
+          <div class="pg-art"><i class="sun"></i><i class="hill"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="neck"></div>
+    <div class="foot"></div>
+  </div>
+  <p class="mon-hint">{m.hint}</p>
+</figure>
+
+<style>
+  .monitor { margin: 0; display: none; }
+  @media (min-width: 64rem) { .monitor { display: block; margin-top: 2.5rem; } }
+  .mon-cap { display: inline-flex; align-items: center; gap: .5rem; font-size: .875rem; font-weight: 700; margin-bottom: .9rem; }
+  .live { width: .55rem; height: .55rem; border-radius: 9999px; background: var(--color-status-success); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-status-success) 35%, transparent); }
+  .mon { display: grid; justify-items: center; width: min(100%, 30rem); }
+  .bezel { width: 100%; padding: .55rem; border-radius: 1rem; background: var(--color-surface-inverse); box-shadow: 0 40px 70px -36px oklch(0.1 0.08 266 / .9), inset 0 0 0 1.5px oklch(1 0 0 / .12); }
+  .scr { border-radius: .55rem; overflow: hidden; background: var(--color-surface-page); color: var(--color-text-primary); aspect-ratio: 16 / 10; display: flex; flex-direction: column; }
+  .neck { width: 4.5rem; height: 2rem; background: linear-gradient(var(--color-surface-inverse), color-mix(in oklab, var(--color-surface-inverse) 80%, var(--color-text-on-inverse))); clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%); }
+  .foot { width: 10rem; height: .5rem; border-radius: .5rem .5rem .25rem .25rem; background: var(--color-surface-inverse); box-shadow: 0 10px 20px -8px oklch(0.1 0.08 266 / .7); }
+
+  .chrome { display: flex; align-items: center; gap: .6rem; padding: .45rem .6rem; background: var(--color-surface-sunken); border-bottom: 1px solid var(--color-border-subtle); }
+  .dots { display: flex; gap: .25rem; }
+  .dots i { width: .45rem; height: .45rem; border-radius: 9999px; background: var(--color-border-subtle); }
+  .url { flex: 1; min-width: 0; display: flex; align-items: center; gap: .3rem; padding: .2rem .55rem; border-radius: 9999px; background: var(--color-surface-page); color: var(--color-text-secondary); font-size: .6875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .url b { color: var(--color-text-primary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+
+  .page { flex: 1; display: grid; grid-template-columns: 1.1fr 1fr; gap: 1rem; align-items: center; padding: 1rem 1.1rem; }
+  .pg-copy { display: grid; gap: .45rem; justify-items: start; min-width: 0; }
+  .pg-brand { display: flex; align-items: center; gap: .35rem; font-size: .625rem; color: var(--color-text-secondary); max-width: 100%; }
+  .pg-brand span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pg-brand i { flex: none; width: .8rem; height: .8rem; border-radius: 9999px; background: var(--color-accent-solid); }
+  .pg-title { font-size: 1.05rem; font-weight: 800; line-height: 1.12; letter-spacing: -.02em; max-width: none; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+  .pg-text { font-size: .6875rem; line-height: 1.4; color: var(--color-text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pg-btn { margin-top: .2rem; padding: .45rem .75rem; border-radius: .55rem; background: var(--color-status-success); color: var(--color-text-on-accent); font-size: .6875rem; font-weight: 700; white-space: nowrap; }
+  .pg-art { position: relative; height: 100%; min-height: 6rem; border-radius: .6rem; background: var(--color-accent-subtle); overflow: hidden; }
+  .pg-art .sun { position: absolute; width: 1.6rem; height: 1.6rem; right: 18%; top: 18%; border-radius: 9999px; background: var(--color-accent-solid); opacity: .55; }
+  .pg-art .hill { position: absolute; left: -10%; right: -10%; bottom: -55%; height: 100%; border-radius: 50%; background: var(--color-accent-solid); }
+
+  /* tone changes the voice of the sketch */
+  [data-tone="amichevole"] .pg-title { font-style: italic; }
+  [data-tone="amichevole"] .pg-btn, [data-tone="amichevole"] .pg-art { border-radius: 1.2rem; }
+  [data-tone="elegante"] .pg-title { font-weight: 600; letter-spacing: 0; }
+  [data-tone="elegante"] .pg-btn { background: var(--color-surface-inverse); border-radius: .2rem; }
+  [data-tone="elegante"] .pg-art { border-radius: .15rem; }
+  [data-tone="diretto"] .pg-title { text-transform: uppercase; font-size: .95rem; letter-spacing: -.01em; }
+
+  .mon-hint { margin-top: 1rem; font-size: .8125rem; color: var(--color-text-on-accent-muted); max-width: 40ch; }
+  :global(.is-new) { animation: none; }
+  .scr :global(.is-new) { animation: m-new 600ms var(--ease-expo); }
+  @keyframes m-new { from { opacity: .2; translate: 0 3px; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .live { animation: live 2s var(--ease-out) infinite; }
+    @keyframes live { 50% { box-shadow: 0 0 0 6px transparent; } }
+    .pg-title, .pg-btn, .pg-art { transition: border-radius 300ms var(--ease-out), background-color 300ms var(--ease-out), font-size 300ms var(--ease-out); }
+  }
+</style>

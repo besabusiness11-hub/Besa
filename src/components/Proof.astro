@@ -2,7 +2,6 @@
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 import { todo } from "../lib/todo";
-import Stamp from "./Stamp.astro";
 const c = copy.proof;
 ---
 <section class="proof on-blue bg-surface-inverse text-[var(--color-text-on-inverse)] section" aria-labelledby="proof-title">
@@ -10,9 +9,6 @@ const c = copy.proof;
     <div class="reveal">
       <div class="ph">
         <h2 id="proof-title" class="t-h2 max-w-[14ch]" set:html={em(c.headline)} />
-        <Stamp class="proof-stamp" tilt={6} width="7rem" ink="var(--color-text-primary)">
-          <span class="ps"><strong>{c.stamp.big}</strong><small>{c.stamp.small}</small></span>
-        </Stamp>
       </div>
       <div class="mt-8 grid gap-4 text-[var(--color-text-on-accent-muted)]">
         {c.paragraphs.map((p) => <p class="lead">{p}</p>)}
@@ -38,9 +34,6 @@ const c = copy.proof;
     --proof-dash: color-mix(in oklch, var(--color-text-on-inverse) 50%, transparent);
   }
   .ph { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; }
-  .ps { display: grid; justify-items: center; line-height: 1; }
-  .ps strong { font-size: 2.5rem; font-weight: 800; font-style: italic; letter-spacing: -.04em; }
-  .ps small { margin-top: .35rem; font-size: .5625rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; line-height: 1.25; max-width: none; overflow-wrap: normal; word-break: keep-all; }
   .how { display: grid; }
   .how li { padding-block: 1.25rem; border-top: 1px solid var(--proof-line); font-size: var(--text-h3); line-height: 1.25; font-weight: 700; letter-spacing: -.015em; }
   .how li:last-child { border-bottom: 1px solid var(--proof-line); }
