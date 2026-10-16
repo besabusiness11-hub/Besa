@@ -45,10 +45,12 @@ export const copy = {
     headline: "Quanto ti costa {em}chi clicca e se ne va{/em}?",
     lead: "Metti i tuoi numeri. Il conto si fa qui, nel tuo browser: non salviamo niente.",
     defaultsNote: "Valori di esempio: metti i tuoi.",
+    less: "Diminuisci",
+    more: "Aumenta",
     inputs: {
       budget: { label: "Spendi in inserzioni al mese", min: 50, max: 5000, step: 50, value: 300 },
       cpc: { label: "Paghi ogni click, più o meno", min: 0.1, max: 3, step: 0.05, value: 0.5 },
-      msgs: { label: "Messaggi che ricevi al mese", min: 0, max: 300, step: 1, value: 6 },
+      msgs: { label: "Messaggi che ricevi al mese", min: 0, max: 150, step: 1, value: 6 },
     },
     results: {
       clicks: "click pagati al mese",

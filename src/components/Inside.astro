@@ -70,10 +70,9 @@ const kindOf = (i: number) => rows.find((r) => r.i === i)!.kind;
 
 <style>
   .list { display: grid; }
-  @media (min-width: 64rem) {
-    .sticky-col { position: sticky; top: 6rem; }
-    .list li { padding-block: 2rem; }
-  }
+  @media (min-width: 64rem) { .list li { padding-block: 2rem; } }
+  /* pin the phone only when the whole column fits under the header */
+  @media (min-width: 64rem) and (min-height: 50rem) { .sticky-col { position: sticky; top: 5.5rem; } }
   /* active feature: its row, its spot on the phone and its label light up together */
   .list li :global(h3) { transition: color 250ms var(--ease-out); }
   .list li.is-on :global(h3) { color: var(--color-accent-text); }

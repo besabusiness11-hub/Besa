@@ -13,8 +13,9 @@ const inputs = [
 const nf = (n: number, d = 0) => new Intl.NumberFormat("it-IT", { maximumFractionDigits: d }).format(n);
 const eur = (n: number) => new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR", maximumFractionDigits: n < 10 ? 2 : 0 }).format(n);
 const fmt = (id: string, v: number) => (id === "msgs" ? nf(v) : eur(v));
-const budget = p.inputs.budget.value, cpc = p.inputs.cpc.value, msgs = p.inputs.msgs.value;
+const budget = p.inputs.budget.value, cpc = p.inputs.cpc.value;
 const clicks = Math.round(budget / cpc);
+const msgs = Math.min(p.inputs.msgs.value, clicks);
 const gone = Math.max(0, clicks - msgs);
 const per100 = clicks ? Math.min(100, (msgs / clicks) * 100) : 0;
 const filled = msgs > 0 ? Math.min(100, Math.max(1, Math.round(per100))) : 0;
@@ -33,6 +34,7 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
           <div class="rng">
             <label for={`c-${i.id}`}>{i.label}</label>
             <output for={`c-${i.id}`} id={`o-${i.id}`} class="val">{fmt(i.id, i.value)}</output>
+            <button type="button" class="stp" data-for={`c-${i.id}`} data-d="-1" aria-label={`${p.less}: ${i.label}`}>−</button>
             <input
               type="range"
               id={`c-${i.id}`}
@@ -44,6 +46,7 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
               aria-valuetext={fmt(i.id, i.value)}
               style={`--p:${pct(i)}%`}
             />
+            <button type="button" class="stp" data-for={`c-${i.id}`} data-d="1" aria-label={`${p.more}: ${i.label}`}>+</button>
           </div>
         ))}
         <p class="defaults">{p.defaultsNote}</p>
@@ -120,8 +123,9 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
         inp.setAttribute("aria-valuetext", txt);
         inp.style.setProperty("--p", ((v - Number(inp.min)) / (Number(inp.max) - Number(inp.min))) * 100 + "%");
       }
-      const budget = num("budget"), cpc = num("cpc"), msgs = num("msgs");
+      const budget = num("budget"), cpc = num("cpc");
       const clicks = Math.round(budget / cpc);
+      const msgs = Math.min(num("msgs"), clicks);
       const gone = Math.max(0, clicks - msgs);
       const per100 = clicks ? Math.min(100, (msgs / clicks) * 100) : 0;
       const filled = msgs > 0 ? Math.min(100, Math.max(1, Math.round(per100))) : 0;
@@ -143,6 +147,14 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
       }, 700);
     };
     form.addEventListener("input", update);
+    // Steppers: fine control where a thumb is too coarse (small values on a phone).
+    form.addEventListener("click", (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>(".stp");
+      if (!b) return;
+      const inp = document.getElementById(b.dataset.for!) as HTMLInputElement;
+      b.dataset.d === "1" ? inp.stepUp() : inp.stepDown();
+      inp.dispatchEvent(new Event("input", { bubbles: true }));
+    });
     form.addEventListener("submit", (e) => e.preventDefault());
   }
 </script>
@@ -158,10 +170,18 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
 
   /* ---- sliders ---- */
   .inputs { margin-top: 2.5rem; display: grid; gap: 1.75rem; max-width: 34rem; }
-  .rng { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .5rem 1rem; }
-  .rng label { font-weight: 600; font-size: 1rem; line-height: 1.35; }
-  .val { font-weight: 800; font-size: 1.375rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
+  /* label + value on top; with JS: [−] slider [+] underneath */
+  .rng { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .5rem .75rem; }
+  .rng label { grid-column: 1 / 3; font-weight: 600; font-size: 1rem; line-height: 1.35; }
+  .rng .val { grid-column: 3; justify-self: end; }
   .rng input { grid-column: 1 / -1; }
+  :global(.js) .rng input { grid-column: 2; }
+  .stp { display: none; }
+  :global(.js) .stp { display: inline-grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border: 0; border-radius: 9999px; background: var(--color-surface-sunken); color: var(--color-accent-text); font: inherit; font-weight: 700; font-size: 1.25rem; line-height: 1; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  :global(.js) .stp:active { scale: .92; }
+  .rng .stp:last-child { justify-self: end; }
+  @media (hover: hover) { :global(.js) .stp:hover { background: var(--color-accent-subtle); } }
+  .val { font-weight: 800; font-size: 1.375rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
   .defaults { font-size: .875rem; color: var(--color-text-secondary); }
 
   input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 2.75rem; margin: 0; background: transparent; cursor: pointer; --track: linear-gradient(to right, var(--color-accent-solid) var(--p), var(--color-border-subtle) var(--p)); }
