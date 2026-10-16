@@ -60,16 +60,16 @@ export const copy = {
         title: "Dal telefono",
         steps: [
           "Apri l’annuncio su Instagram o Facebook.",
-          "Tocca l’aeroplanino (Condividi) o i tre puntini.",
+          "Tocca l’icona di condivisione o i tre puntini.",
           "Scegli «Copia link» e incollalo qui.",
         ],
       },
       {
         title: "Da Gestione inserzioni (computer)",
         steps: [
-          "Apri l’inserzione e vai su «Anteprima».",
-          "Dal menu di condivisione scegli «Post di Facebook con commenti».",
-          "Copia l’indirizzo della pagina che si apre.",
+          "Seleziona l’inserzione e apri l’anteprima.",
+          "Clicca l’icona di condivisione e scegli l’opzione per condividere un link.",
+          "Copia il link e incollalo qui.",
         ],
       },
       {

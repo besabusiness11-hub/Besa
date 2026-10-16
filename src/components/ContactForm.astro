@@ -275,7 +275,7 @@ const labels = JSON.stringify({
       .more-q[open]::details-content { block-size: auto; }
     }
   }
-  .more :global(.printer) { margin-bottom: 2.5rem; }
+  .more :global(.printer) { margin-bottom: 2.5rem; scroll-margin-top: 4.5rem; }
   @media (min-width: 64rem) { .more :global(.printer) { margin-top: 2.5rem; } }
   @media (max-width: 63.99rem) { .more :global(.printer) { margin-inline: auto; } }
   .ok { position: relative; }
@@ -462,8 +462,16 @@ const labels = JSON.stringify({
           if (printer) {
             const st = $("printer-status");
             const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-            printer.dataset.stage = "printing"; st.textContent = st.dataset.printing!;
-            setTimeout(() => { printer.dataset.stage = "complete"; st.textContent = st.dataset.complete!; }, reduce ? 0 : 1900);
+            const print = () => {
+              printer.dataset.stage = "printing"; st.textContent = st.dataset.printing!;
+              setTimeout(() => { printer.dataset.stage = "complete"; st.textContent = st.dataset.complete!; }, reduce ? 0 : 1900);
+            };
+            // On phones the printer sits under the card: bring it up, and print only once it is on screen.
+            if (!matchMedia("(min-width: 64rem)").matches) {
+              setTimeout(() => printer.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }), reduce ? 0 : 600);
+            }
+            const io = new IntersectionObserver(([en]) => { if (en.intersectionRatio >= 0.5) { io.disconnect(); print(); } }, { threshold: [0.5] });
+            io.observe(printer);
           }
           return;
         }
