@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizeAdLink } from "./link";
 
 export const MSG = {
   invalid: "Controlla i campi del modulo e riprova.",
@@ -18,12 +19,13 @@ const truthy = z.preprocess(
 export const leadSchema = z.object({
   nome: z.string().trim().min(2, "Inserisci il tuo nome.").max(100),
   contatto: z.string().trim().min(5, "Inserisci email o telefono.").max(200),
+  // Same normalization as the browser: share text, bare domains and @handles become a URL (no-JS posts too).
   annuncio: z
     .string()
     .trim()
     .max(500)
     .optional()
-    .transform((v) => (v ? v : undefined))
+    .transform((v) => (v ? normalizeAdLink(v) || v : undefined))
     .refine(
       (v) => {
         if (!v) return true;
@@ -36,6 +38,20 @@ export const leadSchema = z.object({
       },
       { message: MSG.annuncio },
     ),
+  // Optional answers from the form: empty strings count as "not given".
+  obiettivo: z.preprocess((v) => (v === "" ? undefined : v), z.enum(["whatsapp", "chiamata", "preventivo", "prenotazione"]).optional()),
+  piano: z.preprocess((v) => (v === "" ? undefined : v), z.enum(["abbonamento", "una-tantum", "su-misura"]).optional()),
+  attivita: z.string().trim().max(120).optional().transform((v) => (v ? v : undefined)),
+  offerta: z.string().trim().max(200).optional().transform((v) => (v ? v : undefined)),
+  zona: z.string().trim().max(120).optional().transform((v) => (v ? v : undefined)),
+  tono: z.preprocess((v) => (v === "" ? undefined : v), z.enum(["diretto", "amichevole", "elegante"]).optional()),
+  note: z.string().trim().max(1000).optional().transform((v) => (v ? v : undefined)),
+  calcolo: z
+    .string()
+    .trim()
+    .max(160)
+    .optional()
+    .transform((v) => (v ? v : undefined)),
   privacy: truthy.refine((v) => v === true, { message: MSG.privacy }),
   website: z.string().optional(),
   "cf-turnstile-response": z.string().optional(),
@@ -158,7 +174,15 @@ export function buildEmail(lead: Lead): { subject: string; text: string; html: s
     ["Nome", nome],
     ["Contatto", oneLine(lead.contatto)],
     ["Annuncio", lead.annuncio ? oneLine(lead.annuncio) : "(non indicato)"],
+    ["Obiettivo della pagina", lead.obiettivo ?? "(non indicato)"],
   ];
+  if (lead.piano) rows.push(["Piano scelto", lead.piano]);
+  if (lead.attivita) rows.push(["Attività", oneLine(lead.attivita)]);
+  if (lead.offerta) rows.push(["Offerta dell’annuncio", oneLine(lead.offerta)]);
+  if (lead.zona) rows.push(["Zona", oneLine(lead.zona)]);
+  if (lead.tono) rows.push(["Tono", lead.tono]);
+  if (lead.note) rows.push(["Note", oneLine(lead.note)]);
+  if (lead.calcolo) rows.push(["Dal calcolatore", oneLine(lead.calcolo)]);
   const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n");
   const html =
     `<table>` +

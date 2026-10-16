@@ -21,12 +21,11 @@ export const copy = {
   },
 
   hero: {
-    kicker: "Landing page per chi fa Meta Ads",
     headline: "Più messaggi dai click {em}che già paghi{/em}.",
-    lead: "Mandaci il link del tuo annuncio Facebook o Instagram: costruiamo la pagina che porta chi clicca a scriverti.",
+    lead: "Landing page per le tue inserzioni Facebook e Instagram. Ci mandi il link, al resto pensiamo noi.",
     cta: "Mandaci il tuo annuncio",
     note: "Ci basta un link. Il resto lo facciamo noi.",
-    chips: ["Non cambi annuncio", "La provi prima di decidere", "Un solo pulsante: scrivere a te"],
+    keep: "Il tuo annuncio resta com’è: cambia solo dove arriva chi clicca.",
     compare: {
       legend: "Dove arriva chi clicca il tuo annuncio",
       before: "Oggi",
@@ -37,8 +36,52 @@ export const copy = {
       ad: { name: "La tua attività", sponsored: "Sponsorizzato", offer: "La tua offerta", cta: "Scopri di più" },
       profile: { handle: "latuaattivita", link: "link in bio", doubts: ["Dove scrivo?", "Quanto costa?", "Era questa l’offerta?"] },
       landing: { title: "La tua offerta, come nell’annuncio", text: "Due righe chiare su cosa ottieni.", button: "Scrivici su WhatsApp" },
-      toast: { app: "WhatsApp", text: "Ciao! Ho visto l’annuncio, vorrei sapere di più." },
+      url: "pagina-di-prova",
+      tags: { art: "Come nell’annuncio", title: "Stessa promessa", button: "Un solo pulsante" },
+      sent: "Messaggio inviato",
+      stamp: { top: "Prima", main: "la provi", bottom: "pagina di prova" },
     },
+  },
+
+  catcher: {
+    label: "Link dell’annuncio o @profilo Instagram",
+    placeholder: "Link o @tuoprofilo",
+    button: "Continua",
+    hint: "Va bene anche solo il tuo @profilo: l’annuncio lo troviamo noi.",
+    added: "Link aggiunto al modulo. Ora dicci dove risponderti.",
+    fallback: "Mandaci il tuo annuncio",
+  },
+
+  linkHelp: {
+    button: "Dove trovo il link?",
+    title: "Dove trovo il link dell’annuncio?",
+    sources: [
+      {
+        title: "Dal telefono",
+        steps: [
+          "Apri l’annuncio su Instagram o Facebook.",
+          "Tocca l’aeroplanino (Condividi) o i tre puntini.",
+          "Scegli «Copia link» e incollalo qui.",
+        ],
+      },
+      {
+        title: "Da Gestione inserzioni (computer)",
+        steps: [
+          "Apri l’inserzione e vai su «Anteprima».",
+          "Dal menu di condivisione scegli «Post di Facebook con commenti».",
+          "Copia l’indirizzo della pagina che si apre.",
+        ],
+      },
+      {
+        title: "Dalla Libreria inserzioni di Meta",
+        steps: [
+          "Cerca il nome della tua pagina nella Libreria inserzioni.",
+          "Apri l’annuncio attivo e copia l’indirizzo dal browser.",
+        ],
+      },
+    ],
+    alt: "Ancora niente? Scrivi il tuo @profilo: lo cerchiamo noi.",
+    close: "Ho capito",
   },
 
   problem: {
@@ -62,6 +105,7 @@ export const copy = {
       dotsLegendWrote: "ti scrive",
       dotsLegendGone: "se ne va",
     },
+    calcSummary: "{budget} al mese · {cpc} a click · {msgs} messaggi al mese",
     closing: "Di solito il problema non è l’annuncio: è la pagina dove arriva chi clicca. Lì lavoriamo noi.",
     note: "Solo aritmetica sui numeri che inserisci. Non è una previsione.",
   },
@@ -76,7 +120,7 @@ export const copy = {
     steps: [
       {
         title: "Mandi il link del tuo annuncio",
-        text: "Nome, WhatsApp o email, link all’inserzione (o al profilo). Tre campi.",
+        text: "Incollalo qui sotto: lo mettiamo nel modulo per te. Poi ci dici solo dove risponderti.",
       },
       {
         title: "Costruiamo la landing da lì",
@@ -87,7 +131,6 @@ export const copy = {
         text: "Ti diciamo dove collegarla alle inserzioni. Poi guardiamo insieme com’è andata e cosa fare dopo.",
       },
     ],
-    pasteExample: "facebook.com/ads/library/?id=…",
     demoTitle: "Prova prima di decidere",
     demoNote:
       "All’inizio la pagina vive su un indirizzo di prova, non sul tuo dominio. Così puoi vederla e provarla dal telefono prima di decidere.",
@@ -99,24 +142,24 @@ export const copy = {
     headline: "Cosa c’è dentro la pagina.",
     features: [
       {
-        title: "Titolo preso dal tuo annuncio",
-        text: "Chi arriva ritrova la stessa promessa e capisce subito di essere nel posto giusto.",
+        title: "Pagina leggera",
+        text: "Costruita per caricarsi in fretta dal telefono, anche con poca connessione.",
       },
       {
-        title: "Pulsante per contattarti",
-        text: "WhatsApp, telefono o modulo: quello che usi davvero per rispondere ai clienti.",
+        title: "Titolo preso dal tuo annuncio",
+        text: "Chi arriva ritrova la stessa promessa e capisce subito di essere nel posto giusto.",
       },
       {
         title: "Testi scritti da noi",
         text: "Brevi e concreti, senza giri di parole. Li scriviamo noi e li controlli tu prima di andare online.",
       },
       {
-        title: "Pagina leggera",
-        text: "Costruita per caricarsi in fretta dal telefono, anche con poca connessione.",
-      },
-      {
         title: "Modulo corto",
         text: "Poche domande, perché ogni campo in più fa scappare qualcuno.",
+      },
+      {
+        title: "Pulsante per contattarti",
+        text: "WhatsApp, telefono o modulo: quello che usi davvero per rispondere ai clienti.",
       },
       {
         title: "Tracciamento delle richieste",
@@ -143,6 +186,8 @@ export const copy = {
           "[TODO: numero di modifiche incluse al mese e tempi di risposta]",
         ],
         cta: "Scegli l’abbonamento",
+        // Link di pagamento (es. Stripe Payment Link). Vuoto = il pulsante porta al modulo con il piano già scelto.
+        checkout: "",
       },
       {
         id: "una-tantum",
@@ -157,6 +202,7 @@ export const copy = {
           "[TODO: round di revisione inclusi e cosa succede dopo la consegna]",
         ],
         cta: "Scegli una tantum",
+        checkout: "",
       },
       {
         id: "su-misura",
@@ -170,6 +216,7 @@ export const copy = {
           "Preventivo dopo aver visto il tuo caso",
         ],
         cta: "Raccontaci cosa ti serve",
+        checkout: "",
       },
     ],
   },
@@ -184,6 +231,7 @@ export const copy = {
       "Scriviamo noi i testi, con te che controlli prima di andare online.",
       "Dopo la messa online guardiamo insieme cosa succede.",
     ],
+    stamp: { big: "0", small: "recensioni inventate" },
     caseStudies: "[TODO: casi reali con permesso del cliente, quando ci saranno]",
   },
 
@@ -211,7 +259,7 @@ export const copy = {
     items: [
       {
         q: "Cosa mi serve per partire?",
-        a: "Il link a un tuo annuncio (o al tuo profilo Facebook o Instagram) e un recapito per risponderti. Basta il modulo qui sotto: tre campi.",
+        a: "Il link a un tuo annuncio (o al tuo profilo Facebook o Instagram) e un recapito per risponderti. Basta il modulo qui sotto: il resto è facoltativo.",
       },
       {
         q: "Non ho un annuncio attivo. Posso partire lo stesso?",
@@ -262,11 +310,66 @@ export const copy = {
 
   finalCta: {
     headline: "Mandaci il link. {em}Ti rispondiamo noi{/em}.",
-    lead: "Tre campi e hai fatto: nome, recapito, link all’annuncio. Ti rispondiamo su WhatsApp o via email. [TODO: tempo di risposta promesso]",
+    lead: "Guardiamo il tuo annuncio e prepariamo una pagina di prova da aprire sul telefono. Ti rispondiamo su WhatsApp o via email. [TODO: tempo di risposta promesso]",
+    next: {
+      title: "Cosa succede dopo",
+      steps: [
+        "Leggiamo il tuo annuncio: offerta, tono, a chi parli.",
+        "Prepariamo la pagina su un indirizzo di prova.",
+        "Te la mandiamo: la apri dal telefono e ci dici cosa ne pensi.",
+      ],
+    },
+    preview: { forName: "Pagina di prova per", fallbackName: "te", from: "dal tuo annuncio su", title: "La tua offerta, come nell’annuncio", note: "Anteprima illustrativa: si aggiorna mentre compili." },
     cta: "Mandaci il tuo annuncio",
   },
 
   form: {
+    steps: { link: "Il tuo annuncio", goal: "Cosa deve fare chi arriva?", contact: "Dove ti rispondiamo?" },
+    goal: {
+      optional: "Facoltativo",
+      options: [
+        { value: "whatsapp", label: "Scriverti su WhatsApp", button: "Scrivici su WhatsApp" },
+        { value: "chiamata", label: "Chiamarti", button: "Chiamaci ora" },
+        { value: "preventivo", label: "Chiedere un preventivo", button: "Chiedi un preventivo" },
+        { value: "prenotazione", label: "Prenotare", button: "Prenota ora" },
+      ],
+    },
+    calc: { label: "Dal calcolatore", remove: "Togli i numeri del calcolatore" },
+    plan: { label: "Piano scelto", remove: "Togli il piano scelto" },
+    checkoutCta: "Paga e inizia",
+    progress: { of: "di 3", ready: "Pronto da inviare", label: "Domande completate" },
+    more: {
+      summary: "Vuoi una pagina di prova più precisa? Aggiungi qualche dettaglio",
+      optional: "Tutto facoltativo",
+      attivita: { label: "Che attività hai?", placeholder: "Es. palestra, pizzeria, studio dentistico" },
+      offerta: { label: "Cosa offri nell’annuncio?", placeholder: "Es. prima lezione gratis, sconto sul primo ordine" },
+      zona: { label: "Dove lavori?", placeholder: "Es. Treviso e provincia" },
+      tono: {
+        legend: "Come vuoi che parli la pagina?",
+        options: [
+          { value: "diretto", label: "Diretta" },
+          { value: "amichevole", label: "Amichevole" },
+          { value: "elegante", label: "Elegante" },
+        ],
+      },
+      note: { label: "Altro che dobbiamo sapere?", placeholder: "Orari, cosa ti distingue, cosa non vuoi vedere…" },
+    },
+    printer: {
+      label: "Riepilogo della tua pagina di prova",
+      brand: "BESA",
+      status: { draft: "Si compila mentre scrivi", printing: "Stampo il riepilogo…", complete: "Ricevuto: ci pensiamo noi" },
+      title: "Pagina di prova",
+      forName: "per",
+      fallbackName: "te",
+      rows: { attivita: "Attività", offerta: "Offerta", zona: "Zona", annuncio: "Annuncio", obiettivo: "Pulsante", tono: "Tono", piano: "Piano" },
+      empty: "da capire insieme",
+      sections: "Cosa ci sarà",
+      sectionList: ["Titolo preso dal tuo annuncio", "La tua offerta, spiegata in breve", "Un solo pulsante"],
+      delivery: "Arriva su un indirizzo di prova",
+      thanks: "Grazie!",
+      note: "Riepilogo illustrativo di quello che ci hai scritto.",
+    },
+    reassure: "Ti rispondiamo noi, su WhatsApp o via email.",
     fields: {
       name: {
         label: "Nome",
@@ -275,13 +378,14 @@ export const copy = {
       },
       contact: {
         label: "WhatsApp o email",
-        placeholder: "Il numero o l’indirizzo dove risponderti",
+        placeholder: "Numero o email",
         error: "Inserisci un numero WhatsApp o un’email valida.",
       },
       link: {
-        label: "Link all’annuncio o al profilo",
-        placeholder: "Incolla qui il link",
-        error: "Incolla il link del tuo annuncio o del tuo profilo.",
+        label: "Link dell’annuncio o @profilo Instagram",
+        hint: "Va bene anche solo il tuo @profilo, o il link della pagina Facebook: l’annuncio lo troviamo noi.",
+        placeholder: "Link o @tuoprofilo",
+        error: "Incolla il link dell’annuncio o scrivi il tuo @profilo Instagram.",
       },
     },
     privacy: {
@@ -289,11 +393,12 @@ export const copy = {
       linkLabel: "informativa privacy",
       error: "Per inviare la richiesta devi accettare la privacy.",
     },
-    submit: "Mandaci il tuo annuncio",
+    submit: "Voglio la pagina di prova",
     submitting: "Invio in corso…",
     success: {
       title: "Ricevuto, grazie.",
-      text: "Guardiamo il tuo annuncio e ti scriviamo noi. [TODO: tempo di risposta promesso]",
+      stamp: "Ricevuto",
+      text: "Guardiamo il tuo annuncio, prepariamo la pagina di prova e te la mandiamo. [TODO: tempo di risposta promesso]",
     },
     errors: {
       generic: "Non siamo riusciti a inviare. Riprova tra poco o scrivici a info@besaweb.com.",

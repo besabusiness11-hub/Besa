@@ -2,9 +2,13 @@
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 import { splitTodo } from "../lib/todo";
+import LinkHelp from "./LinkHelp.astro";
+import ReceiptPrinter from "./ReceiptPrinter.astro";
+import Stamp from "./Stamp.astro";
 
 const c = copy.finalCta;
 const f = copy.form;
+const mo = f.more;
 // Turnstile: no site key => no widget is rendered (local dev). In production the server
 // rejects leads without a valid token, so PUBLIC_TURNSTILE_SITEKEY must be set there.
 const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY as string | undefined;
@@ -16,39 +20,127 @@ const msgs = JSON.stringify({
   busy: f.submitting,
   generic: f.errors.generic,
   network: f.errors.network,
+  of: f.progress.of,
+  ready: f.progress.ready,
+});
+const buttons = JSON.stringify(Object.fromEntries(f.goal.options.map((o) => [o.value, o.button])));
+const labels = JSON.stringify({
+  tono: Object.fromEntries(mo.tono.options.map((o) => [o.value, o.label])),
 });
 ---
 <section id="contatto" class="on-blue bg-accent-solid text-[var(--color-text-on-accent)] section" aria-labelledby="contatto-title">
-  <div class="wrap grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-start">
-    <div>
+  <div class="wrap layout">
+    <div class="intro head">
       <h2 id="contatto-title" class="t-h2" set:html={em(c.headline)} />
-      <p class="lead mt-6 text-[var(--color-text-on-accent-muted)]">
-        {splitTodo(c.lead).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}
-      </p>
+      <p class="lead mt-6 text-[var(--color-text-on-accent-muted)]">{splitTodo(c.lead).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}</p>
+
+    </div>
+    <div class="intro more">
+      <ReceiptPrinter />
+      <div class="next">
+        <h3 class="next-t">{c.next.title}</h3>
+        <ol>
+          {c.next.steps.map((t) => <li>{t}</li>)}
+        </ol>
+      </div>
+
     </div>
 
-    <div>
+    <div class="card-wrap">
       {/*
         No-JS: the browser posts natively; the endpoint answers Accept: text/html with a 303 to /grazie
         (or /?invio=errore#contatto on failure, no field messages). Limitation: without JS the Turnstile
         widget cannot load, so in production a no-JS submit fails the anti-spam check. JS is the main path.
       */}
-      <form id="lead-form" method="post" action="/api/lead" novalidate data-msg={msgs} data-sitekey={sitekey ? "1" : undefined}>
-        <div class="field">
-          <label for="f-nome">{f.fields.name.label}</label>
-          <input id="f-nome" name="nome" type="text" autocomplete="name" autocapitalize="words" placeholder={f.fields.name.placeholder} required minlength="2" maxlength="100" aria-describedby="e-nome" />
-          <p id="e-nome" class="err"></p>
+      <form id="lead-form" class="card" method="post" action="/api/lead" novalidate data-msg={msgs} data-buttons={buttons} data-labels={labels} data-sitekey={sitekey ? "1" : undefined}>
+        <div class="prog" aria-hidden="true">
+          <span class="prog-bar"><i></i></span>
+          <span class="prog-t" id="prog-t">0 {f.progress.of}</span>
         </div>
-        <div class="field">
-          <label for="f-contatto">{f.fields.contact.label}</label>
-          <input id="f-contatto" name="contatto" type="text" inputmode="email" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder={f.fields.contact.placeholder} required maxlength="200" aria-describedby="e-contatto" />
-          <p id="e-contatto" class="err"></p>
+
+        <div class="calc plan" id="plan-chip" hidden>
+          <input type="hidden" name="piano" id="f-piano" value="" />
+          <p><strong>{f.plan.label}:</strong> <span id="plan-text"></span></p>
+          <button type="button" class="calc-x" id="plan-x" aria-label={f.plan.remove}>
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+          </button>
         </div>
-        <div class="field">
-          <label for="f-annuncio">{f.fields.link.label}</label>
-          <input id="f-annuncio" name="annuncio" type="url" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder={f.fields.link.placeholder} required maxlength="500" aria-describedby="e-annuncio" />
-          <p id="e-annuncio" class="err"></p>
+
+        <div class="q">
+          <p class="q-h"><span class="n">1</span>{f.steps.link}</p>
+          <div class="field">
+            <div class="lbl-row"><label for="f-annuncio">{f.fields.link.label}</label><LinkHelp id="help-form" /></div>
+            <input id="f-annuncio" name="annuncio" type="url" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder={f.fields.link.placeholder} required maxlength="500" aria-describedby="h-annuncio e-annuncio" />
+            <p id="h-annuncio" class="hint">{f.fields.link.hint}</p>
+            <p id="e-annuncio" class="err"></p>
+          </div>
         </div>
+
+        <fieldset class="q">
+          <legend class="q-h"><span class="n">2</span>{f.steps.goal} <span class="opt">{f.goal.optional}</span></legend>
+          <div class="goals">
+            {f.goal.options.map((o) => (
+              <label class="goal">
+                <input type="radio" name="obiettivo" value={o.value} />
+                <span>{o.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div class="calc" id="calc-chip" hidden>
+          <input type="hidden" name="calcolo" id="f-calcolo" value="" />
+          <p><strong>{f.calc.label}:</strong> <span id="calc-text"></span></p>
+          <button type="button" class="calc-x" id="calc-x" aria-label={f.calc.remove}>
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+          </button>
+        </div>
+
+        <div class="q">
+          <p class="q-h"><span class="n">3</span>{f.steps.contact}</p>
+          <div class="pair">
+            <div class="field">
+              <label for="f-nome">{f.fields.name.label}</label>
+              <input id="f-nome" name="nome" type="text" autocomplete="name" autocapitalize="words" placeholder={f.fields.name.placeholder} required minlength="2" maxlength="100" aria-describedby="e-nome" />
+              <p id="e-nome" class="err"></p>
+            </div>
+            <div class="field">
+              <label for="f-contatto">{f.fields.contact.label}</label>
+              <input id="f-contatto" name="contatto" type="text" inputmode="email" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder={f.fields.contact.placeholder} required maxlength="200" aria-describedby="e-contatto" />
+              <p id="e-contatto" class="err"></p>
+            </div>
+          </div>
+        </div>
+
+        <details class="more-q" id="more-q">
+          <summary><span>{mo.summary}</span><span class="opt">{mo.optional}</span></summary>
+          <div class="more-body">
+            <div class="field">
+              <label for="f-attivita">{mo.attivita.label}</label>
+              <input id="f-attivita" name="attivita" type="text" maxlength="120" autocomplete="organization" placeholder={mo.attivita.placeholder} />
+            </div>
+            <div class="field">
+              <label for="f-offerta">{mo.offerta.label}</label>
+              <input id="f-offerta" name="offerta" type="text" maxlength="200" autocomplete="off" placeholder={mo.offerta.placeholder} />
+            </div>
+            <div class="field">
+              <label for="f-zona">{mo.zona.label}</label>
+              <input id="f-zona" name="zona" type="text" maxlength="120" autocomplete="address-level2" placeholder={mo.zona.placeholder} />
+            </div>
+            <fieldset class="tone">
+              <legend>{mo.tono.legend}</legend>
+              <div class="tones">
+                {mo.tono.options.map((o) => (
+                  <label class="goal tone-opt"><input type="radio" name="tono" value={o.value} /><span>{o.label}</span></label>
+                ))}
+              </div>
+            </fieldset>
+            <div class="field">
+              <label for="f-note">{mo.note.label}</label>
+              <textarea id="f-note" name="note" rows="3" maxlength="1000" placeholder={mo.note.placeholder}></textarea>
+            </div>
+          </div>
+        </details>
 
         <div class="hp" aria-hidden="true">
           <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
@@ -66,64 +158,174 @@ const msgs = JSON.stringify({
 
         <p id="e-form" class="err" role="alert"></p>
         <p id="s-form" class="sr-only" role="status"></p>
-        <button class="btn submit" type="submit" data-label={f.submit}>{f.submit}</button>
+        <button class="submit" type="submit" data-label={f.submit}>
+          <span class="s-label">{f.submit}</span>
+          <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+        <p class="reassure">{f.reassure}</p>
       </form>
 
-      <div id="lead-ok" class="ok" role="status" tabindex="-1" hidden>
-        <span class="ok-check" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+      <div id="lead-ok" class="card ok" role="status" tabindex="-1" hidden>
+        <Stamp class="ok-stamp" tilt={7} width="5.5rem" depth={3} h={8} v={10}>
+          <span class="ok-st"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg><strong>{f.success.stamp}</strong></span>
+        </Stamp>
         <h3 class="t-h3">{f.success.title}</h3>
-        <p class="mt-2">
-          {splitTodo(f.success.text).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}
-        </p>
+        <p class="mt-2">{splitTodo(f.success.text).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}</p>
       </div>
+      <p id="lc-live" class="sr-only" aria-live="polite" data-msg={copy.catcher.added}></p>
     </div>
   </div>
 </section>
 
 <style>
-  .field { margin-bottom: 1.25rem; }
-  label { display: block; font-weight: 700; margin-bottom: .5rem; }
-  .field input:not([type="checkbox"]) {
-    width: 100%; min-height: 3rem; padding: .625rem .875rem; font: inherit; font-size: 1.0625rem;
-    color: var(--color-text-primary); background: var(--color-surface-page); border: 2px solid transparent; border-radius: var(--radius-base);
+  /* phone: headline, then the form right away, then what happens next */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "card" "more"; gap: 2.5rem; }
+  .head { grid-area: head; } .card-wrap { grid-area: card; } .more { grid-area: more; }
+  @media (min-width: 64rem) {
+    .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 33rem); grid-template-areas: "head card" "more card"; grid-template-rows: auto 1fr; column-gap: 4rem; row-gap: 0; align-items: start; }
   }
+  .plan { margin: 0 0 1.5rem; }
+
+  /* ---- left: what happens next + live preview ---- */
+  .next { margin-top: 0; }
+  .next-t { font-size: 1rem; font-weight: 700; }
+  .next ol { list-style: none; counter-reset: nx; margin: .9rem 0 0; padding: 0; display: grid; gap: .75rem; }
+  .next li { counter-increment: nx; display: grid; grid-template-columns: 1.75rem 1fr; gap: .75rem; align-items: start; color: var(--color-text-on-accent-muted); line-height: 1.45; }
+  .next li::before { content: counter(nx); display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 9999px; font-size: .8125rem; font-weight: 800; color: var(--color-accent-text); background: var(--color-text-on-accent); }
+
+
+  /* ---- right: the form card ---- */
+  .card { background: var(--color-surface-page); color: var(--color-text-primary); border-radius: var(--radius-xl); padding: clamp(1.25rem, .9rem + 1.6vw, 2rem); box-shadow: 0 40px 80px -40px oklch(0.15 0.1 266 / .8); }
+  /* the section is drenched blue: inside the white card, focus rings go back to the dark ring */
+  .card :global(:focus-visible) { outline-color: var(--color-focus-ring); }
+
+  .prog { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; }
+  .prog-bar { flex: 1; height: .375rem; border-radius: 9999px; background: var(--color-surface-sunken); overflow: hidden; }
+  .prog-bar i { display: block; height: 100%; width: 100%; border-radius: inherit; background: var(--color-accent-solid); transform: scaleX(var(--done, 0)); transform-origin: left; transition: transform 500ms var(--ease-expo); }
+  .prog-t { font-size: .8125rem; font-weight: 700; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .card.is-ready .prog-t { color: var(--color-status-success); }
+  .card.is-ready .prog-bar i { background: var(--color-status-success); }
+
+  .q { border: 0; margin: 0 0 1.5rem; padding: 0; min-width: 0; }
+  .q-h { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; padding: 0; margin-bottom: .9rem; font-weight: 800; font-size: 1.125rem; letter-spacing: -.01em; }
+  .n { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 9999px; background: var(--color-accent-subtle); color: var(--color-accent-text); font-size: .875rem; font-weight: 800; flex: none; }
+  .opt { font-size: .75rem; font-weight: 600; color: var(--color-text-secondary); padding: .15rem .5rem; border-radius: 9999px; background: var(--color-surface-sunken); }
+
+  .field { margin-bottom: 1rem; }
+  label { display: block; font-weight: 600; font-size: .9375rem; margin-bottom: .4rem; }
+  .lbl-row { display: flex; align-items: center; gap: .5rem; margin-bottom: .4rem; }
+  .lbl-row label { margin: 0; }
+  .field input:not([type="checkbox"]) {
+    width: 100%; min-height: 3.25rem; padding: .7rem .9rem; font: inherit; font-size: 1.0625rem;
+    color: var(--color-text-primary); background: var(--color-surface-sunken); border: 1.5px solid transparent; border-radius: var(--radius-base);
+    transition: border-color 200ms var(--ease-out), background-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+  }
+  .field input:not([type="checkbox"]):focus { outline: none; background: var(--color-surface-page); border-color: var(--color-accent-solid); box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-accent-solid) 18%, transparent); }
   .field input::placeholder { color: var(--color-text-secondary); opacity: 1; }
-  .field input:not([type="checkbox"]) { transition: box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out); }
-  .field input:not([type="checkbox"]):focus { box-shadow: 0 0 0 5px color-mix(in oklab, var(--color-text-on-accent) 30%, transparent); }
   .field input[aria-invalid="true"] { border-color: var(--color-status-error); }
-  .check { display: flex; gap: .75rem; align-items: flex-start; min-height: 2.75rem; font-weight: 400; margin: 0; padding-block: .25rem; }
-  .check input { flex: none; appearance: none; width: 1.5rem; height: 1.5rem; margin: .125rem 0 0; border: 2px solid var(--color-text-on-accent); border-radius: .375rem; background: transparent; display: grid; place-content: center; }
-  .check input::after { content: ""; width: .75rem; height: .4rem; margin-top: -.1rem; border-left: 3px solid var(--color-accent-text); border-bottom: 3px solid var(--color-accent-text); rotate: -45deg; opacity: 0; }
-  .check input:checked { background: var(--color-text-on-accent); }
+  .field input:not([type="checkbox"]):valid:not(:placeholder-shown) { background: var(--color-surface-page); border-color: var(--color-border-subtle); }
+  .hint { margin-top: .4rem; font-size: .875rem; line-height: 1.4; color: var(--color-text-secondary); }
+  .pair { display: grid; gap: 0 1rem; }
+  @media (min-width: 40rem) { .pair { grid-template-columns: 1fr 1fr; } }
+  .pair .field { margin-bottom: 0; }
+  @media (max-width: 39.99rem) { .pair .field + .field { margin-top: 1rem; } }
+
+  /* the field the hero/step-1 link was dropped into flashes once */
+  .field:global(.just-filled) input { animation: filled 1.4s var(--ease-out); }
+  @keyframes filled { 0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-accent-solid) 45%, transparent); } 100% { box-shadow: 0 0 0 10px transparent; } }
+
+  /* goal: native radios dressed as choice chips */
+  .goals { display: grid; grid-template-columns: 1fr; gap: .5rem; }
+  @media (min-width: 30rem) { .goals { grid-template-columns: 1fr 1fr; } }
+  .goal { position: relative; display: flex; align-items: center; min-height: 3rem; margin: 0; padding: .6rem .8rem .6rem 2.4rem; border-radius: var(--radius-base); background: var(--color-surface-sunken); font-weight: 600; font-size: .9375rem; line-height: 1.25; cursor: pointer; transition: background-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), color 200ms var(--ease-out); }
+  .goal input { position: absolute; left: .8rem; top: 50%; width: 1.1rem; height: 1.1rem; margin: -.55rem 0 0; appearance: none; border-radius: 9999px; border: 2px solid var(--color-text-secondary); background: var(--color-surface-page); cursor: pointer; transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
+  .goal input:checked { border-color: var(--color-accent-solid); box-shadow: inset 0 0 0 3px var(--color-surface-page), inset 0 0 0 10px var(--color-accent-solid); }
+  .goal:has(input:checked) { background: var(--color-accent-subtle); box-shadow: inset 0 0 0 2px var(--color-accent-solid); color: var(--color-accent-text); }
+  .goal:has(input:focus-visible) { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+  .goal input:focus-visible { outline: none; }
+  @media (hover: hover) { .goal:hover { background: var(--color-accent-subtle); } }
+
+  .calc { display: flex; align-items: center; gap: .75rem; margin: -.5rem 0 1.5rem; padding: .6rem .6rem .6rem .9rem; border-radius: var(--radius-base); background: var(--color-accent-subtle); font-size: .875rem; }
+  .calc[hidden] { display: none; }
+  .calc p { flex: 1; min-width: 0; }
+  .calc-x { flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 0; border-radius: 9999px; background: transparent; color: var(--color-text-secondary); cursor: pointer; }
+  @media (hover: hover) { .calc-x:hover { background: var(--color-surface-page); color: var(--color-text-primary); } }
+
+  /* optional context: a disclosure so the short path stays short */
+  .more-q { margin: 0 0 1.25rem; border-radius: var(--radius-base); background: var(--color-surface-sunken); }
+  .more-q summary { display: flex; align-items: center; justify-content: space-between; gap: .75rem; min-height: 3.25rem; padding: .6rem .9rem; font-weight: 700; font-size: .9375rem; line-height: 1.3; cursor: pointer; list-style: none; border-radius: inherit; }
+  .more-q summary::-webkit-details-marker { display: none; }
+  .more-q summary::before { content: "+"; display: grid; place-items: center; flex: none; width: 1.5rem; height: 1.5rem; border-radius: 9999px; background: var(--color-accent-solid); color: var(--color-text-on-accent); font-size: 1.1rem; line-height: 1; order: -1; transition: rotate 300ms var(--ease-out); }
+  .more-q[open] summary::before { rotate: 45deg; }
+  .more-q summary > span:first-child { flex: 1; }
+  .more-body { padding: .25rem .9rem .9rem; }
+  .more-body input:not([type="radio"]), .more-body textarea { background: var(--color-surface-page) !important; }
+  .field textarea { width: 100%; padding: .7rem .9rem; font: inherit; font-size: 1.0625rem; color: var(--color-text-primary); background: var(--color-surface-sunken); border: 1.5px solid transparent; border-radius: var(--radius-base); resize: vertical; }
+  .field textarea:focus { outline: none; border-color: var(--color-accent-solid); box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-accent-solid) 18%, transparent); }
+  .field textarea::placeholder { color: var(--color-text-secondary); opacity: 1; }
+  .tone { border: 0; margin: 0 0 1rem; padding: 0; min-width: 0; }
+  .tone legend { font-weight: 600; font-size: .9375rem; margin-bottom: .4rem; padding: 0; }
+  .tones { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .tones .tone-opt { flex: 1 1 auto; }
+  .tone-opt { background: var(--color-surface-page); padding-left: 2.2rem; }
+  @media (prefers-reduced-motion: no-preference) {
+    .more-q { interpolate-size: allow-keywords; }
+    @supports selector(::details-content) {
+      .more-q::details-content { block-size: 0; overflow: clip; transition: block-size 350ms var(--ease-out), content-visibility 350ms allow-discrete; }
+      .more-q[open]::details-content { block-size: auto; }
+    }
+  }
+  .more :global(.printer) { margin-bottom: 2.5rem; }
+  @media (min-width: 64rem) { .more :global(.printer) { margin-top: 2.5rem; } }
+  @media (max-width: 63.99rem) { .more :global(.printer) { margin-inline: auto; } }
+  .ok { position: relative; }
+  .ok :global(h3), .ok p { padding-right: 5.5rem; }
+  .ok :global(.ok-stamp) { position: absolute; top: -1.25rem; right: 1.25rem; }
+  .ok-st { display: grid; justify-items: center; gap: .2rem; color: var(--color-accent-text); }
+  .ok-st strong { font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+
+  .check { display: flex; gap: .75rem; align-items: flex-start; min-height: 2.75rem; font-weight: 400; font-size: .9375rem; line-height: 1.45; color: var(--color-text-secondary); margin: 0; padding-block: .25rem; }
+  .check input { flex: none; appearance: none; width: 1.375rem; height: 1.375rem; margin: .1rem 0 0; border: 2px solid var(--color-text-secondary); border-radius: .375rem; background: var(--color-surface-page); display: grid; place-content: center; cursor: pointer; }
+  .check input::after { content: ""; width: .7rem; height: .38rem; margin-top: -.1rem; border-left: 3px solid var(--color-text-on-accent); border-bottom: 3px solid var(--color-text-on-accent); rotate: -45deg; opacity: 0; }
+  .check input:checked { background: var(--color-accent-solid); border-color: var(--color-accent-solid); }
   .check input:checked::after { opacity: 1; }
-  .check a { color: var(--color-text-on-accent); text-decoration-thickness: from-font; text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
-  /* Error: white pill with err-colored text (>= 4.5:1 on white), readable on the blue drench. */
-  .err { display: none; width: fit-content; max-width: 100%; margin-top: .5rem; padding: .25rem .75rem; border-radius: var(--radius-sm); background: var(--color-surface-page); color: var(--color-status-error); font-size: .9375rem; font-weight: 600; line-height: 1.4; }
+  .check a { color: var(--color-accent-text); text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
+
+  .err { display: none; margin-top: .4rem; color: var(--color-status-error); font-size: .875rem; font-weight: 600; line-height: 1.4; }
   .err:not(:empty) { display: block; }
-  #e-form { margin: 0 0 1rem; }
-  .submit { width: 100%; margin-top: .5rem; font-size: 1.0625rem; border: 0; cursor: pointer; }
-  .submit[aria-disabled="true"] { opacity: .75; cursor: progress; scale: 1; translate: none; }
-  #ts { margin-bottom: 1.25rem; }
+  #e-form { margin: 0 0 1rem; padding: .6rem .8rem; border-radius: var(--radius-sm); background: color-mix(in oklab, var(--color-status-error) 10%, var(--color-surface-page)); }
+  #e-form:empty { display: none; }
+
+  .submit { display: flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; min-height: 3.5rem; margin-top: .75rem; padding: .75rem 1.5rem; border: 0; border-radius: var(--radius-base); background: var(--color-accent-solid); color: var(--color-text-on-accent); font: inherit; font-weight: 700; font-size: 1.0625rem; cursor: pointer; box-shadow: 0 14px 30px -14px oklch(0.448 0.193 268 / .9); transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out), translate 150ms var(--ease-out); }
+  .submit svg { transition: translate 250ms var(--ease-out); }
+  .submit:active { scale: .98; }
+  .submit:focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 3px; }
+  @media (hover: hover) { .submit:hover { background: var(--color-accent-solid-hover); } .submit:hover svg { translate: 3px 0; } }
+  .submit[aria-disabled="true"] { opacity: .75; cursor: progress; scale: 1; }
+  .reassure { margin-top: .75rem; text-align: center; font-size: .875rem; color: var(--color-text-secondary); max-width: none; }
+  #ts { margin-bottom: 1rem; }
   .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
-  .ok-check { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: 1rem; border-radius: 9999px; background: var(--color-status-success); color: var(--color-text-on-accent); }
-  .ok-check path { stroke-dasharray: 24; stroke-dashoffset: 0; }
+
+  .ok:focus-visible { outline: 3px solid var(--color-focus-ring-on-accent); outline-offset: 3px; }
+  #contatto .intro :global(mark.todo) { background: var(--color-surface-page); color: var(--color-text-primary); outline: 1px dashed var(--color-text-primary); outline-offset: 1px; padding: 0 .25em; border-radius: 2px; }
+  #contatto .card :global(mark.todo) { background: var(--color-surface-subtle); color: var(--color-text-primary); outline: 1.5px dashed var(--color-accent-solid); }
+
   @media (prefers-reduced-motion: no-preference) {
     .ok:not([hidden]) { animation: ok-in 600ms var(--ease-expo) backwards; }
-    .ok:not([hidden]) .ok-check path { animation: draw-check 500ms var(--ease-out) 250ms backwards; }
+    .ok:not([hidden]) :global(.ok-stamp) { animation: stamp-in 500ms var(--ease-expo) 200ms backwards; }
     @keyframes ok-in { from { opacity: 0; translate: 0 1rem; scale: .98; } }
-    @keyframes draw-check { from { stroke-dashoffset: 24; } }
+    @keyframes stamp-in { from { opacity: 0; scale: 1.4; rotate: 20deg; } }
   }
-  .ok { background: var(--color-surface-page); color: var(--color-text-primary); border-radius: var(--radius-lg); padding: 1.5rem; }
-  .ok:focus-visible { outline: 3px solid var(--color-focus-ring-on-accent); outline-offset: 3px; }
-  #contatto :global(mark.todo) { background: var(--color-surface-page); color: var(--color-text-primary); outline: 1px dashed var(--color-text-primary); outline-offset: 1px; padding: 0 .25em; border-radius: 2px; }
-  @media (min-width: 640px) { .submit { width: auto; min-width: 16rem; } }
 </style>
 
 <script>
+  import { isAdLink, normalizeAdLink } from "../lib/link";
   const form = document.getElementById("lead-form") as HTMLFormElement | null;
   if (form) {
     const M = JSON.parse(form.dataset.msg || "{}");
+    const B = JSON.parse(form.dataset.buttons || "{}");
     const btn = form.querySelector<HTMLButtonElement>(".submit")!;
+    const btnLabel = btn.querySelector<HTMLElement>(".s-label")!;
     const status = document.getElementById("s-form")!;
     let busy = false;
     const $ = (id: string) => document.getElementById(id)!;
@@ -133,26 +335,98 @@ const msgs = JSON.stringify({
       $("e-" + n).textContent = msg;
       i?.setAttribute("aria-invalid", msg ? "true" : "false");
     };
-    const withScheme = (v: string) => (/^[a-z][a-z0-9+.-]*:\/\//i.test(v) ? v : "https://" + v);
-    const isUrl = (v: string) => {
-      try {
-        const u = new URL(withScheme(v));
-        return /^https?:$/.test(u.protocol) && u.hostname.includes(".");
-      } catch { return false; }
-    };
+    // Links, share text and @handles are all accepted; what we send is always a full URL.
+    const adLink = () => normalizeAdLink(val("annuncio"));
+    const isUrl = (_v?: string) => isAdLink(adLink());
     const isContact = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || /^\+?[\d\s().\-/]{6,}$/.test(v) && (v.match(/\d/g) || []).length >= 6;
+    // Same order as the fields on screen, so focus lands on the first error.
     const validate = () => {
       const bad: string[] = [];
       const chk = (n: string, ok: boolean) => { show(n, ok ? "" : M[n]); if (!ok) bad.push(n); };
+      chk("annuncio", isUrl(val("annuncio")));
       chk("nome", val("nome").length >= 2);
       chk("contatto", isContact(val("contatto")));
-      chk("annuncio", isUrl(val("annuncio")));
       chk("privacy", (form.elements.namedItem("privacy") as HTMLInputElement).checked);
       return bad;
+    };
+
+    // The link field accepts "facebook.com/…" without a scheme: native URL validation would reject it.
+    const link = $("f-annuncio") as HTMLInputElement;
+    link.type = "text";
+
+    // Progress + receipt printer (every answer goes in via textContent).
+    const L = JSON.parse(form.dataset.labels || "{}");
+    const printer = document.getElementById("printer");
+    const pr = (k: string) => printer?.querySelector<HTMLElement>(`[data-r="${k}"]`) ?? null;
+    const card = form;
+    const progT = $("prog-t");
+    const put = (el: HTMLElement | null, text: string) => {
+      if (!el) return;
+      const empty = !text;
+      const next = empty ? (el.dataset.empty ?? el.textContent ?? "") : text;
+      el.classList.toggle("is-empty", empty && !!el.dataset.empty);
+      if (el.textContent === next) return;
+      el.textContent = next;
+      el.classList.remove("is-new"); void el.offsetWidth; el.classList.add("is-new");
+    };
+    const nameEl = pr("nome");
+    const fallbackName = nameEl?.textContent ?? "";
+    const radio = (n: string) => form.querySelector<HTMLInputElement>(`input[name=${n}]:checked`)?.value ?? "";
+    const refresh = () => {
+      const done = [isUrl(), val("nome").length >= 2, isContact(val("contatto"))].filter(Boolean).length;
+      card.style.setProperty("--done", String(done / 3));
+      card.classList.toggle("is-ready", done === 3);
+      progT.textContent = done === 3 ? M.ready : `${done} ${M.of}`;
+      if (!printer) return;
+      put(nameEl, val("nome").split(/\s+/)[0] || fallbackName);
+      let host = "";
+      try { if (isUrl()) { const u = new URL(adLink()); host = u.hostname.replace(/^www\.|^m\./, "") + (u.pathname.length > 1 ? u.pathname.replace(/\/$/, "") : ""); } } catch {}
+      put(pr("annuncio"), host);
+      put(pr("attivita"), val("attivita"));
+      put(pr("offerta"), val("offerta"));
+      put(pr("zona"), val("zona"));
+      const goal = radio("obiettivo");
+      put(pr("obiettivo"), goal ? B[goal] : "");
+      put(pr("section-btn"), goal ? `${B[goal]}` : (pr("section-btn")?.textContent ?? ""));
+      put(pr("tono"), L.tono?.[radio("tono")] ?? "");
+      put(pr("piano"), ($("f-piano") as HTMLInputElement).value ? $("plan-text").textContent ?? "" : "");
     };
     form.addEventListener("input", (e) => {
       const n = (e.target as HTMLInputElement).name;
       if (n && $("e-" + n)?.textContent) show(n, "");
+      refresh();
+    });
+    form.addEventListener("change", refresh);
+    refresh();
+
+    // Calculator numbers: attached only after the visitor used the calculator, visible and removable.
+    const chip = $("calc-chip");
+    const calcIn = $("f-calcolo") as HTMLInputElement;
+    let calcRemoved = false;
+    document.addEventListener("besa:calc", (e) => {
+      if (calcRemoved) return;
+      const text = String((e as CustomEvent).detail || "").slice(0, 160);
+      calcIn.value = text;
+      $("calc-text").textContent = text;
+      chip.hidden = !text;
+    });
+    $("calc-x").addEventListener("click", () => {
+      calcRemoved = true; calcIn.value = ""; chip.hidden = true;
+      (form.querySelector("input[name=obiettivo]") as HTMLElement | null)?.focus();
+    });
+
+    // Plan buttons in "Piani" carry the choice into the form (visible, removable).
+    const planIn = $("f-piano") as HTMLInputElement;
+    document.querySelectorAll<HTMLAnchorElement>("a[data-plan]").forEach((a) => a.addEventListener("click", () => {
+      planIn.value = a.dataset.plan!;
+      $("plan-text").textContent = a.dataset.planName!;
+      $("plan-chip").hidden = false;
+      refresh();
+    }));
+    $("plan-x").addEventListener("click", () => {
+      planIn.value = ""; $("plan-chip").hidden = true;
+      refresh();
+      (form.querySelector("input[name=obiettivo]") as HTMLElement | null)?.focus();
     });
 
     // Load Turnstile only when the form nears the viewport or gets focus (protects LCP/TBT).
@@ -175,8 +449,8 @@ const msgs = JSON.stringify({
       const bad = validate();
       if (bad.length) { (form.elements.namedItem(bad[0]) as HTMLElement).focus(); return; }
       const fd = new FormData(form);
-      fd.set("annuncio", withScheme(val("annuncio")));
-      busy = true; btn.setAttribute("aria-disabled", "true"); btn.textContent = M.busy; status.textContent = M.busy;
+      fd.set("annuncio", adLink());
+      busy = true; btn.setAttribute("aria-disabled", "true"); btnLabel.textContent = M.busy; status.textContent = M.busy;
       try {
         const r = await fetch(form.action, { method: "POST", body: fd, headers: { accept: "application/json" } });
         const j = await r.json().catch(() => null);
@@ -185,6 +459,12 @@ const msgs = JSON.stringify({
           status.textContent = "";
           form.hidden = true;
           const ok = $("lead-ok"); ok.hidden = false; ok.focus();
+          if (printer) {
+            const st = $("printer-status");
+            const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+            printer.dataset.stage = "printing"; st.textContent = st.dataset.printing!;
+            setTimeout(() => { printer.dataset.stage = "complete"; st.textContent = st.dataset.complete!; }, reduce ? 0 : 1900);
+          }
           return;
         }
         $("e-form").textContent = j?.error || M.generic;
@@ -192,7 +472,7 @@ const msgs = JSON.stringify({
         $("e-form").textContent = M.network;
       }
       (window as any).turnstile?.reset();
-      busy = false; btn.removeAttribute("aria-disabled"); btn.textContent = btn.dataset.label!; status.textContent = "";
+      busy = false; btn.removeAttribute("aria-disabled"); btnLabel.textContent = btn.dataset.label!; status.textContent = "";
     });
   }
 </script>

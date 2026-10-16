@@ -1,0 +1,110 @@
+---
+// Receipt printer that summarizes the landing we will build from the form answers.
+// Markup + CSS only: ContactForm drives it (data-stage, [data-r] text via textContent).
+import { copy } from "../lib/copy";
+const p = copy.form.printer;
+const rows = Object.entries(p.rows) as [keyof typeof p.rows, string][];
+---
+<section class="printer" id="printer" data-stage="draft" aria-label={p.label}>
+  <div class="machine">
+    <div class="m-head" aria-hidden="true">
+      <span class="m-brand">{p.brand}</span>
+      <span class="m-led"></span>
+    </div>
+    <div class="screen">
+      <span class="ind" aria-hidden="true"><i class="spin"></i><svg class="done" viewBox="0 0 20 20" width="18" height="18"><circle cx="10" cy="10" r="9" fill="currentColor" /><path d="m6 10.5 2.6 2.6L14 7.6" fill="none" stroke="var(--color-surface-inverse)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+      <span class="st" id="printer-status" role="status" data-draft={p.status.draft} data-printing={p.status.printing} data-complete={p.status.complete}>{p.status.draft}</span>
+    </div>
+    <div class="slot" aria-hidden="true"></div>
+  </div>
+
+  <div class="output">
+    <article class="paper">
+      <p class="r-title">{p.title}</p>
+      <p class="r-for">{p.forName} <strong data-r="nome">{p.fallbackName}</strong></p>
+      <hr />
+      <dl class="r-rows">
+        {rows.map(([k, label]) => (
+          <div class="r-row" data-row={k}>
+            <dt>{label}</dt>
+            <dd data-r={k} data-empty={p.empty}>{p.empty}</dd>
+          </div>
+        ))}
+      </dl>
+      <hr />
+      <p class="r-sub">{p.sections}</p>
+      <ol class="r-list">
+        {p.sectionList.map((s, i) => <li data-r={i === 2 ? "section-btn" : undefined}>{s}</li>)}
+      </ol>
+      <hr />
+      <p class="r-foot">{p.delivery}</p>
+      <p class="r-thanks">{p.thanks}</p>
+      <span class="r-code" aria-hidden="true"></span>
+    </article>
+  </div>
+  <p class="p-note">{p.note}</p>
+</section>
+
+<style>
+  .printer { --pr-radius: 1.5rem; --pr-inset: .75rem; position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; width: min(100%, 22rem); }
+
+  /* machine: dark molded plastic with an inset screen and the paper slot */
+  .machine { position: relative; z-index: 2; width: 100%; padding: var(--pr-inset) var(--pr-inset) 2rem; border-radius: var(--pr-radius); background: color-mix(in oklab, var(--color-surface-inverse) 88%, var(--color-text-on-inverse)); box-shadow: 0 24px 40px -22px oklch(0.1 0.05 266 / .8), 0 6px 14px -8px oklch(0.1 0.05 266 / .4), inset 0 1px 0 oklch(1 0 0 / .14), inset 0 -1px 0 oklch(0 0 0 / .4); }
+  .m-head { display: flex; align-items: center; justify-content: space-between; height: 2rem; padding-inline: .35rem; }
+  .m-brand { font-weight: 800; font-style: italic; font-size: .8125rem; letter-spacing: .02em; color: oklch(1 0 0 / .55); }
+  .m-led { width: .5rem; height: .5rem; border-radius: 9999px; background: var(--color-status-success); box-shadow: 0 0 8px var(--color-status-success); }
+  .screen { position: relative; display: flex; align-items: center; gap: .6rem; min-height: 3rem; padding: .75rem 1rem; border-radius: calc(var(--pr-radius) - var(--pr-inset)); background: var(--color-surface-inverse); color: var(--color-text-on-inverse); box-shadow: inset 0 0 24px 4px oklch(0 0 0 / .45); }
+  .st { font-size: .8125rem; font-weight: 600; color: oklch(1 0 0 / .85); }
+  .ind { display: grid; place-items: center; width: 1.25rem; height: 1.25rem; flex: none; }
+  .ind > * { grid-area: 1 / 1; }
+  .spin { width: 1rem; height: 1rem; border-radius: 9999px; border: 2px solid oklch(1 0 0 / .25); border-top-color: oklch(1 0 0 / .9); }
+  .done { color: var(--color-status-success); opacity: 0; scale: .9; transition: opacity 160ms var(--ease-out), scale 160ms var(--ease-out); }
+  [data-stage="complete"] .spin { opacity: 0; }
+  [data-stage="complete"] .done { opacity: 1; scale: 1; }
+  [data-stage="draft"] .spin { border-top-color: oklch(1 0 0 / .45); }
+  .slot { position: absolute; left: 1.5rem; right: 1.5rem; bottom: var(--pr-inset); height: .5rem; border-radius: .25rem; background: oklch(0.1 0.03 266); box-shadow: inset 0 2px 3px oklch(0 0 0 / .8); }
+
+  /* output: the paper comes out of the slot */
+  .output { position: relative; z-index: 3; width: calc(80% + 2rem); margin-top: -1.1rem; padding-inline: 1rem; overflow: hidden; }
+  .output::before { content: ""; position: absolute; z-index: 2; left: 1rem; right: 1rem; top: -.25rem; height: .5rem; background: oklch(0.1 0.03 266 / .7); filter: blur(5px); }
+  .paper {
+    position: relative; padding: 1.5rem 1.25rem 1.75rem; background: linear-gradient(180deg, oklch(0.97 0.004 266), var(--color-surface-page) 1.5rem); color: var(--color-text-primary);
+    font-size: .8125rem; line-height: 1.4; font-variant-numeric: tabular-nums;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5px), 97.5% 100%, 95% calc(100% - 5px), 92.5% 100%, 90% calc(100% - 5px), 87.5% 100%, 85% calc(100% - 5px), 82.5% 100%, 80% calc(100% - 5px), 77.5% 100%, 75% calc(100% - 5px), 72.5% 100%, 70% calc(100% - 5px), 67.5% 100%, 65% calc(100% - 5px), 62.5% 100%, 60% calc(100% - 5px), 57.5% 100%, 55% calc(100% - 5px), 52.5% 100%, 50% calc(100% - 5px), 47.5% 100%, 45% calc(100% - 5px), 42.5% 100%, 40% calc(100% - 5px), 37.5% 100%, 35% calc(100% - 5px), 32.5% 100%, 30% calc(100% - 5px), 27.5% 100%, 25% calc(100% - 5px), 22.5% 100%, 20% calc(100% - 5px), 17.5% 100%, 15% calc(100% - 5px), 12.5% 100%, 10% calc(100% - 5px), 7.5% 100%, 5% calc(100% - 5px), 2.5% 100%, 0 calc(100% - 5px));
+    box-shadow: 0 8px 24px oklch(0.1 0.05 266 / .25);
+  }
+  .r-title { text-align: center; font-weight: 800; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; max-width: none; }
+  .r-for { margin-top: .2rem; text-align: center; color: var(--color-text-secondary); max-width: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .r-for strong { color: var(--color-text-primary); }
+  hr { margin: .8rem 0; border: 0; border-top: 1.5px dashed var(--color-border-subtle); }
+  .r-rows { margin: 0; display: grid; gap: .35rem; }
+  .r-row { display: grid; grid-template-columns: 5.25rem 1fr; gap: .5rem; }
+  .r-row dt { color: var(--color-text-secondary); }
+  .r-row dd { margin: 0; font-weight: 600; min-width: 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .r-row dd.is-empty { font-weight: 400; color: var(--color-text-secondary); font-style: italic; }
+  .r-sub { font-weight: 700; max-width: none; }
+  .r-list { margin: .35rem 0 0; padding-left: 1.1rem; display: grid; gap: .2rem; }
+  .r-foot { text-align: center; color: var(--color-text-secondary); max-width: none; }
+  .r-thanks { margin-top: .35rem; text-align: center; font-weight: 800; font-style: italic; font-size: 1rem; max-width: none; }
+  .r-code { display: block; height: 1.6rem; margin: .7rem auto 0; width: 70%; background: repeating-linear-gradient(90deg, var(--color-text-primary) 0 2px, transparent 2px 4px, var(--color-text-primary) 4px 5px, transparent 5px 8px, var(--color-text-primary) 8px 11px, transparent 11px 13px); opacity: .85; }
+  .p-note { margin-top: .75rem; font-size: .75rem; color: var(--color-text-on-accent-muted); text-align: center; }
+
+  /* a line flashes when its answer changes */
+  .r-row dd:global(.is-new), .r-for strong:global(.is-new) { animation: ink 700ms var(--ease-out); }
+  @keyframes ink { from { background: color-mix(in oklab, var(--color-accent-solid) 18%, transparent); } }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .spin { animation: spin 900ms linear infinite; }
+    [data-stage="draft"] .spin { animation-duration: 2.4s; }
+    [data-stage="complete"] .spin { animation: none; }
+    @keyframes spin { to { rotate: 1turn; } }
+    /* stepped feed: the paper comes out line by line */
+    [data-stage="printing"] .paper { animation: feed 1.75s linear both; }
+    @keyframes feed {
+      0% { translate: 0 calc(-100% + 2px); } 7.5%, 10.5% { translate: 0 -91%; } 18%, 21% { translate: 0 -81%; }
+      28.5%, 31.5% { translate: 0 -70%; } 39%, 42% { translate: 0 -58%; } 49.5%, 52.5% { translate: 0 -45%; }
+      60%, 63% { translate: 0 -32%; } 70.5%, 73.5% { translate: 0 -20%; } 81%, 84% { translate: 0 -10%; }
+      91.5%, 94.5% { translate: 0 -3%; } 100% { translate: 0 0; }
+    }
+  }
+</style>

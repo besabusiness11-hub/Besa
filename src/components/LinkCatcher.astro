@@ -1,0 +1,103 @@
+---
+// Inline "paste your ad link" field. With JS it drops the link into the contact form and moves
+// the visitor there; without JS it is replaced by a plain link to the form (nothing typed is lost).
+import { copy } from "../lib/copy";
+import LinkHelp from "./LinkHelp.astro";
+interface Props {
+  id: string;
+  tone?: "blue" | "light";
+  hint?: boolean;
+  fallback?: string;
+}
+const { id, tone = "light", hint = false, fallback = copy.catcher.fallback } = Astro.props;
+const c = copy.catcher;
+---
+<div class:list={["lc-wrap", tone]}>
+  <form class="lc" data-catcher novalidate action="#contatto">
+    <div class="lc-top">
+      <label class="lc-label" for={id}>{c.label}</label>
+      <LinkHelp id={`${id}-help`} />
+    </div>
+    <div class="lc-field">
+      <svg class="lc-ic" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M8.5 11.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.5 3.5 0 0 0-5-5l-.8.8M11.5 8.5a3.5 3.5 0 0 0-5 0L4 11a3.5 3.5 0 0 0 5 5l.8-.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+      <input
+        id={id}
+        type="text"
+        inputmode="url"
+        autocomplete="off"
+        autocapitalize="none"
+        autocorrect="off"
+        spellcheck="false"
+        enterkeyhint="go"
+        maxlength="500"
+        placeholder={c.placeholder}
+      />
+      <button type="submit" class="lc-btn">
+        <span>{c.button}</span>
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+    </div>
+    {hint && <p class="lc-hint">{c.hint}</p>}
+  </form>
+  <a class="btn lc-fallback" href="#contatto">{fallback}</a>
+</div>
+
+<script>
+  import { normalizeAdLink } from "../lib/link";
+  // Share text, bare domains and @handles all become a usable link; anything else is passed as typed.
+  const extract = (raw: string) => normalizeAdLink(raw) || raw.trim();
+  const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  document.querySelectorAll<HTMLFormElement>("form[data-catcher]").forEach((form) => {
+    const input = form.querySelector("input")!;
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const target = document.getElementById("f-annuncio") as HTMLInputElement | null;
+      const section = document.getElementById("contatto");
+      if (!target || !section) return;
+      const link = extract(input.value);
+      if (link) {
+        target.value = link;
+        target.dispatchEvent(new Event("input", { bubbles: true }));
+        target.closest(".field")?.classList.add("just-filled");
+        setTimeout(() => target.closest(".field")?.classList.remove("just-filled"), 1600);
+        const live = document.getElementById("lc-live");
+        if (live) live.textContent = live.dataset.msg ?? "";
+      }
+      section.scrollIntoView({ behavior: reduce() ? "auto" : "smooth", block: "start" });
+      // First empty required field, in DOM order (link first if it is still empty).
+      const next = ["f-annuncio", "f-nome", "f-contatto"]
+        .map((i) => document.getElementById(i) as HTMLInputElement | null)
+        .find((el) => el && !el.value.trim());
+      (next ?? target).focus({ preventScroll: true });
+    });
+  });
+</script>
+
+<style>
+  .lc { display: none; }
+  :global(.js) .lc { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; width: min(100%, 34rem); }
+  :global(.js) .lc-fallback { display: none; }
+  .lc-top { display: flex; align-items: center; gap: .5rem; }
+  .lc-label { font-size: .9375rem; font-weight: 700; margin: 0; }
+  .lc-field { display: flex; align-items: center; gap: .25rem; min-height: 3.75rem; padding: .375rem .375rem .375rem .875rem; border-radius: 1rem; background: var(--color-surface-page); color: var(--color-text-primary); box-shadow: 0 0 0 2px transparent, 0 14px 34px -16px oklch(0.2 0.1 266 / .55); transition: box-shadow 200ms var(--ease-out); }
+  .lc-field:focus-within { box-shadow: 0 0 0 3px var(--color-focus-ring), 0 14px 34px -16px oklch(0.2 0.1 266 / .55); }
+  .blue .lc-field:focus-within { box-shadow: 0 0 0 3px var(--color-focus-ring-on-accent), 0 0 0 7px color-mix(in oklab, var(--color-text-on-accent) 30%, transparent); }
+  .lc-ic { flex: none; color: var(--color-accent-text); }
+  input { flex: 1; min-width: 0; width: 100%; height: 3rem; border: 0; background: transparent; font: inherit; font-size: 1.0625rem; color: inherit; padding-inline: .25rem; }
+  input:focus { outline: none; }
+  input::placeholder { color: var(--color-text-secondary); opacity: 1; }
+  .lc-btn { flex: none; display: inline-flex; align-items: center; gap: .375rem; min-height: 3rem; padding-inline: 1.1rem .9rem; border: 0; border-radius: .75rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); font: inherit; font-weight: 700; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  .lc-btn svg { transition: translate 250ms var(--ease-out); }
+  .lc-btn:active { scale: .97; }
+  .lc-btn:focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+  @media (hover: hover) {
+    .lc-btn:hover { background: var(--color-accent-solid-hover); }
+    .lc-btn:hover svg { translate: 3px 0; }
+  }
+  .lc-hint { font-size: .9375rem; color: var(--color-text-secondary); }
+  .blue .lc-hint { color: var(--color-text-on-accent-muted); }
+  .light .lc-field { box-shadow: 0 0 0 1px var(--color-border-subtle), 0 14px 34px -20px oklch(0.2 0.1 266 / .35); }
+  .light .lc-field:focus-within { box-shadow: 0 0 0 3px var(--color-focus-ring); }
+  @media (max-width: 22rem) { .lc-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } }
+</style>

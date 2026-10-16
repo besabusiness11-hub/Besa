@@ -1,0 +1,36 @@
+---
+// Perforated paper stamp. Decorative by default; pass label to expose it as an image with a name.
+import { stampClipPath } from "../lib/stamp";
+interface Props {
+  class?: string;
+  label?: string;
+  ink?: string;
+  paper?: string;
+  tilt?: number;
+  width?: string;
+  ratio?: string;
+  depth?: number;
+  h?: number;
+  v?: number;
+}
+const { class: cls, label, ink = "var(--color-accent-text)", paper = "var(--color-surface-page)", tilt = 0, width = "8rem", ratio = "4 / 5", depth = 2.4, h = 12, v = 15 } = Astro.props;
+const clip = stampClipPath(depth, h, v);
+---
+<div
+  class:list={["stamp", cls]}
+  style={`--stamp-ink:${ink};--stamp-paper:${paper};--tilt:${tilt}deg;width:${width};aspect-ratio:${ratio}`}
+  role={label ? "img" : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : "true"}
+>
+  <div class="paper" style={`clip-path:${clip}`}>
+    <div class="frame"><slot /></div>
+  </div>
+</div>
+
+<style>
+  .stamp { position: relative; flex: none; rotate: var(--tilt); filter: drop-shadow(0 1px 1px rgb(15 15 15 / 12%)) drop-shadow(0 12px 22px rgb(15 15 15 / 14%)); }
+  .paper { width: 100%; height: 100%; padding: 9%; color: var(--stamp-ink); background: linear-gradient(145deg, rgb(255 255 255 / 34%), transparent 42%), var(--stamp-paper); }
+  /* inner printed border, like a real stamp's frame */
+  .frame { position: relative; width: 100%; height: 100%; display: grid; place-items: center; text-align: center; border: 1.5px solid color-mix(in oklab, var(--stamp-ink) 55%, transparent); border-radius: 2px; overflow: hidden; }
+</style>

@@ -22,7 +22,10 @@ const rest = c.plans.filter((p) => !p.highlight);
         <ul class="feat">
           {main.features.map((x) => <li set:html={todo(x)} />)}
         </ul>
-        <a class="btn" href="#contatto">{main.cta}</a>
+        <div class="acts">
+          {main.checkout && <a class="btn" href={main.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
+          <a class:list={["btn", { ghost: !!main.checkout }]} href="#contatto" data-plan={main.id} data-plan-name={main.name}>{main.cta}</a>
+        </div>
       </article>
 
       <div class="rows reveal-stagger">
@@ -35,7 +38,8 @@ const rest = c.plans.filter((p) => !p.highlight);
             <ul class="rfeat">
               {p.features.map((x) => <li set:html={todo(x)} />)}
             </ul>
-            <a class="cta" href="#contatto">{p.cta}</a>
+            {p.checkout && <a class="cta" href={p.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
+            <a class="cta" href="#contatto" data-plan={p.id} data-plan-name={p.name}>{p.cta}</a>
           </article>
         ))}
       </div>
@@ -70,7 +74,7 @@ const rest = c.plans.filter((p) => !p.highlight);
   .feat li { color: var(--color-text-on-accent-muted); }
   .feat li::before { content: ""; position: absolute; left: 0; top: .7em; width: .5rem; height: 2px; background: var(--color-text-on-accent); }
   .rfeat li::before { content: ""; position: absolute; left: 0; top: .7em; width: .5rem; height: 2px; background: var(--color-accent-solid); }
-  .main .btn { margin-top: auto; }
+  .acts { margin-top: auto; display: flex; flex-wrap: wrap; gap: .75rem; }
 
   .rows { display: grid; gap: 1.5rem; align-content: start; }
   .row { background: var(--color-surface-subtle); border-radius: var(--radius-lg); padding: clamp(1.25rem, 1rem + 1.5vw, 2rem); }
