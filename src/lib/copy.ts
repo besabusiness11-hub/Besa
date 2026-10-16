@@ -18,6 +18,14 @@ export const copy = {
       { label: "Chi siamo", href: "#chi-siamo" },
       { label: "FAQ", href: "#faq" },
     ],
+    sections: {
+      label: "Sezioni della pagina",
+      title: "In questa pagina",
+      top: "Inizio",
+      open: "Apri l’indice delle sezioni",
+      close: "Chiudi l’indice delle sezioni",
+      of: "di",
+    },
   },
 
   hero: {

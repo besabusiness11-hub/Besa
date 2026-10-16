@@ -3,66 +3,28 @@ import { copy } from "../lib/copy";
 import { Image } from "astro:assets";
 import logo from "../assets/logo-blue.png";
 import logoWhite from "../assets/logo-white.png";
-const links = copy.nav.links;
 ---
-<!-- data-tone / --hdr-bg follow the section under the bar (script below); data-top = still over the top of the page -->
+<!-- Logo centred, one clear CTA. Section navigation lives in SectionNav (right rail / bottom pill).
+     data-tone / --hdr-bg follow the section under the bar (script below); data-top = still over the top of the page. -->
 <header class="site-header sticky top-0 z-10" data-tone="dark" data-top>
   <div class="wrap bar">
+    <span aria-hidden="true"></span>
     <a class="brand" href="/" aria-label="BESA, torna all'inizio">
       <Image class="logo-ink" src={logo} alt="BESA" width={47} height={24} densities={[2, 3]} loading="eager" />
       <Image class="logo-white" src={logoWhite} alt="" width={47} height={24} densities={[2, 3]} loading="eager" />
     </a>
-
-    <nav class="nav" aria-label="Principale">
-      <ul id="site-menu" class="menu">
-        {links.map((l) => (
-          <li><a class="nlink" href={l.href}>{l.label}</a></li>
-        ))}
-      </ul>
-    </nav>
-
-    <a class="btn cta" href="#contatto">{copy.nav.cta}</a>
-
-    <button class="toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Menu">
-      <span class="bars" aria-hidden="true"><i></i><i></i></span>
-    </button>
+    <a class="btn cta" href="#contatto">
+      <span>{copy.nav.cta}</span>
+      <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </a>
   </div>
 </header>
 
-<!-- Runs before first paint of the body below: enables the JS-only disclosure layout. -->
+<!-- Runs before first paint of the body below: enables the JS-only enhancements. -->
 <script is:inline>document.documentElement.classList.add("js");</script>
 
 <script>
   const header = document.querySelector<HTMLElement>(".site-header")!;
-  const toggle = header.querySelector<HTMLButtonElement>(".toggle")!;
-  const menu = header.querySelector<HTMLElement>("#site-menu")!;
-  const anchors = Array.from(menu.querySelectorAll<HTMLAnchorElement>("a"));
-  const wide = matchMedia("(min-width: 64rem)");
-
-  const setOpen = (open: boolean, restoreFocus = false) => {
-    toggle.setAttribute("aria-expanded", String(open));
-    header.toggleAttribute("data-open", open);
-    if (!open && restoreFocus) toggle.focus();
-  };
-
-  // The toggle comes after the links in DOM order: when opened by keyboard, move into the menu so Tab does not skip it.
-  toggle.addEventListener("click", (e) => {
-    const open = toggle.getAttribute("aria-expanded") !== "true";
-    setOpen(open);
-    if (open && e.detail === 0) anchors[0]?.focus();
-  });
-  anchors.forEach((a) => a.addEventListener("click", () => setOpen(false)));
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") setOpen(false, header.contains(document.activeElement));
-  });
-  header.addEventListener("focusout", (e) => {
-    const to = e.relatedTarget as Node | null;
-    if (to && !header.contains(to)) setOpen(false);
-  });
-  document.addEventListener("click", (e) => {
-    if (!header.contains(e.target as Node)) setOpen(false);
-  });
-  wide.addEventListener("change", () => setOpen(false));
 
   // Chameleon bar: take the background of the section currently behind the bar, and flip
   // logo/text to white when that background is dark. Over the top of the page it is fully transparent.
@@ -103,31 +65,6 @@ const links = copy.nav.links;
   addEventListener("scroll", schedule, { passive: true });
   addEventListener("resize", schedule);
   paint();
-
-  // Current-section indication (progressive enhancement).
-  const map = new Map<Element, HTMLAnchorElement>();
-  anchors.forEach((a) => {
-    const el = document.getElementById(a.hash.slice(1));
-    if (el) map.set(el, a);
-  });
-  if (map.size && "IntersectionObserver" in window) {
-    const visible = new Set<Element>();
-    const mark = () => {
-      const first = [...map.keys()].find((el) => visible.has(el));
-      anchors.forEach((a) => {
-        if (first && map.get(first) === a) a.setAttribute("aria-current", "location");
-        else a.removeAttribute("aria-current");
-      });
-    };
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((en) => (en.isIntersecting ? visible.add(en.target) : visible.delete(en.target)));
-        mark();
-      },
-      { rootMargin: "-25% 0px -60% 0px" },
-    );
-    map.forEach((_, el) => io.observe(el));
-  }
 </script>
 
 <style>
@@ -146,88 +83,50 @@ const links = copy.nav.links;
   :global(.js) .site-header[data-tone="dark"] { --hdr-ink: var(--color-text-on-inverse); }
   /* over the top of the page (the blue hero): no fill at all */
   :global(.js) .site-header[data-top] { background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
-  /* menu open on phones: the bar joins the white panel under it */
-  :global(.js) .site-header[data-open] { --hdr-ink: var(--color-text-primary); background: var(--color-surface-page); box-shadow: 0 1px 0 var(--color-border-subtle); }
 
-  :global(.js) .site-header[data-tone="dark"]:not([data-open]) .logo-ink { display: none; }
-  :global(.js) .site-header[data-tone="dark"]:not([data-open]) .logo-white { display: block; }
-  :global(.js) .site-header[data-tone="dark"]:not([data-open]) .cta { background: var(--color-text-on-accent); color: var(--color-accent-text); box-shadow: 0 6px 16px -8px oklch(0.15 0.08 266 / .6); }
-  :global(.js) .site-header[data-tone="dark"]:not([data-open]) :focus-visible { outline-color: var(--color-focus-ring-on-accent); }
-  @media (hover: hover) { :global(.js) .site-header[data-tone="dark"]:not([data-open]) .cta:hover { background: var(--color-accent-subtle); } }
-  :global(.js) .site-header .toggle { color: var(--hdr-ink); }
-  @media (min-width: 64rem) {
-    :global(.js) .site-header .nlink { color: var(--hdr-ink); }
-    :global(.js) .site-header[data-tone="dark"] .nlink[aria-current="location"] { color: var(--hdr-ink); }
-    :global(.js) .site-header[data-tone="dark"] .nlink::after { background: var(--hdr-ink); }
-  }
+  :global(.js) .site-header[data-tone="dark"] .logo-ink { display: none; }
+  :global(.js) .site-header[data-tone="dark"] .logo-white { display: block; }
+  :global(.js) .site-header[data-tone="dark"] .cta { background: var(--color-text-on-accent); color: var(--color-accent-text); box-shadow: 0 8px 20px -10px oklch(0.15 0.08 266 / .7); }
+  :global(.js) .site-header[data-tone="dark"] :focus-visible { outline-color: var(--color-focus-ring-on-accent); }
+  @media (hover: hover) { :global(.js) .site-header[data-tone="dark"] .cta:hover { background: var(--color-accent-subtle); } }
 
   /* reading progress: a hairline that fills as the page scrolls (CSS only) */
   .site-header::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--color-accent-solid); transform: scaleX(0); transform-origin: left; pointer-events: none; }
-  :global(.js) .site-header[data-tone="dark"]:not([data-open])::after { background: var(--color-text-on-inverse); }
+  :global(.js) .site-header[data-tone="dark"]::after { background: var(--color-text-on-inverse); }
   @supports (animation-timeline: scroll()) {
     @media (prefers-reduced-motion: no-preference) {
       .site-header::after { animation: progress linear both; animation-timeline: scroll(root); }
       @keyframes progress { to { transform: none; } }
     }
   }
-  .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: .5rem; min-height: 3.5rem; }
-  .brand { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+  /* three columns, the logo in the true centre whatever the CTA width */
+  .bar { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: .75rem; min-height: 3.5rem; }
+  .brand { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; min-width: 2.75rem; }
   .brand :global(img) { height: 1.25rem; width: auto; }
-  .cta { min-height: 2.75rem !important; padding: .5rem 1rem !important; font-size: .875rem; margin-left: auto; box-shadow: 0 6px 16px -8px oklch(0.448 0.193 268 / .8); }
-
-  /* No JS: links wrap on their own row under the logo and CTA. */
-  .nav { order: 5; width: 100%; }
-  .menu { list-style: none; margin: 0; padding: 0 0 .5rem; display: flex; flex-wrap: wrap; gap: 0 1rem; }
-  .nlink { position: relative; display: inline-flex; align-items: center; min-height: 2.75rem; font-size: .9375rem; font-weight: 500; color: var(--color-text-primary); text-decoration: none; }
-  .toggle { display: none; }
-
-  /* With JS on mobile: disclosure panel. */
-  :global(.js) .toggle { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; margin-right: -.5rem; background: none; border: 0; border-radius: var(--radius-sm); color: var(--color-text-primary); cursor: pointer; }
-  :global(.js) .bar { flex-wrap: nowrap; }
-  :global(.js) .nav { order: 0; width: auto; }
-  :global(.js) .menu {
-    position: absolute; inset-inline: 0; top: 100%; flex-direction: column; flex-wrap: nowrap; gap: 0;
-    padding: .5rem max(1rem, calc((100% - 75rem) / 2)) 1rem; background: var(--color-surface-page);
-    box-shadow: 0 1px 0 var(--color-border-subtle), 0 12px 24px oklch(0.2 0.04 266 / 0.08);
-    opacity: 0; transform: translateY(-.5rem); visibility: hidden; pointer-events: none;
-    transition: opacity 200ms var(--ease-out), transform 250ms var(--ease-out), visibility 0s linear 250ms;
+  .cta {
+    justify-self: end; min-height: 2.75rem !important; padding: .5rem .875rem .5rem 1rem !important; gap: .4rem !important;
+    font-size: .875rem; border-radius: 9999px !important; white-space: nowrap;
+    box-shadow: 0 8px 20px -10px oklch(0.448 0.193 268 / .8);
   }
-  :global(.js) [data-open] .menu { opacity: 1; transform: none; visibility: visible; pointer-events: auto; transition-delay: 0s; }
-  :global(.js) .nlink { width: 100%; min-height: 3rem; font-size: 1.0625rem; border-bottom: 1px solid var(--color-border-subtle); }
-  :global(.js) .menu li:last-child .nlink { border-bottom: 0; }
-  .nlink[aria-current="location"] { color: var(--color-accent-text); font-weight: 700; }
-
-  .bars { position: relative; width: 1.375rem; height: 1rem; display: block; }
-  .bars i { position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px; background: currentColor; transition: transform 250ms var(--ease-out); }
-  .bars i:first-child { top: .25rem; }
-  .bars i:last-child { top: .625rem; }
-  [data-open] .bars i:first-child { transform: translateY(.1875rem) rotate(45deg); }
-  [data-open] .bars i:last-child { transform: translateY(-.1875rem) rotate(-45deg); }
+  .cta svg { flex: none; transition: translate 250ms var(--ease-out); }
+  @media (hover: hover) { .cta:hover svg { translate: 3px 0; } }
 
   /* phones held sideways: a slimmer bar leaves more of the ~380px screen to the page */
   @media (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
     .bar { min-height: 3rem; }
-    :global(.js) .menu { max-height: calc(100svh - 3rem); overflow-y: auto; }
   }
-  /* very narrow phones: logo, CTA and menu button share 288px */
-  @media (max-width: 22.5rem) { .cta { padding-inline: .75rem !important; } }
+  /* phones: the logo keeps the true centre, so the CTA gets compact enough to fit its third of the bar */
+  @media (max-width: 29.99rem) {
+    .bar { column-gap: .5rem; }
+    .cta { font-size: .8125rem; padding-inline: .8rem !important; }
+    .cta svg { display: none; }
+  }
+  @media (max-width: 22.5rem) { .cta { font-size: .75rem; padding-inline: .6rem !important; } }
 
   @media (min-width: 64rem) {
-    .bar { min-height: 3.75rem; flex-wrap: nowrap; column-gap: 1.5rem; }
+    .bar { min-height: 3.75rem; }
     .brand :global(img) { height: 1.5rem; }
-    .brand, .nav { flex: none; }
-    .nav { order: 0; width: auto; margin-inline: auto; }
-    .menu, :global(.js) .menu {
-      position: static; flex-direction: row; flex-wrap: nowrap; gap: .25rem 1.5rem; padding: 0; box-shadow: none; background: none;
-      opacity: 1; transform: none; visibility: visible; pointer-events: auto; transition: none;
-    }
-    .nlink, :global(.js) .nlink { width: auto; min-height: 2.75rem; font-size: .9375rem; border-bottom: 0; }
-    .nlink::after { content: ""; position: absolute; left: 0; right: 0; bottom: .5rem; height: 2px; background: var(--color-accent-solid); transform: scaleX(0); transform-origin: left; transition: transform 250ms var(--ease-out); }
-    .nlink[aria-current="location"]::after { transform: scaleX(1); }
-    .cta { margin-left: 0; }
-    :global(.js) .toggle { display: none; }
-  }
-  @media (min-width: 64rem) and (hover: hover) {
-    .nlink:hover::after { transform: scaleX(1); }
+    .cta { font-size: .9375rem; padding-inline: 1.25rem 1.1rem !important; }
   }
 </style>
