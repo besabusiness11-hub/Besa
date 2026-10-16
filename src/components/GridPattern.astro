@@ -1,0 +1,61 @@
+---
+// Animated grid background (after Magic UI's AnimatedGridPattern), vanilla SVG + CSS.
+// Lines are static; a few cells fade in and out and then jump elsewhere. Reduced motion: static grid only.
+interface Props { size?: number; squares?: number }
+const { size = 44, squares = 26 } = Astro.props;
+const id = `gp-${Math.random().toString(36).slice(2, 8)}`;
+---
+<svg class="grid-bg" aria-hidden="true" data-grid data-size={size} data-squares={squares}>
+  <defs>
+    <pattern id={id} width={size} height={size} patternUnits="userSpaceOnUse" x="-1" y="-1">
+      <path d={`M.5 ${size}V.5H${size}`} fill="none" />
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill={`url(#${id})`} />
+  <g class="cells"></g>
+</svg>
+
+<script>
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll<SVGSVGElement>("svg[data-grid]").forEach((svg) => {
+    if (reduce) return;
+    const size = Number(svg.dataset.size);
+    const count = Number(svg.dataset.squares);
+    const g = svg.querySelector<SVGGElement>(".cells")!;
+    const NS = "http://www.w3.org/2000/svg";
+    let w = 0, h = 0;
+    const place = (r: SVGRectElement) => {
+      r.setAttribute("x", String(Math.floor(Math.random() * (w / size)) * size));
+      r.setAttribute("y", String(Math.floor(Math.random() * (h / size)) * size));
+    };
+    const build = () => {
+      const b = svg.getBoundingClientRect();
+      if (b.width === w && b.height === h) return;
+      w = b.width; h = b.height;
+      g.replaceChildren();
+      for (let i = 0; i < count; i++) {
+        const r = document.createElementNS(NS, "rect");
+        r.setAttribute("width", String(size - 1));
+        r.setAttribute("height", String(size - 1));
+        r.style.animationDelay = `${(i * 0.37) % 8}s`;
+        r.style.animationDuration = `${5 + (i % 4)}s`;
+        place(r);
+        // each time a cell has faded out, it moves somewhere else
+        r.addEventListener("animationiteration", () => place(r));
+        g.appendChild(r);
+      }
+    };
+    new ResizeObserver(build).observe(svg);
+    // pause when the hero is off screen
+    new IntersectionObserver(([e]) => svg.classList.toggle("paused", !e.isIntersecting)).observe(svg);
+  });
+</script>
+
+<style>
+  .grid-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; stroke: oklch(1 0 0 / .12); fill: oklch(1 0 0 / .12);
+    /* fade the grid out towards the edges so it sits behind the content, not on top of it */
+    mask-image: radial-gradient(ellipse 75% 70% at 60% 45%, #000 30%, transparent 85%); }
+  .grid-bg :global(.cells rect) { stroke: none; fill: oklch(1 0 0 / 1); opacity: 0; animation: cell ease-in-out infinite both; transform: translate(1px, 1px); }
+  .grid-bg.paused :global(.cells rect) { animation-play-state: paused; }
+  @keyframes cell { 0%, 100% { opacity: 0; } 45%, 55% { opacity: .1; } }
+</style>

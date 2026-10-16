@@ -2,10 +2,12 @@
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 import LinkCatcher from "./LinkCatcher.astro";
+import GridPattern from "./GridPattern.astro";
 const h = copy.hero;
 const c = h.compare;
 ---
 <section class="hero on-blue bg-accent-solid text-text-on-accent" aria-labelledby="hero-title">
+  <GridPattern />
   <div class="wrap grid-h">
     <div class="copy">
       <h1 id="hero-title" class="h1" set:html={em(h.headline)} />
@@ -117,7 +119,8 @@ const c = h.compare;
 </script>
 
 <style>
-  .hero { position: relative; overflow: clip; }
+  .hero { position: relative; overflow: clip; isolation: isolate; }
+  .grid-h { position: relative; z-index: 1; }
   .grid-h { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "stage"; gap: 2.25rem; padding-block: 2.25rem 3rem; align-items: center; }
   .copy { grid-area: copy; }
   .stage { grid-area: stage; }

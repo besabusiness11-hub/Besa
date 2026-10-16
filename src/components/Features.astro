@@ -1,0 +1,197 @@
+---
+// Bento grid of what the service does (after Magic UI's BentoGrid): each card has a small live
+// visual on top, copy below; on hover the copy lifts and a "start here" link slides in.
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+const f = copy.features;
+const [eta, link, channel, edits, tryIt, people] = f.items;
+const arrow = `<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+---
+<section id="servizio" class="section features" aria-labelledby="features-title">
+  <div class="wrap">
+    <div class="reveal head">
+      <h2 id="features-title" class="t2" set:html={em(f.headline)} />
+      <p class="lead mt-5 text-text-secondary">{f.lead}</p>
+    </div>
+
+    <div class="bento">
+      <article class="card c-eta">
+        <div class="viz" aria-hidden="true">
+          <ol class="track">
+            {eta.steps.map((s, i) => <li style={`--i:${i}`}><span class="dot"></span>{s}</li>)}
+          </ol>
+          <span class="eta-badge">1 giorno</span>
+        </div>
+        <div class="body">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg></span>
+          <h3>{eta.title}</h3>
+          <p>{eta.text}</p>
+        </div>
+        <a class="go" href="#contatto"><span>{f.cta}</span><Fragment set:html={arrow} /></a>
+      </article>
+
+      <article class="card c-link">
+        <div class="viz" aria-hidden="true">
+          <div class="field"><svg viewBox="0 0 20 20" width="16" height="16"><path d="M8.5 11.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.5 3.5 0 0 0-5-5l-.8.8M11.5 8.5a3.5 3.5 0 0 0-5 0L4 11a3.5 3.5 0 0 0 5 5l.8-.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg><span class="typed">{link.sample}</span><span class="send"></span></div>
+        </div>
+        <div class="body">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg></span>
+          <h3>{link.title}</h3>
+          <p>{link.text}</p>
+        </div>
+        <a class="go" href="#contatto"><span>{f.cta}</span><Fragment set:html={arrow} /></a>
+      </article>
+
+      <article class="card c-channel">
+        <div class="viz" aria-hidden="true">
+          <div class="chips">{channel.chips.map((c, i) => <span style={`--i:${i}`}>{c}</span>)}</div>
+          <span class="big-btn"><b class="lbl">{channel.chips[0]}</b></span>
+        </div>
+        <div class="body">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3.5" y="8" width="17" height="8" rx="4" fill="none" stroke="currentColor" stroke-width="1.8" /><circle cx="12" cy="12" r="1.6" fill="currentColor" /></svg></span>
+          <h3>{channel.title}</h3>
+          <p>{channel.text}</p>
+        </div>
+        <a class="go" href="#contatto"><span>{f.cta}</span><Fragment set:html={arrow} /></a>
+      </article>
+
+      <article class="card c-edits">
+        <div class="viz" aria-hidden="true">
+          <div class="chat">
+            <p class="msg you">{edits.chat[0]}</p>
+            <p class="msg us"><svg viewBox="0 0 16 16" width="12" height="12"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>{edits.chat[1]}</p>
+          </div>
+        </div>
+        <div class="body">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></svg></span>
+          <h3>{edits.title}</h3>
+          <p>{edits.text}</p>
+        </div>
+        <a class="go" href="#piani"><span>{copy.offer.plans[0].cta}</span><Fragment set:html={arrow} /></a>
+      </article>
+
+      <article class="card c-try">
+        <div class="viz" aria-hidden="true">
+          <div class="mini-phone"><span class="mp-url">{tryIt.url}</span><span class="mp-art"></span><i></i><i class="s"></i><span class="mp-btn"></span></div>
+        </div>
+        <div class="body">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M9.5 12l2 2 3.5-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+          <h3>{tryIt.title}</h3>
+          <p>{tryIt.text}</p>
+        </div>
+        <a class="go" href="#come-funziona"><span>{copy.nav.links[1].label}</span><Fragment set:html={arrow} /></a>
+      </article>
+
+      <article class="card c-people">
+        <div class="viz" aria-hidden="true">
+          <div class="avatars"><span>L</span><span>B</span></div>
+          <p class="bubble">Ciao, sono Leo.</p>
+        </div>
+        <div class="body">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="9" cy="8.5" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8" /><circle cx="16.5" cy="9.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M3.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M14.5 14.6c2.6-.3 4.6 1 5.4 3.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg></span>
+          <h3>{people.title}</h3>
+          <p>{people.text}</p>
+        </div>
+        <a class="go" href="#chi-siamo"><span>{copy.nav.links[4].label}</span><Fragment set:html={arrow} /></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .features { background: var(--color-surface-subtle); }
+  .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; max-width: 18ch; }
+  .head { margin-bottom: 3rem; }
+
+  .bento { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 48rem) { .bento { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 64rem) {
+    .bento { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 21rem; }
+    .c-eta, .c-edits, .c-try { grid-column: span 2; }
+  }
+
+  .card {
+    position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+    min-height: 19rem; border-radius: var(--radius-lg); background: var(--color-surface-page);
+    box-shadow: 0 0 0 1px oklch(0.2 0.04 266 / .05), 0 2px 4px oklch(0.2 0.04 266 / .05), 0 12px 24px oklch(0.2 0.04 266 / .06);
+  }
+  .card::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: oklch(0.2 0.06 266 / 0); transition: background-color 300ms var(--ease-out); }
+  .viz { position: relative; flex: 1; display: grid; place-items: center; padding: 1.5rem 1.5rem 0; min-height: 9rem; }
+  .body { position: relative; z-index: 3; display: grid; gap: .3rem; padding: 1.25rem 1.5rem 1.5rem; transition: translate 300ms var(--ease-out); }
+  .ic { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; margin-bottom: .4rem; border-radius: .8rem; background: var(--color-accent-subtle); color: var(--color-accent-text); transform-origin: left; transition: scale 300ms var(--ease-out); }
+  h3 { font-size: 1.1875rem; font-weight: 800; line-height: 1.25; letter-spacing: -.015em; }
+  .body p { color: var(--color-text-secondary); font-size: .9375rem; line-height: 1.5; max-width: 42ch; }
+  .go { position: relative; z-index: 4; display: inline-flex; align-items: center; gap: .35rem; min-height: 2.75rem; margin: -1rem 1.5rem 1rem; font-weight: 700; font-size: .9375rem; color: var(--color-accent-text); }
+  .go svg { transition: translate 250ms var(--ease-out); }
+  @media (min-width: 64rem) {
+    .go { position: absolute; left: 0; bottom: 0; margin: 0 1.5rem 1.1rem; opacity: 0; translate: 0 1rem; transition: opacity 300ms var(--ease-out), translate 300ms var(--ease-out); }
+    .card:hover .body, .card:focus-within .body { translate: 0 -2.25rem; }
+    .card:hover .ic, .card:focus-within .ic { scale: .8; }
+    .card:hover .go, .card:focus-within .go { opacity: 1; translate: none; }
+    .card:hover::after { background: oklch(0.2 0.06 266 / .02); }
+    .go:hover svg { translate: 3px 0; }
+  }
+
+  /* ---- visuals ---- */
+  .track { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: .5rem; width: min(100%, 30rem); }
+  .track li { flex: 1; display: grid; justify-items: center; gap: .5rem; font-size: .8125rem; font-weight: 700; color: var(--color-text-secondary); position: relative; }
+  .track li:not(:last-child)::after { content: ""; position: absolute; top: .6rem; left: calc(50% + .9rem); right: calc(-50% + .9rem); height: 3px; border-radius: 9999px; background: linear-gradient(to right, var(--color-accent-solid) var(--fill, 100%), var(--color-border-subtle) var(--fill, 100%)); }
+  .track .dot { width: 1.25rem; height: 1.25rem; border-radius: 9999px; background: var(--color-accent-solid); box-shadow: 0 0 0 4px var(--color-accent-subtle); }
+  .track li:last-child { color: var(--color-status-success); }
+  .track li:last-child .dot { background: var(--color-status-success); box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-status-success) 18%, transparent); }
+  .eta-badge { position: absolute; right: 1.5rem; top: 1.25rem; padding: .3rem .6rem; border-radius: 9999px; background: var(--color-surface-inverse); color: var(--color-text-on-inverse); font-size: .75rem; font-weight: 800; }
+
+  .field { display: flex; align-items: center; gap: .5rem; width: min(100%, 17rem); padding: .5rem .5rem .5rem .8rem; border-radius: .9rem; background: var(--color-surface-page); color: var(--color-accent-text); box-shadow: 0 0 0 2px var(--color-accent-solid), 0 14px 26px -16px oklch(0.448 0.193 268 / .6); }
+  .typed { flex: 0 1 auto; overflow: hidden; white-space: nowrap; font-size: .9375rem; font-weight: 600; color: var(--color-text-primary); border-right: 2px solid var(--color-accent-solid); width: fit-content; max-width: max-content; }
+  .send { flex: none; margin-left: auto; width: 2rem; height: 2rem; border-radius: .6rem; background: var(--color-accent-solid); }
+
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; }
+  .chips span { padding: .3rem .65rem; border-radius: 9999px; background: var(--color-surface-sunken); font-size: .75rem; font-weight: 700; color: var(--color-text-secondary); }
+  .chips span:first-child { background: var(--color-accent-subtle); color: var(--color-accent-text); }
+  .big-btn { margin-top: .8rem; display: grid; place-items: center; width: min(100%, 13rem); min-height: 2.75rem; border-radius: .85rem; background: var(--color-status-success); color: var(--color-text-on-accent); font-size: .875rem; }
+  .c-channel .viz { align-content: center; }
+
+  .chat { display: grid; gap: .5rem; width: min(100%, 26rem); }
+  .msg { max-width: 80%; padding: .6rem .85rem; border-radius: 1rem; font-size: .875rem; line-height: 1.35; }
+  .you { justify-self: start; background: var(--color-surface-sunken); border-bottom-left-radius: .3rem; }
+  .us { justify-self: end; display: inline-flex; align-items: center; gap: .35rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); border-bottom-right-radius: .3rem; font-weight: 600; }
+
+  .mini-phone { display: grid; gap: .35rem; width: 8.5rem; padding: .55rem .55rem .7rem; border: 4px solid var(--color-surface-inverse); border-bottom: 0; border-radius: 1.3rem 1.3rem 0 0; background: var(--color-surface-page); align-self: end; translate: 0 1.5rem; }
+  .mp-url { justify-self: center; padding: .1rem .5rem; border-radius: 9999px; background: var(--color-surface-sunken); font-size: .5625rem; font-weight: 600; color: var(--color-text-secondary); }
+  .mp-art { display: block; height: 3rem; border-radius: .45rem; background: var(--color-accent-subtle); }
+  .mini-phone i { display: block; height: .3rem; border-radius: 9999px; background: var(--color-border-subtle); }
+  .mini-phone i.s { width: 60%; }
+  .mp-btn { display: block; height: 1.4rem; border-radius: .45rem; background: var(--color-status-success); }
+  .c-try .viz { overflow: hidden; }
+
+  .avatars { display: flex; }
+  .avatars span { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border-radius: 9999px; border: 3px solid var(--color-surface-page); background: var(--color-accent-solid); color: var(--color-text-on-accent); font-weight: 800; font-style: italic; font-size: 1.25rem; }
+  .avatars span + span { margin-left: -.75rem; background: var(--color-surface-inverse); }
+  .bubble { margin-top: .75rem; padding: .45rem .8rem; border-radius: 1rem 1rem 1rem .3rem; background: var(--color-surface-sunken); font-size: .8125rem; font-weight: 600; }
+  .c-people .viz { align-content: center; }
+
+  /* motion: each visual plays its small story when the card comes into view; hover replays the accent */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .card { animation: card-in linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+      .track li:not(:last-child)::after { animation: fill-line linear both; animation-timeline: view(); animation-range: entry 30% cover 45%; }
+      .typed { animation: typing steps(14, end) both; animation-timeline: view(); animation-range: entry 30% cover 40%; }
+      .msg { animation: msg-in linear both; animation-timeline: view(); }
+      .you { animation-range: entry 20% cover 30%; }
+      .us { animation-range: entry 45% cover 42%; }
+      .mini-phone { animation: phone-up linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
+      @keyframes card-in { from { opacity: 0; translate: 0 1.5rem; } }
+      @keyframes fill-line { from { --fill: 0%; } }
+      @keyframes typing { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+      @keyframes msg-in { from { opacity: 0; translate: 0 .5rem; scale: .96; } }
+      @keyframes phone-up { from { translate: 0 4rem; } }
+    }
+  }
+  @property --fill { syntax: "<percentage>"; inherits: false; initial-value: 100%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .card:hover .big-btn { animation: tap 900ms var(--ease-out); }
+    .card:hover .avatars span:last-child { animation: nudge 600ms var(--ease-expo); }
+    @keyframes tap { 40% { scale: .95; } 100% { scale: 1; } }
+    @keyframes nudge { 50% { translate: .3rem 0; } }
+  }
+</style>

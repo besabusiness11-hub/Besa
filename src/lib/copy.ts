@@ -143,6 +143,49 @@ export const copy = {
     demoIllustrative: "Indirizzo illustrativo: quello vero ti arriva con la pagina.",
   },
 
+  features: {
+    headline: "Tutto quello che serve, {em}fatto da noi{/em}.",
+    lead: "Cosa succede dopo che ci mandi il tuo annuncio, e cosa resta a te: quasi niente.",
+    cta: "Inizia da qui",
+    items: [
+      {
+        id: "eta",
+        title: "Pagina di prova entro 1 giorno lavorativo",
+        text: "Ci mandi il link oggi, domani hai una pagina vera da aprire sul telefono.",
+        steps: ["Ricevuto", "In lavorazione", "Pronta"],
+      },
+      {
+        id: "link",
+        title: "Basta un link, o il tuo @profilo",
+        text: "Niente moduli lunghi, niente chiamate per iniziare.",
+        sample: "@latuaattivita",
+      },
+      {
+        id: "channel",
+        title: "Il pulsante che usi davvero",
+        text: "WhatsApp, chiamata o richiesta di preventivo: scegli tu dove arrivano i contatti.",
+        chips: ["WhatsApp", "Chiamata", "Preventivo"],
+      },
+      {
+        id: "edits",
+        title: "Modifiche quando ti servono",
+        text: "Cambi offerta o annuncio? Con l’abbonamento ci scrivi e aggiorniamo la pagina.",
+        chat: ["Da lunedì l’offerta cambia, aggiorniamo?", "Fatto, è già online."],
+      },
+      {
+        id: "try",
+        title: "La provi prima di decidere",
+        text: "Vive su un indirizzo di prova finché non ti convince.",
+        url: "pagina-di-prova",
+      },
+      {
+        id: "people",
+        title: "Parli con chi la costruisce",
+        text: "Leo e Benito, nessun intermediario. Ti risponde chi ci mette le mani.",
+      },
+    ],
+  },
+
   inside: {
     headline: "Cosa c’è dentro la pagina.",
     features: [
