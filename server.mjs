@@ -74,6 +74,20 @@ function compress(req, res) {
     stream.on("end", () => end());
   };
   res.setHeader("Vary", "Accept-Encoding");
+  // SSR responses (e.g. POST /api/lead) pass all headers to writeHead(status, headers), which commits
+  // them: deciding later would call setHeader after the fact and kill the response. So fold the
+  // headers in and decide here, before anything is committed.
+  const writeHead = res.writeHead.bind(res);
+  res.writeHead = (status, ...rest) => {
+    const hi = rest.findIndex((x) => x && typeof x === "object" && !Array.isArray(x));
+    if (hi >= 0) {
+      for (const [k, v] of Object.entries(rest[hi])) if (v !== undefined) res.setHeader(k, v);
+      rest.splice(hi, 1);
+    }
+    res.statusCode = status;
+    if (!decided) decide();
+    return writeHead(status, ...rest);
+  };
   res.write = (chunk, ...a) => {
     if (!decided) decide();
     if (!stream) return write(chunk, ...a);
