@@ -70,6 +70,7 @@ const msgs = JSON.stringify({
       </form>
 
       <div id="lead-ok" class="ok" role="status" tabindex="-1" hidden>
+        <span class="ok-check" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
         <h3 class="t-h3">{f.success.title}</h3>
         <p class="mt-2">
           {splitTodo(f.success.text).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}
@@ -87,6 +88,8 @@ const msgs = JSON.stringify({
     color: var(--color-text-primary); background: var(--color-surface-page); border: 2px solid transparent; border-radius: var(--radius-base);
   }
   .field input::placeholder { color: var(--color-text-secondary); opacity: 1; }
+  .field input:not([type="checkbox"]) { transition: box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out); }
+  .field input:not([type="checkbox"]):focus { box-shadow: 0 0 0 5px color-mix(in oklab, var(--color-text-on-accent) 30%, transparent); }
   .field input[aria-invalid="true"] { border-color: var(--color-status-error); }
   .check { display: flex; gap: .75rem; align-items: flex-start; min-height: 2.75rem; font-weight: 400; margin: 0; padding-block: .25rem; }
   .check input { flex: none; appearance: none; width: 1.5rem; height: 1.5rem; margin: .125rem 0 0; border: 2px solid var(--color-text-on-accent); border-radius: .375rem; background: transparent; display: grid; place-content: center; }
@@ -102,6 +105,14 @@ const msgs = JSON.stringify({
   .submit[aria-disabled="true"] { opacity: .75; cursor: progress; scale: 1; translate: none; }
   #ts { margin-bottom: 1.25rem; }
   .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+  .ok-check { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: 1rem; border-radius: 9999px; background: var(--color-status-success); color: var(--color-text-on-accent); }
+  .ok-check path { stroke-dasharray: 24; stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ok:not([hidden]) { animation: ok-in 600ms var(--ease-expo) backwards; }
+    .ok:not([hidden]) .ok-check path { animation: draw-check 500ms var(--ease-out) 250ms backwards; }
+    @keyframes ok-in { from { opacity: 0; translate: 0 1rem; scale: .98; } }
+    @keyframes draw-check { from { stroke-dashoffset: 24; } }
+  }
   .ok { background: var(--color-surface-page); color: var(--color-text-primary); border-radius: var(--radius-lg); padding: 1.5rem; }
   .ok:focus-visible { outline: 3px solid var(--color-focus-ring-on-accent); outline-offset: 3px; }
   #contatto :global(mark.todo) { background: var(--color-surface-page); color: var(--color-text-primary); outline: 1px dashed var(--color-text-primary); outline-offset: 1px; padding: 0 .25em; border-radius: 2px; }

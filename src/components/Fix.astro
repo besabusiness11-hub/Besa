@@ -35,7 +35,10 @@ for (const raw of f.headline.split(" ")) {
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .w { animation: lit linear both; animation-timeline: view(); animation-range: cover calc(12% + var(--i) * 5%) cover calc(26% + var(--i) * 5%); }
-      @keyframes lit { from { opacity: .14; translate: 0 .15em; } to { opacity: 1; translate: none; } }
+      /* start values keep large-text contrast >= 3:1 even before scrolling (accent needs a higher floor) */
+      .w.em { animation-name: lit-em; }
+      @keyframes lit { from { opacity: .55; translate: 0 .15em; } to { opacity: 1; translate: none; } }
+      @keyframes lit-em { from { opacity: .78; translate: 0 .15em; } to { opacity: 1; translate: none; } }
     }
   }
 </style>

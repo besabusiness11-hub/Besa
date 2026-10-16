@@ -85,6 +85,7 @@ export const copy = {
         text: "Ti diciamo dove collegarla alle inserzioni. Poi guardiamo insieme com’è andata e cosa fare dopo.",
       },
     ],
+    pasteExample: "facebook.com/ads/library/?id=…",
     demoTitle: "Prova prima di decidere",
     demoNote:
       "All’inizio la pagina vive su un indirizzo di prova, non sul tuo dominio. Così puoi vederla e provarla dal telefono prima di decidere.",

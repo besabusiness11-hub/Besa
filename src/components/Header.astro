@@ -88,10 +88,18 @@ const links = copy.nav.links;
 </script>
 
 <style>
+  /* reading progress: a hairline that fills as the page scrolls (CSS only) */
+  .site-header::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--color-accent-solid); transform: scaleX(0); transform-origin: left; pointer-events: none; }
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .site-header::after { animation: progress linear both; animation-timeline: scroll(root); }
+      @keyframes progress { to { transform: none; } }
+    }
+  }
   .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: .5rem; min-height: 3.5rem; }
   .brand { display: inline-flex; align-items: center; min-height: 2.75rem; }
   .brand :global(img) { height: 1.25rem; width: auto; }
-  .cta { min-height: 2.75rem !important; padding: .5rem 1rem !important; font-size: .875rem; margin-left: auto; }
+  .cta { min-height: 2.75rem !important; padding: .5rem 1rem !important; font-size: .875rem; margin-left: auto; box-shadow: 0 6px 16px -8px oklch(0.448 0.193 268 / .8); }
 
   /* No JS: links wrap on their own row under the logo and CTA. */
   .nav { order: 5; width: 100%; }

@@ -73,7 +73,10 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
       <p class="note">{p.note}</p>
     </div>
 
-    <p class="closing reveal">{p.closing}</p>
+    <div class="closing reveal">
+      <p>{p.closing}</p>
+      <a class="btn" href="#contatto">{copy.hero.cta}</a>
+    </div>
     <p id="calc-live" class="sr-only" aria-live="polite"></p>
   </div>
 </section>
@@ -203,7 +206,8 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
   .k.on { background: var(--color-accent-solid); }
   .k:not(:first-child) { margin-left: .75rem; }
   .note { font-size: .8125rem; color: var(--color-text-secondary); }
-  .closing { font-size: var(--text-h3); line-height: 1.3; font-weight: 700; letter-spacing: -.015em; max-width: 36ch; }
+  .closing { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem 2rem; padding-top: 2rem; border-top: 1px solid var(--color-border-subtle); }
+  .closing p { font-size: var(--text-h3); line-height: 1.3; font-weight: 700; letter-spacing: -.015em; max-width: 36ch; }
 
   @media (prefers-reduced-motion: no-preference) {
     .dots i { transition: background-color 300ms var(--ease-out), scale 300ms var(--ease-expo); transition-delay: calc(var(--d) * 4ms); }

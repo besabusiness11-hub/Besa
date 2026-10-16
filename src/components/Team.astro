@@ -19,7 +19,7 @@ const photos = [leo, benito];
     <div class="people reveal-stagger">
       {t.members.map((m, i) => (
         <article class="person">
-          <Picture
+          <div class="frame"><Picture
             src={photos[i]}
             formats={["avif", "webp"]}
             widths={[240, 360, 500]}
@@ -30,7 +30,7 @@ const photos = [leo, benito];
             loading="lazy"
             decoding="async"
             class="photo img-outline"
-          />
+          /></div>
           <div class="txt">
             <h3 class="t-h3">{m.name}</h3>
             <p class="role">{m.role}</p>
@@ -51,6 +51,10 @@ const photos = [leo, benito];
   .intro { max-width: 40rem; }
   .people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 3rem; align-items: start; max-width: 50rem; }
   .person { display: grid; grid-template-rows: auto 1fr; gap: 1rem; min-width: 0; }
+  .frame { overflow: hidden; border-radius: var(--radius-lg); }
+  @media (min-width: 48rem) { .frame { border-radius: var(--radius-xl); } }
+  .photo { transition: scale 700ms var(--ease-expo); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) { .person:hover .photo { scale: 1.04; } }
   .photo { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; object-position: 50% 35%; border-radius: var(--radius-lg); background: var(--color-surface-sunken); }
   .role { color: var(--color-text-secondary); font-weight: 500; font-size: .9375rem; margin-top: .25rem; }
   .bio { margin-top: .75rem; }

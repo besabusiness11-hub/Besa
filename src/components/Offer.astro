@@ -43,7 +43,23 @@ const rest = c.plans.filter((p) => !p.highlight);
   </div>
 </section>
 
+<script>
+  const card = document.querySelector<HTMLElement>("#piani .main");
+  if (card && matchMedia("(hover: hover) and (prefers-reduced-motion: no-preference)").matches) {
+    card.addEventListener("pointermove", (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      card.style.setProperty("--my", `${e.clientY - r.top}px`);
+    });
+  }
+</script>
+
 <style>
+  .main { position: relative; isolation: isolate; overflow: hidden; box-shadow: 0 30px 60px -30px oklch(0.348 0.182 266 / .7); }
+  .main::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(28rem circle at var(--mx, 70%) var(--my, 0%), oklch(1 0 0 / .14), transparent 60%); opacity: .6; transition: opacity 300ms var(--ease-out); }
+  @media (hover: hover) { .main:hover::before { opacity: 1; } }
+  .row { transition: translate 300ms var(--ease-expo), box-shadow 300ms var(--ease-out); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) { .row:hover { translate: 0 -3px; box-shadow: var(--shadow-mock); } }
   .main { border-radius: var(--radius-lg); padding: clamp(1.5rem, 1rem + 2.5vw, 3rem); display: flex; flex-direction: column; align-items: flex-start; }
   .name { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -.03em; font-weight: 800; }
   .price { margin-top: 1.5rem; font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem); font-weight: 800; line-height: 1.2; font-variant-numeric: tabular-nums; max-width: none; }
