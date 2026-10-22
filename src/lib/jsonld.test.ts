@@ -41,15 +41,13 @@ describe("jsonld", () => {
     expect(w.inLanguage).toBe("it-IT");
   });
 
-  it("faq: solo domande interamente risposte, testo identico a copy", () => {
+  it("faq: testo identico a copy, nessuna domanda persa", () => {
     const f = faqJsonLd();
-    const complete = copy.faq.items.filter((it) => !it.q.includes("[TODO") && !it.a.includes("[TODO"));
-    expect(copy.faq.items).toHaveLength(12);
-    expect(f.mainEntity.length).toBe(complete.length);
-    expect(f.mainEntity.length).toBeGreaterThan(0);
+    expect(copy.faq.items.length).toBeGreaterThan(0);
+    expect(f.mainEntity.length).toBe(copy.faq.items.length);
     f.mainEntity.forEach((e, n) => {
-      expect(e.name).toBe(complete[n].q);
-      expect(e.acceptedAnswer.text).toBe(complete[n].a);
+      expect(e.name).toBe(copy.faq.items[n].q);
+      expect(e.acceptedAnswer.text).toBe(copy.faq.items[n].a);
     });
     expect(JSON.stringify(f)).not.toContain("TODO");
   });

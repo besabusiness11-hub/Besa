@@ -1,0 +1,128 @@
+---
+// "i" next to the calculator: a native popover (no JS needed to open) that shows how the waste is worked out.
+// Same shell as LinkHelp. The formulas carry live numbers: Problem.astro fills the [data-tpl] nodes on every input.
+import { copy } from "../lib/copy";
+import { fill, type WasteStrings } from "../lib/waste";
+interface Props { id: string; vals: WasteStrings; tab?: "calc" | "numbers" | "limits"; card?: boolean }
+const { id, vals, tab = "calc", card = false } = Astro.props;
+const h = copy.problem.help;
+const v = vals as unknown as Record<string, string>;
+const tabs = [
+  { id: "calc", label: h.tabs.calc },
+  { id: "numbers", label: h.tabs.numbers },
+  { id: "limits", label: h.tabs.limits },
+] as const;
+---
+<button type="button" class="ch-btn" popovertarget={id} data-help-tab={tab} aria-label={h.button} title={h.button}>
+  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 7v4.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" /><circle cx="8" cy="4.4" r="1.25" fill="currentColor" /></svg>
+</button>
+
+{/* One card per page (card=true); the other buttons only open it on their own tab. */}
+{card && (
+  <div id={id} popover class="ch-pop" role="dialog" aria-labelledby={`${id}-t`}>
+    <header class="ch-head">
+      <div>
+        <p id={`${id}-t`} class="ch-t">{h.title}</p>
+        <p class="ch-sub">{h.subtitle}</p>
+      </div>
+      <button type="button" class="ch-x" popovertarget={id} popovertargetaction="hide" aria-label={h.close}>
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+      </button>
+    </header>
+
+    <div class="ch-body">
+      <fieldset class="ch-tabs">
+        <legend class="sr-only">{h.subtitle}</legend>
+        {tabs.map((t) => (
+          <label class="ch-tab">
+            <input type="radio" name={`${id}-tab`} value={t.id} checked={t.id === "calc"} form={`${id}-detached`} />
+            <span>{t.label}</span>
+          </label>
+        ))}
+      </fieldset>
+
+      <section class="ch-panel p-calc" aria-label={h.tabs.calc}>
+        <ol class="ch-steps">
+          {h.steps.map((s, i) => (
+            <li style={`--i:${i}`}>
+              <p class="ch-st">{s.title}</p>
+              <p class="ch-f" data-tpl={s.formula}>{fill(s.formula, v)}</p>
+              {"text" in s && <p class="ch-d" data-tpl={s.text}>{fill(s.text, v)}</p>}
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="ch-panel p-numbers" aria-label={h.tabs.numbers}>
+        <p class="ch-intro">{h.numbers.intro}</p>
+        <ul class="ch-list">
+          {h.numbers.items.map((it) => (
+            <li><p class="ch-st">{it.title}</p><p class="ch-d">{it.text}</p></li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="ch-panel p-limits" aria-label={h.tabs.limits}>
+        <ul class="ch-list">
+          {h.limits.items.map((it) => (
+            <li><p class="ch-st" data-tpl={it.title}>{fill(it.title, v)}</p><p class="ch-d">{it.text}</p></li>
+          ))}
+        </ul>
+      </section>
+
+      <button type="button" class="ch-done" popovertarget={id} popovertargetaction="hide">{h.done}</button>
+    </div>
+  </div>
+)}
+
+<style>
+  .ch-btn { --ch-bg: var(--ch-bg-in, var(--color-accent-subtle)); --ch-fg: var(--color-accent-text); display: inline-grid; place-items: center; flex: none; width: 1.625rem; height: 1.625rem; padding: 0; border: 0; border-radius: 9999px; background: var(--ch-bg); color: var(--ch-fg); cursor: pointer; position: relative; transition: scale 150ms var(--ease-out), box-shadow 200ms var(--ease-out); }
+  .ch-btn::before { content: ""; position: absolute; inset: -.625rem; }
+  .ch-btn:active { scale: .92; }
+  @media (hover: hover) { .ch-btn:hover { box-shadow: 0 0 0 4px color-mix(in oklab, var(--ch-bg) 45%, transparent); } }
+  .ch-btn:focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+
+  .ch-pop { width: min(100% - 2rem, 30rem); max-height: calc(100dvh - 2rem); margin: auto; padding: 0; border: 0; border-radius: var(--radius-xl); background: var(--color-surface-page); color: var(--color-text-primary); box-shadow: 0 50px 100px -40px oklch(0.15 0.1 266 / .7); font-size: 1rem; line-height: 1.5; text-align: left; overflow: auto; overscroll-behavior: contain; }
+  .ch-pop::backdrop { background: oklch(0.2 0.08 266 / .5); }
+  @media (hover: hover) and (pointer: fine) { .ch-pop::backdrop { backdrop-filter: blur(3px); } }
+  .ch-pop :focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+  .ch-head { position: relative; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.5rem 1.5rem 1.25rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); overflow: hidden; }
+  .ch-head::after { content: ""; position: absolute; right: -3rem; top: -4rem; width: 11rem; height: 11rem; border-radius: 9999px; background: radial-gradient(closest-side, oklch(1 0 0 / .16), transparent); pointer-events: none; }
+  .ch-t { font-weight: 800; font-size: 1.25rem; line-height: 1.2; letter-spacing: -.02em; }
+  .ch-sub { margin-top: .35rem; font-size: .9375rem; color: var(--color-text-on-accent-muted); max-width: 32ch; }
+  .ch-x { position: relative; z-index: 1; flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; margin: -.5rem -.5rem 0 0; border: 0; border-radius: 9999px; background: color-mix(in oklab, var(--color-text-on-accent) 16%, transparent); color: var(--color-text-on-accent); cursor: pointer; transition: background-color 150ms var(--ease-out), rotate 300ms var(--ease-expo); }
+  @media (hover: hover) { .ch-x:hover { background: color-mix(in oklab, var(--color-text-on-accent) 26%, transparent); rotate: 90deg; } }
+  .ch-head .ch-x:focus-visible { outline-color: var(--color-focus-ring-on-accent); }
+
+  .ch-body { padding: 1.25rem 1.5rem 1.5rem; }
+  .ch-tabs { display: flex; gap: .25rem; margin: 0; padding: .25rem; border: 0; border-radius: 9999px; background: var(--color-surface-sunken); min-width: 0; }
+  .ch-tab { position: relative; flex: 1; display: grid; place-items: center; min-height: 2.75rem; padding: .25rem .5rem; border-radius: 9999px; font-size: .8125rem; font-weight: 700; line-height: 1.15; text-align: center; color: var(--color-text-secondary); cursor: pointer; transition: background-color 250ms var(--ease-out), color 250ms var(--ease-out), box-shadow 250ms var(--ease-out); }
+  .ch-tab input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+  .ch-tab:has(input:checked) { background: var(--color-surface-page); color: var(--color-accent-text); box-shadow: 0 4px 12px -6px oklch(0.2 0.1 266 / .4); }
+  .ch-tab:has(input:focus-visible) { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+
+  .ch-panel { display: none; margin-top: 1.25rem; }
+  .ch-pop:has(input[value="calc"]:checked) .p-calc,
+  .ch-pop:has(input[value="numbers"]:checked) .p-numbers,
+  .ch-pop:has(input[value="limits"]:checked) .p-limits { display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ch-pop:has(input:checked) .ch-panel { animation: ch-in 350ms var(--ease-out) backwards; }
+    @keyframes ch-in { from { opacity: 0; translate: 0 .5rem; } }
+    .ch-steps li { animation: ch-in 450ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 60ms); }
+  }
+
+  .ch-steps { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .ch-steps li { counter-increment: s; display: grid; grid-template-columns: 1.75rem 1fr; column-gap: .75rem; row-gap: .35rem; align-items: start; }
+  .ch-steps li::before { content: counter(s); grid-row: 1 / span 3; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 9999px; background: var(--color-accent-subtle); color: var(--color-accent-text); font-weight: 800; font-size: .8125rem; }
+  .ch-steps li > * { grid-column: 2; }
+  .ch-st { font-weight: 700; font-size: .9375rem; line-height: 1.35; }
+  .ch-f { padding: .5rem .75rem; border-radius: var(--radius-sm); background: var(--color-surface-sunken); font-weight: 700; font-size: .9375rem; font-variant-numeric: tabular-nums; color: var(--color-accent-text); overflow-wrap: anywhere; }
+  .ch-d { font-size: .875rem; line-height: 1.45; color: var(--color-text-secondary); }
+  .ch-intro { font-size: .9375rem; color: var(--color-text-secondary); margin-bottom: 1rem; }
+  .ch-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .ch-list li { display: grid; gap: .2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border-subtle); }
+  .ch-list li:last-child { padding-bottom: 0; border-bottom: 0; }
+  .ch-done { margin-top: 1.5rem; width: 100%; min-height: 3rem; border: 0; border-radius: var(--radius-base); background: var(--color-accent-solid); color: var(--color-text-on-accent); font: inherit; font-weight: 700; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  .ch-done:active { scale: .98; }
+  @media (hover: hover) { .ch-done:hover { background: var(--color-accent-solid-hover); } }
+</style>

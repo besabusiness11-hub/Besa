@@ -1,0 +1,107 @@
+---
+// Tongue-in-cheek button ("explain it like I'm five") that opens a one-minute card: the problem they
+// do not see, what we do, how we fix it. Native popover, same shell as LinkHelp and CalcHelp.
+import { copy } from "../lib/copy";
+interface Props { id: string; label: string }
+const { id, label } = Astro.props;
+const e = copy.eli5;
+---
+<button type="button" class="ez-btn" popovertarget={id}>
+  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M5.6 6.2A2.5 2.5 0 1 1 8.7 8.6c-.5.3-.7.6-.7 1.2M8 12.2v.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+  {label}
+</button>
+
+<div id={id} popover class="ez-pop" role="dialog" aria-labelledby={`${id}-t`}>
+  <header class="ez-head">
+    <div>
+      <p id={`${id}-t`} class="ez-t">{e.title}</p>
+      <p class="ez-sub">{e.subtitle}</p>
+    </div>
+    <button type="button" class="ez-x" popovertarget={id} popovertargetaction="hide" aria-label={e.close}>
+      <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+    </button>
+  </header>
+
+  <div class="ez-body">
+    <p class="ez-scene">{e.scene}</p>
+
+    <div class="ez-compare" aria-hidden="true">
+      <figure class="ez-box">
+        <div class="ez-doors">{Array.from({ length: 10 }, (_, n) => <i class="door" style={`--n:${n}`}></i>)}</div>
+        <figcaption><strong>{e.before}</strong>{e.beforeNote}</figcaption>
+      </figure>
+      <figure class="ez-box to">
+        <div class="ez-one"><i class="door big"><svg viewBox="0 0 16 16" width="18" height="18"><path d="M3 8h9m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></i></div>
+        <figcaption><strong>{e.after}</strong>{e.afterNote}</figcaption>
+      </figure>
+    </div>
+
+    <ol class="ez-list">
+      {e.blocks.map((b, i) => (
+        <li style={`--i:${i}`}><p class="ez-bt">{b.title}</p><p class="ez-bx">{b.text}</p></li>
+      ))}
+    </ol>
+
+    <p class="ez-closer">{e.closer}</p>
+    <a class="ez-go" href="#contatto" data-ez-close>{e.done}</a>
+  </div>
+</div>
+
+<script>
+  // The link jumps to the form; the card closes first so it does not sit on top of it.
+  document.querySelectorAll<HTMLElement>("[data-ez-close]").forEach((a) => {
+    a.addEventListener("click", () => (a.closest("[popover]") as HTMLElement | null)?.hidePopover());
+  });
+</script>
+
+<style>
+  .ez-btn { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .5rem 1rem .5rem .8rem; border: 1.5px dashed color-mix(in oklab, var(--color-text-on-accent) 55%, transparent); border-radius: 9999px; background: transparent; color: var(--color-text-on-accent); font: inherit; font-size: .9375rem; font-weight: 600; line-height: 1.25; text-align: left; cursor: pointer; transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out), scale 150ms var(--ease-out); }
+  .ez-btn svg { flex: none; }
+  .ez-btn:active { scale: .98; }
+  @media (hover: hover) { .ez-btn:hover { background: color-mix(in oklab, var(--color-text-on-accent) 12%, transparent); border-style: solid; border-color: var(--color-text-on-accent); } }
+  .ez-btn:focus-visible { outline: 3px solid var(--color-focus-ring-on-accent); outline-offset: 3px; }
+
+  .ez-pop { width: min(100% - 2rem, 30rem); max-height: calc(100dvh - 2rem); margin: auto; padding: 0; border: 0; border-radius: var(--radius-xl); background: var(--color-surface-page); color: var(--color-text-primary); box-shadow: 0 50px 100px -40px oklch(0.15 0.1 266 / .7); font-size: 1rem; line-height: 1.5; text-align: left; overflow: auto; overscroll-behavior: contain; }
+  .ez-pop::backdrop { background: oklch(0.2 0.08 266 / .5); }
+  @media (hover: hover) and (pointer: fine) { .ez-pop::backdrop { backdrop-filter: blur(3px); } }
+  .ez-pop :focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+  .ez-head { position: relative; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.5rem 1.5rem 1.25rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); overflow: hidden; }
+  .ez-head::after { content: ""; position: absolute; right: -3rem; top: -4rem; width: 11rem; height: 11rem; border-radius: 9999px; background: radial-gradient(closest-side, oklch(1 0 0 / .16), transparent); pointer-events: none; }
+  .ez-t { font-weight: 800; font-size: 1.5rem; line-height: 1.15; letter-spacing: -.025em; }
+  .ez-sub { margin-top: .3rem; font-size: .9375rem; color: var(--color-text-on-accent-muted); }
+  .ez-x { position: relative; z-index: 1; flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; margin: -.5rem -.5rem 0 0; border: 0; border-radius: 9999px; background: color-mix(in oklab, var(--color-text-on-accent) 16%, transparent); color: var(--color-text-on-accent); cursor: pointer; transition: background-color 150ms var(--ease-out), rotate 300ms var(--ease-expo); }
+  @media (hover: hover) { .ez-x:hover { background: color-mix(in oklab, var(--color-text-on-accent) 26%, transparent); rotate: 90deg; } }
+  .ez-head .ez-x:focus-visible { outline-color: var(--color-focus-ring-on-accent); }
+
+  .ez-body { padding: 1.25rem 1.5rem 1.5rem; display: grid; gap: 1.25rem; }
+  .ez-scene { font-size: 1.0625rem; line-height: 1.5; font-weight: 500; text-wrap: pretty; }
+
+  /* before / after: a corridor of ten unmarked doors against one door with an arrow */
+  .ez-compare { display: grid; grid-template-columns: 1.35fr 1fr; gap: .75rem; }
+  .ez-box { margin: 0; display: grid; gap: .6rem; align-content: start; padding: .9rem; border-radius: var(--radius-lg); background: var(--color-surface-sunken); }
+  .ez-box.to { background: var(--color-surface-subtle); }
+  .ez-box figcaption { display: grid; font-size: .8125rem; line-height: 1.3; color: var(--color-text-secondary); }
+  .ez-box figcaption strong { font-size: .9375rem; color: var(--color-text-primary); }
+  .ez-doors { display: grid; grid-template-columns: repeat(5, 1fr); gap: .35rem; }
+  .ez-one { display: grid; place-items: center; min-height: 100%; }
+  .door { display: block; aspect-ratio: 3 / 4; border-radius: .35rem .35rem .15rem .15rem; background: var(--color-border-subtle); box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--color-text-secondary) 35%, transparent); }
+  .door.big { display: grid; place-items: center; width: 4.25rem; aspect-ratio: 3 / 4; border-radius: .6rem .6rem .25rem .25rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); box-shadow: none; }
+
+  .ez-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .ez-list li { padding-top: 1rem; border-top: 1px solid var(--color-border-subtle); }
+  .ez-bt { font-weight: 800; font-size: 1.0625rem; letter-spacing: -.01em; }
+  .ez-bx { margin-top: .25rem; font-size: .9375rem; line-height: 1.5; color: var(--color-text-secondary); }
+  .ez-closer { font-weight: 700; font-size: 1.0625rem; line-height: 1.35; letter-spacing: -.01em; }
+  .ez-go { display: grid; place-items: center; min-height: 3rem; padding-inline: 1rem; border-radius: var(--radius-base); background: var(--color-accent-solid); color: var(--color-text-on-accent); font-weight: 700; text-align: center; text-decoration: none; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  .ez-go:active { scale: .98; }
+  @media (hover: hover) { .ez-go:hover { background: var(--color-accent-solid-hover); } }
+
+  @media (max-width: 24rem) { .ez-compare { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .ez-pop:popover-open .door:not(.big) { animation: door-in 400ms var(--ease-expo) backwards; animation-delay: calc(var(--n) * 35ms + 150ms); }
+    .ez-pop:popover-open .door.big { animation: door-in 600ms var(--ease-expo) 500ms backwards; }
+    .ez-pop:popover-open .ez-list li { animation: ez-in 450ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 80ms + 350ms); }
+    @keyframes door-in { from { scale: .6; opacity: 0; } }
+    @keyframes ez-in { from { opacity: 0; translate: 0 .5rem; } }
+  }
+</style>

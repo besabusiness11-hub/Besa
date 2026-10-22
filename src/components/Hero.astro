@@ -2,6 +2,7 @@
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
 import LinkCatcher from "./LinkCatcher.astro";
+import Eli5 from "./Eli5.astro";
 import GridPattern from "./GridPattern.astro";
 const h = copy.hero;
 const c = h.compare;
@@ -19,6 +20,7 @@ const c = h.compare;
         <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
         {h.keep}
       </p>
+      <div class="eli"><Eli5 id="eli5" label={h.eli5} /></div>
     </div>
 
 
@@ -145,6 +147,7 @@ const c = h.compare;
   .actions { margin-top: 1.75rem; }
 
   .keep { margin-top: 1rem; display: flex; align-items: flex-start; gap: .5rem; font-size: .9375rem; line-height: 1.4; color: var(--color-text-on-accent-muted); max-width: 34rem; }
+  .eli { margin-top: 1.25rem; }
   .keep svg { flex: none; margin-top: .15rem; color: var(--color-text-on-accent); }
 
   /* ---- stage ---- */

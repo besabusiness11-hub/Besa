@@ -83,7 +83,8 @@ const h = copy.linkHelp;
 
   /* panel: same language as the site, blue header, white body, large radius */
   .lh-pop { width: min(100% - 2rem, 28rem); max-height: calc(100dvh - 2rem); margin: auto; padding: 0; border: 0; border-radius: var(--radius-xl); background: var(--color-surface-page); color: var(--color-text-primary); box-shadow: 0 50px 100px -40px oklch(0.15 0.1 266 / .7); font-weight: 400; font-size: 1rem; line-height: 1.5; text-align: left; overflow: auto; overscroll-behavior: contain; }
-  .lh-pop::backdrop { background: oklch(0.2 0.08 266 / .5); backdrop-filter: blur(3px); }
+  .lh-pop::backdrop { background: oklch(0.2 0.08 266 / .5); }
+  @media (hover: hover) and (pointer: fine) { .lh-pop::backdrop { backdrop-filter: blur(3px); } }
   .lh-pop :focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
   .lh-head { position: relative; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.5rem 1.5rem 1.25rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); overflow: hidden; }
   .lh-head::after { content: ""; position: absolute; right: -3rem; top: -4rem; width: 11rem; height: 11rem; border-radius: 9999px; background: radial-gradient(closest-side, oklch(1 0 0 / .16), transparent); pointer-events: none; }

@@ -12,7 +12,7 @@ export const SITE = {
   // Single source of truth: same strings as the homepage <title>/<meta description>.
   title: copy.meta.title,
   description: copy.meta.description,
-  legalLine: "[TODO: ragione sociale / P.IVA]",
+  legalLine: copy.footer.legalLine,
   /** PUBLIC_NOINDEX=true (staging): noindex meta, X-Robots-Tag, robots.txt Disallow. */
   noindex: env.PUBLIC_NOINDEX === "true" || env.PUBLIC_NOINDEX === "1",
 } as const;

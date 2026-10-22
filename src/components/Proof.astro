@@ -1,7 +1,7 @@
 ---
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
-import { todo } from "../lib/todo";
+import SpecSheet from "./SpecSheet.astro";
 const c = copy.proof;
 ---
 <section class="proof on-blue bg-surface-inverse text-[var(--color-text-on-inverse)] section" aria-labelledby="proof-title">
@@ -20,10 +20,19 @@ const c = copy.proof;
         {c.how.map((x) => <li>{x}</li>)}
       </ul>
 
-      <div class="slot" role="group" aria-label="Casi reali">
-        <div class="ghost" aria-hidden="true"><span></span><span></span></div>
-        <p class="slot-text" set:html={todo(c.caseStudies)} />
-      </div>
+      {c.metrics.items.length > 0 && (
+        <div class="reveal">
+          <h3 class="m-title">{c.metrics.title}</h3>
+          <dl class="metrics">
+            {c.metrics.items.map((m) => (
+              <div class="m"><dd>{m.value}</dd><dt>{m.label}</dt></div>
+            ))}
+          </dl>
+          <p class="m-note">{c.metrics.note}</p>
+          <div class="m-spec"><SpecSheet id="spec-sheet" /></div>
+        </div>
+      )}
+
     </div>
   </div>
 </section>
@@ -37,12 +46,26 @@ const c = copy.proof;
   .how { display: grid; }
   .how li { padding-block: 1.25rem; border-top: 1px solid var(--proof-line); font-size: var(--text-h3); line-height: 1.25; font-weight: 700; letter-spacing: -.015em; }
   .how li:last-child { border-bottom: 1px solid var(--proof-line); }
-  .slot { border: 2px dashed var(--proof-dash); border-radius: var(--radius-lg); padding: 1.25rem; display: grid; gap: 1rem; }
-  .ghost { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
-  .ghost span { aspect-ratio: 4 / 3; border-radius: var(--radius-base); background: color-mix(in oklch, var(--color-text-on-inverse) 8%, transparent); }
-  .slot-text { color: var(--color-text-on-accent-muted); max-width: none; }
-  :global(.proof .todo) {
-    display: inline; font-size: .8125rem; font-weight: 600; font-style: normal; color: var(--color-text-on-inverse);
-    background: transparent; padding: .05rem .4rem; border: 1.5px dashed var(--color-text-on-inverse); outline: 0; border-radius: .35rem;
+  .m-title { font-size: var(--text-h3); line-height: 1.2; font-weight: 700; letter-spacing: -.015em; }
+  .metrics { margin-top: 1.25rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  .m {
+    background: color-mix(in oklch, var(--color-text-on-inverse) 7%, transparent);
+    border: 1px solid var(--proof-line);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 1.25rem;
+    display: flex; flex-direction: column; justify-content: flex-start; gap: .75rem;
+    transition: background-color 200ms ease-out, border-color 200ms ease-out, translate 200ms ease-out;
   }
+  .m dd { font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.25rem); font-weight: 800; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; margin: 0; white-space: nowrap; transition: scale 200ms ease-out; transform-origin: left center; }
+  .m dt { font-size: .9375rem; line-height: 1.35; color: var(--color-text-on-accent-muted); }
+  @media (hover: hover) {
+    .m:hover { background: color-mix(in oklch, var(--color-text-on-inverse) 12%, transparent); border-color: var(--proof-dash); translate: 0 -3px; }
+    .m:hover dd { scale: 1.05; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .m, .m dd { transition: none; }
+    .m:hover, .m:hover dd { translate: none; scale: none; }
+  }
+  .m-spec { margin-top: 1.25rem; }
+  .m-note { margin-top: 1rem; font-size: .875rem; color: var(--color-text-on-accent-muted); max-width: 52ch; }
 </style>

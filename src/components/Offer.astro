@@ -1,10 +1,17 @@
 ---
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
-import { todo } from "../lib/todo";
+import { eur, FULL, PRICING } from "../lib/offer";
 const c = copy.offer;
+const q = c.quote;
+const launch = c.launch;
 const main = c.plans.find((p) => p.highlight)!;
 const rest = c.plans.filter((p) => !p.highlight);
+
+// Quote maths, shared with the script below so the no-JS page shows the example.
+const total = (n: number) => PRICING.customFrom + Math.max(0, n - PRICING.customIncluded) * PRICING.customExtra;
+const n0 = q.value;
+const pct = ((n0 - q.min) / (q.max - q.min)) * 100;
 ---
 <section id="piani" class="offer section" aria-labelledby="offer-title">
   <div class="wrap">
@@ -13,37 +20,106 @@ const rest = c.plans.filter((p) => !p.highlight);
       <p class="lead mt-5 text-text-secondary">{c.lead}</p>
     </div>
 
-    <div class="plans mt-12 grid gap-6 lg:grid-cols-[1.25fr_1fr] lg:items-start lg:gap-8">
-      <article class="main on-blue bg-accent-solid text-text-on-accent reveal" aria-labelledby={`plan-${main.id}`}>
-        <h3 id={`plan-${main.id}`} class="name">{main.name}</h3>
-        <p class="price" set:html={todo(main.price)} />
-        <p class="pnote" set:html={todo(main.priceNote)} />
-        <p class="tagline">{main.tagline}</p>
-        <ul class="feat">
-          {main.features.map((x) => <li set:html={todo(x)} />)}
-        </ul>
-        <div class="acts">
-          {main.checkout && <a class="btn" href={main.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
-          <a class:list={["btn", { ghost: !!main.checkout }]} href="#contatto" data-plan={main.id} data-plan-name={main.name}>{main.cta}</a>
-        </div>
-      </article>
+    {!FULL && (
+      <div class="plans mt-12 grid gap-6 lg:grid-cols-[1.25fr_1fr] lg:items-stretch lg:gap-8">
+        <article class="main on-blue bg-accent-solid text-text-on-accent reveal" aria-labelledby={`plan-${launch.id}`}>
+          <p class="badge">{launch.badge}</p>
+          <h3 id={`plan-${launch.id}`} class="name">{launch.name}</h3>
+          <p class="price">{launch.price}</p>
+          <p class="pnote">{launch.priceNote}</p>
+          <p class="tagline">{launch.tagline}</p>
+          <ul class="feat">
+            {launch.features.map((x) => <li>{x}</li>)}
+          </ul>
+          <div class="acts">
+            <a class="btn" href="#contatto" data-plan={launch.id} data-plan-name={launch.name}>{launch.cta}</a>
+          </div>
+        </article>
 
-      <div class="rows reveal-stagger">
-        {rest.map((p) => (
-          <article class="row" aria-labelledby={`plan-${p.id}`}>
-            <h3 id={`plan-${p.id}`} class="t-h3">{p.name}</h3>
-            <p class="mt-1 text-text-secondary">{p.tagline}</p>
-            <p class="rprice" set:html={todo(p.price)} />
-            <p class="pnote-r mt-1 text-text-secondary" set:html={todo(p.priceNote)} />
-            <ul class="rfeat">
-              {p.features.map((x) => <li set:html={todo(x)} />)}
-            </ul>
-            {p.checkout && <a class="cta" href={p.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
-            <a class="cta" href="#contatto" data-plan={p.id} data-plan-name={p.name}>{p.cta}</a>
-          </article>
-        ))}
+        <div class="rows reveal-stagger">
+          <aside class="row draft">
+            <p class="t-h3">{c.draftLine}</p>
+            <p class="mt-3 text-text-secondary">{copy.hero.keep}</p>
+          </aside>
+          <aside class="row more">
+            <p class="font-bold">{launch.more.text}</p>
+            <a class="cta" href="#contatto" data-plan="su-misura" data-plan-name="Su misura">{launch.more.cta}</a>
+          </aside>
+        </div>
       </div>
-    </div>
+    )}
+
+    {FULL && (
+      <>
+        <p class="draft-line reveal">{c.draftLine}</p>
+        <div class="plans mt-6 grid gap-6 lg:grid-cols-[1.25fr_1fr] lg:items-start lg:gap-8">
+          <article class="main on-blue bg-accent-solid text-text-on-accent reveal" aria-labelledby={`plan-${main.id}`}>
+            <h3 id={`plan-${main.id}`} class="name">{main.name}</h3>
+            <p class="price">{main.price}</p>
+            <p class="pnote">{main.priceNote}</p>
+            <p class="tagline">{main.tagline}</p>
+            <ul class="feat">
+              {main.features.map((x) => <li>{x}</li>)}
+            </ul>
+            <div class="acts">
+              {main.checkout && <a class="btn" href={main.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
+              <a class:list={["btn", { ghost: !!main.checkout }]} href="#contatto" data-plan={main.id} data-plan-name={main.name}>{main.cta}</a>
+            </div>
+          </article>
+
+          <div class="rows reveal-stagger">
+            {rest.map((p) => (
+              <article class="row" aria-labelledby={`plan-${p.id}`}>
+                <h3 id={`plan-${p.id}`} class="t-h3">{p.name}</h3>
+                <p class="mt-1 text-text-secondary">{p.tagline}</p>
+                <p class="rprice">{p.price}</p>
+                <p class="pnote-r mt-1 text-text-secondary">{p.priceNote}</p>
+                <ul class="rfeat">
+                  {p.features.map((x) => <li>{x}</li>)}
+                </ul>
+                {p.checkout && <a class="cta" href={p.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
+                <a class="cta" href="#contatto" data-plan={p.id} data-plan-name={p.name}>{p.cta}</a>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div class="quote reveal" id="preventivo" data-quote
+          data-from={PRICING.customFrom} data-included={PRICING.customIncluded} data-extra={PRICING.customExtra}
+          data-monthly={PRICING.monthly} data-price-once={PRICING.oneTime}
+          data-save={q.save} data-chip={q.chip} data-sub={q.rows.sub} data-once={q.rows.once}
+          data-per-month={q.perMonthShort} data-once-suffix={q.once}>
+          <div class="q-head">
+            <h3 class="t-h3">{q.title}</h3>
+            <p class="mt-2 text-text-secondary">{q.lead}</p>
+          </div>
+          <div class="q-body">
+            <div class="q-in">
+              <div class="rng">
+                <label for="q-n">{q.label}</label>
+                <output for="q-n" id="q-o" class="val">{n0}</output>
+                <button type="button" class="stp" data-d="-1" aria-label={`${q.less}: ${q.label}`}>−</button>
+                <input type="range" id="q-n" min={q.min} max={q.max} step="1" value={n0} aria-valuetext={String(n0)} style={`--p:${pct}%`} />
+                <button type="button" class="stp" data-d="1" aria-label={`${q.more}: ${q.label}`}>+</button>
+              </div>
+              <p class="q-below">{q.below}</p>
+            </div>
+            <div class="q-out" aria-live="polite">
+              <p class="q-label">{q.totalLabel}</p>
+              <p class="q-total"><span id="q-total">{eur(total(n0))}</span> <small>{q.perMonth}</small></p>
+              <p class="q-per"><span id="q-per">{eur(Math.round(total(n0) / n0))}</span> {q.perPage}</p>
+              <dl class="q-cmp" aria-label={q.compare}>
+                <div><dt id="q-sub-l">{q.rows.sub.replace("{n}", String(n0))}</dt><dd id="q-sub">{eur(n0 * PRICING.monthly)}{q.perMonthShort}</dd></div>
+                <div><dt id="q-once-l">{q.rows.once.replace("{n}", String(n0))}</dt><dd id="q-once">{eur(n0 * PRICING.oneTime)} {q.once}</dd></div>
+              </dl>
+              <p class="q-save" id="q-save">{q.save.replace("{amount}", eur(n0 * PRICING.monthly - total(n0))).replace("{n}", String(n0))}</p>
+              <p class="q-note">{q.note}</p>
+              <a class="btn" href="#contatto" id="q-cta" data-plan="su-misura" data-plan-name="Su misura">{q.cta}</a>
+            </div>
+          </div>
+        </div>
+      </>
+    )}
   </div>
 </section>
 
@@ -55,6 +131,47 @@ const rest = c.plans.filter((p) => !p.highlight);
       card.style.setProperty("--mx", `${e.clientX - r.left}px`);
       card.style.setProperty("--my", `${e.clientY - r.top}px`);
     });
+  }
+
+  // Su misura quote: the price per page falls as pages are added; compared live with the other plans.
+  const box = document.querySelector<HTMLElement>("[data-quote]");
+  if (box) {
+    const d = box.dataset;
+    const from = Number(d.from), incl = Number(d.included), extra = Number(d.extra), monthly = Number(d.monthly), once = Number(d.priceOnce);
+    const money = (n: number) => "€" + Math.round(n).toLocaleString("it-IT");
+    const range = box.querySelector<HTMLInputElement>("#q-n")!;
+    const set = (id: string, v: string) => { const el = box.querySelector("#" + id); if (el) el.textContent = v; };
+    const upd = () => {
+      const n = Number(range.value);
+      const total = from + Math.max(0, n - incl) * extra;
+      const pct = ((n - Number(range.min)) / (Number(range.max) - Number(range.min))) * 100;
+      range.style.setProperty("--p", pct + "%");
+      range.setAttribute("aria-valuetext", String(n));
+      set("q-o", String(n));
+      set("q-total", money(total));
+      set("q-per", money(total / n));
+      set("q-sub-l", (d.sub ?? "").replace("{n}", String(n)));
+      set("q-once-l", (d.once ?? "").replace("{n}", String(n)));
+      set("q-sub", money(n * monthly) + (d.perMonth ?? ""));
+      set("q-once", money(n * once) + " " + (d.onceSuffix ?? ""));
+      const saved = n * monthly - total;
+      const save = box.querySelector<HTMLElement>("#q-save")!;
+      save.textContent = (d.save ?? "").replace("{amount}", money(Math.max(0, saved))).replace("{n}", String(n));
+      save.hidden = saved <= 0;
+      const cta = box.querySelector<HTMLElement>("#q-cta")!;
+      cta.dataset.quote = (d.chip ?? "").replace("{n}", String(n)).replace("{total}", money(total));
+    };
+    range.addEventListener("input", upd);
+    box.querySelectorAll<HTMLButtonElement>(".stp").forEach((b) => b.addEventListener("click", () => {
+      range.value = String(Math.min(Number(range.max), Math.max(Number(range.min), Number(range.value) + Number(b.dataset.d))));
+      upd();
+    }));
+    box.querySelector("#q-cta")!.addEventListener("click", (e) => {
+      const q = (e.currentTarget as HTMLElement).dataset.quote;
+      if (!q) upd();
+      document.dispatchEvent(new CustomEvent("besa:quote", { detail: (e.currentTarget as HTMLElement).dataset.quote }));
+    });
+    upd();
   }
 </script>
 
@@ -88,9 +205,39 @@ const rest = c.plans.filter((p) => !p.highlight);
   @media (prefers-reduced-motion: no-preference) { .cta { transition: color 150ms ease-out; } }
   @media (hover: hover) { .cta:hover { color: var(--color-text-primary); } }
 
-  :global(.main .todo) { color: var(--color-text-on-accent); border: 1.5px dashed var(--color-text-on-accent); background: transparent; }
-  :global(.todo) {
-    display: inline; font-size: .8125rem; font-weight: 600; font-style: normal; color: var(--color-text-primary);
-    background: transparent; padding: .05rem .4rem; border: 1.5px dashed var(--color-accent-solid-hover); border-radius: .35rem;
-  }
+
+  .badge { display: inline-block; margin-bottom: 1rem; padding: .25rem .75rem; border-radius: 9999px; font-size: .875rem; font-weight: 700; background: oklch(1 0 0 / .16); }
+  .draft-line { margin-top: 1.5rem; font-weight: 700; color: var(--color-accent-text); }
+  .draft { background: var(--color-surface-subtle); }
+  .more { display: grid; gap: .25rem; justify-items: start; }
+
+  .quote { margin-top: 3rem; border-radius: var(--radius-lg); background: var(--color-surface-subtle); padding: clamp(1.25rem, 1rem + 2vw, 2.5rem); }
+  .q-body { margin-top: 1.5rem; display: grid; gap: 2rem; }
+  @media (min-width: 56rem) { .q-body { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; } }
+  .rng { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .5rem .75rem; }
+  .rng label { grid-column: 1 / 3; font-weight: 600; line-height: 1.35; }
+  .rng .val { grid-column: 3; justify-self: end; font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .rng input { grid-column: 1 / -1; }
+  :global(.js) .rng input { grid-column: 2; }
+  .stp { display: none; }
+  :global(.js) .stp { display: inline-grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border: 0; border-radius: 9999px; background: var(--color-surface-page); color: var(--color-accent-text); font: inherit; font-weight: 700; font-size: 1.25rem; line-height: 1; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  :global(.js) .stp:active { scale: .92; }
+  .rng .stp:last-child { justify-self: end; }
+  @media (hover: hover) { :global(.js) .stp:hover { background: var(--color-accent-solid); color: var(--color-text-on-accent); } }
+  input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 2.75rem; margin: 0; background: transparent; cursor: pointer; --track: linear-gradient(to right, var(--color-accent-solid) var(--p), var(--color-border-subtle) var(--p)); }
+  input[type="range"]::-webkit-slider-runnable-track { height: .5rem; border-radius: 9999px; background: var(--track); }
+  input[type="range"]::-moz-range-track { height: .5rem; border-radius: 9999px; background: var(--track); }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 1.75rem; height: 1.75rem; margin-top: -.625rem; border-radius: 9999px; background: var(--color-surface-page); border: 3px solid var(--color-accent-solid); box-shadow: 0 4px 12px -2px oklch(0.2 0.1 266 / .35); }
+  input[type="range"]::-moz-range-thumb { width: 1.75rem; height: 1.75rem; box-sizing: border-box; border-radius: 9999px; background: var(--color-surface-page); border: 3px solid var(--color-accent-solid); }
+  .q-below { margin-top: .75rem; font-size: .9375rem; color: var(--color-text-secondary); }
+  .q-out { background: var(--color-surface-page); border-radius: var(--radius-lg); padding: clamp(1.25rem, 1rem + 1.5vw, 2rem); box-shadow: var(--shadow-mock); }
+  .q-label { font-weight: 700; color: var(--color-text-secondary); }
+  .q-total { margin-top: .25rem; font-size: clamp(2rem, 1.5rem + 2vw, 3rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; font-variant-numeric: tabular-nums; max-width: none; }
+  .q-total small { font-size: 1rem; font-weight: 600; letter-spacing: 0; color: var(--color-text-secondary); }
+  .q-per { margin-top: .25rem; font-weight: 600; color: var(--color-accent-text); font-variant-numeric: tabular-nums; }
+  .q-cmp { margin-top: 1.25rem; display: grid; gap: .5rem; padding-top: 1rem; border-top: 1px solid var(--color-border-subtle); }
+  .q-cmp div { display: flex; justify-content: space-between; gap: 1rem; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; }
+  .q-cmp dd { font-weight: 700; color: var(--color-text-primary); text-align: right; }
+  .q-save { margin-top: 1rem; font-weight: 700; color: var(--color-status-success); }
+  .q-note { margin-top: .75rem; margin-bottom: 1.25rem; font-size: .875rem; color: var(--color-text-secondary); }
 </style>

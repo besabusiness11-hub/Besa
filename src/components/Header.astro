@@ -54,12 +54,22 @@ import logoWhite from "../assets/logo-white.png";
     return getComputedStyle(document.body).backgroundColor;
   };
   let queued = false;
+  // Write only when something changed: a style write on every scroll frame is wasted work on a phone.
+  let lastBg = "";
+  let lastTop: boolean | null = null;
   const paint = () => {
     queued = false;
     const c = bgBehind();
-    header.style.setProperty("--hdr-bg", c);
-    header.dataset.tone = isDark(c) ? "dark" : "light";
-    header.toggleAttribute("data-top", scrollY < 8);
+    if (c !== lastBg) {
+      lastBg = c;
+      header.style.setProperty("--hdr-bg", c);
+      header.dataset.tone = isDark(c) ? "dark" : "light";
+    }
+    const top = scrollY < 8;
+    if (top !== lastTop) {
+      lastTop = top;
+      header.toggleAttribute("data-top", top);
+    }
   };
   const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(paint); } };
   addEventListener("scroll", schedule, { passive: true });
@@ -79,6 +89,9 @@ import logoWhite from "../assets/logo-white.png";
     box-shadow: 0 1px 0 color-mix(in oklab, var(--hdr-ink) 10%, transparent);
     color: var(--hdr-ink);
     transition: background-color 350ms var(--ease-out), box-shadow 350ms var(--ease-out), color 250ms var(--ease-out), backdrop-filter 350ms var(--ease-out);
+  }
+  @media (hover: none) and (pointer: coarse) {
+    :global(.js) .site-header { background: color-mix(in oklab, var(--hdr-bg, var(--color-surface-page)) 96%, transparent); -webkit-backdrop-filter: none; backdrop-filter: none; }
   }
   :global(.js) .site-header[data-tone="dark"] { --hdr-ink: var(--color-text-on-inverse); }
   /* over the top of the page (the blue hero): no fill at all */

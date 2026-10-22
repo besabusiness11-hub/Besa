@@ -41,6 +41,8 @@ export const leadSchema = z.object({
   // Optional answers from the form: empty strings count as "not given".
   obiettivo: z.preprocess((v) => (v === "" ? undefined : v), z.enum(["whatsapp", "chiamata", "preventivo", "prenotazione"]).optional()),
   piano: z.preprocess((v) => (v === "" ? undefined : v), z.enum(["abbonamento", "una-tantum", "su-misura"]).optional()),
+  pagamento: z.preprocess((v) => (v === "" ? undefined : v), z.enum(["una-volta", "abbonamento"]).optional()),
+  preventivo: z.string().trim().max(160).optional().transform((v) => (v ? v : undefined)),
   attivita: z.string().trim().max(120).optional().transform((v) => (v ? v : undefined)),
   offerta: z.string().trim().max(200).optional().transform((v) => (v ? v : undefined)),
   zona: z.string().trim().max(120).optional().transform((v) => (v ? v : undefined)),
@@ -169,6 +171,12 @@ export function oneLine(s: string): string {
   return s.replace(/[\r\n]+/g, " ").trim();
 }
 
+/** The lead's address when they gave an email (not a phone number), so "Rispondi" in the mailbox reaches them. */
+export function replyToOf(lead: Lead): string | undefined {
+  const c = oneLine(lead.contatto);
+  return /^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]{2,}$/.test(c) ? c : undefined;
+}
+
 export function buildEmail(lead: Lead): { subject: string; text: string; html: string } {
   const nome = oneLine(lead.nome);
   const rows: [string, string][] = [
@@ -178,6 +186,8 @@ export function buildEmail(lead: Lead): { subject: string; text: string; html: s
     ["Obiettivo della pagina", lead.obiettivo ?? "(non indicato)"],
   ];
   if (lead.piano) rows.push(["Piano scelto", lead.piano]);
+  if (lead.pagamento) rows.push(["Preferenza di pagamento", lead.pagamento]);
+  if (lead.preventivo) rows.push(["Stima su misura", oneLine(lead.preventivo)]);
   if (lead.attivita) rows.push(["Attività", oneLine(lead.attivita)]);
   if (lead.offerta) rows.push(["Offerta dell’annuncio", oneLine(lead.offerta)]);
   if (lead.zona) rows.push(["Zona", oneLine(lead.zona)]);

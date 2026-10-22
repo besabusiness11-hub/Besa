@@ -1,7 +1,6 @@
 ---
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
-import { todo } from "../lib/todo";
 import LinkCatcher from "./LinkCatcher.astro";
 const h = copy.howItWorks;
 ---
@@ -15,7 +14,7 @@ const h = copy.howItWorks;
           <span class="num" aria-hidden="true"></span>
           <div class="body">
             <h3 class="t3">{s.title}</h3>
-            <p class="mt-2 text-text-secondary" set:html={todo(s.text)} />
+            <p class="mt-2 text-text-secondary">{s.text}</p>
           </div>
           {i === 0 && (
             <div class="viz live-viz">

@@ -14,13 +14,24 @@ export default defineConfig({
   build: { format: "file", assets: "_astro", inlineStylesheets: "always" },
   vite: { plugins: [tailwindcss()], build: { cssMinify: "esbuild" } },
   image: { service: { entrypoint: "astro/assets/services/sharp" } },
+  // Same family declared twice (Astro merges them): the variable roman file for every weight, but only
+  // italic 800, the only italic the design uses (headline emphasis, names, slogan). Saves ~50 KB on mobile.
   fonts: [
     {
       provider: fontProviders.fontsource(),
       name: "Inter",
       cssVariable: "--font-inter",
       weights: ["400 800"],
-      styles: ["normal", "italic"],
+      styles: ["normal"],
+      subsets: ["latin"],
+      fallbacks: ["system-ui", "sans-serif"],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Inter",
+      cssVariable: "--font-inter",
+      weights: [800],
+      styles: ["italic"],
       subsets: ["latin"],
       fallbacks: ["system-ui", "sans-serif"],
     },

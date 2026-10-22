@@ -1,0 +1,104 @@
+---
+// "Scheda tecnica": the data sheet for the technical and the curious. Every figure was measured on the production build
+// of this page (see copy.spec.note); change the numbers in copy.ts when the page changes.
+import { copy } from "../lib/copy";
+interface Props { id: string }
+const { id } = Astro.props;
+const s = copy.spec;
+---
+<button type="button" class="sp-btn" popovertarget={id}>
+  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3v-11ZM5.5 8h5M5.5 10.5h5M5.5 5.5h2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+  {s.title}
+</button>
+
+<div id={id} popover class="sp-pop" role="dialog" aria-labelledby={`${id}-t`}>
+  <header class="sp-head">
+    <div>
+      <p id={`${id}-t`} class="sp-t">{s.title}</p>
+      <p class="sp-sub">{s.subtitle}</p>
+    </div>
+    <button type="button" class="sp-x" popovertarget={id} popovertargetaction="hide" aria-label={s.close}>
+      <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+    </button>
+  </header>
+
+  <div class="sp-body">
+    <div class="sp-scores" role="group" aria-label={s.scoresLabel}>
+      {s.scores.map((x) => (
+        <div class="sc" style={`--v:${x.value}`}>
+          <span class="ring"><b>{x.value}</b></span>
+          <span class="lbl">{x.label}</span>
+        </div>
+      ))}
+    </div>
+    <p class="sp-meth">{s.scoresLabel}</p>
+
+    {s.groups.map((g) => (
+      <section class="sp-group">
+        <h3 class="sp-g">{g.title}</h3>
+        <dl class="sp-rows">
+          {g.rows.map(([k, v]) => <div class="r"><dt>{k}</dt><dd>{v}</dd></div>)}
+        </dl>
+      </section>
+    ))}
+
+    <p class="sp-note">{s.note}</p>
+    <button type="button" class="sp-done" popovertarget={id} popovertargetaction="hide">{s.done}</button>
+  </div>
+</div>
+
+<style>
+  .sp-btn { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .5rem 1rem .5rem .8rem; border: 1.5px solid color-mix(in oklab, var(--color-text-on-inverse) 45%, transparent); border-radius: 9999px; background: transparent; color: var(--color-text-on-inverse); font: inherit; font-size: .9375rem; font-weight: 700; cursor: pointer; transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out), scale 150ms var(--ease-out); }
+  .sp-btn:active { scale: .98; }
+  @media (hover: hover) { .sp-btn:hover { background: color-mix(in oklab, var(--color-text-on-inverse) 12%, transparent); border-color: var(--color-text-on-inverse); } }
+  .sp-btn:focus-visible { outline: 3px solid var(--color-focus-ring-on-accent); outline-offset: 3px; }
+
+  .sp-pop { width: min(100% - 2rem, 36rem); max-height: calc(100dvh - 2rem); margin: auto; padding: 0; border: 0; border-radius: var(--radius-xl); background: var(--color-surface-page); color: var(--color-text-primary); box-shadow: 0 50px 100px -40px oklch(0.15 0.1 266 / .7); font-size: 1rem; line-height: 1.5; text-align: left; overflow: auto; overscroll-behavior: contain; }
+  .sp-pop::backdrop { background: oklch(0.2 0.08 266 / .55); }
+  @media (hover: hover) and (pointer: fine) { .sp-pop::backdrop { backdrop-filter: blur(3px); } }
+  .sp-pop :focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+  .sp-head { position: sticky; top: 0; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.25rem 1.5rem; background: var(--color-surface-inverse); color: var(--color-text-on-inverse); }
+  .sp-t { font-weight: 800; font-size: 1.375rem; line-height: 1.15; letter-spacing: -.02em; }
+  .sp-sub { margin-top: .3rem; font-size: .9375rem; color: color-mix(in oklab, var(--color-text-on-inverse) 82%, transparent); max-width: 34ch; }
+  .sp-x { flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; margin: -.5rem -.5rem 0 0; border: 0; border-radius: 9999px; background: color-mix(in oklab, var(--color-text-on-inverse) 14%, transparent); color: var(--color-text-on-inverse); cursor: pointer; transition: background-color 150ms var(--ease-out), rotate 300ms var(--ease-expo); }
+  @media (hover: hover) { .sp-x:hover { background: color-mix(in oklab, var(--color-text-on-inverse) 24%, transparent); rotate: 90deg; } }
+  .sp-head .sp-x:focus-visible { outline-color: var(--color-focus-ring-on-accent); }
+
+  .sp-body { padding: 1.5rem; display: grid; gap: 1.75rem; }
+
+  /* Lighthouse rings: conic gradient filled to the score */
+  .sp-scores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; }
+  .sc { display: grid; justify-items: center; gap: .5rem; text-align: center; }
+  .ring { position: relative; display: grid; place-items: center; width: 4rem; aspect-ratio: 1; }
+  .ring::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: conic-gradient(var(--color-accent-solid) calc(var(--v) * 1%), var(--color-border-subtle) 0); -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 calc(100% - 4px)); mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 calc(100% - 4px)); }
+  .ring b { position: relative; font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
+  .lbl { font-size: .8125rem; line-height: 1.25; font-weight: 600; color: var(--color-text-secondary); }
+  .sp-meth { margin-top: -1rem; text-align: center; font-size: .8125rem; color: var(--color-text-secondary); }
+
+  .sp-group { display: grid; gap: .5rem; }
+  .sp-g { font-size: 1.0625rem; font-weight: 800; letter-spacing: -.01em; padding-bottom: .5rem; border-bottom: 2px solid var(--color-text-primary); }
+  .sp-rows { margin: 0; display: grid; }
+  .r { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: .25rem 1rem; padding-block: .6rem; border-bottom: 1px solid var(--color-border-subtle); }
+  .r:last-child { border-bottom: 0; }
+  .r dt { font-size: .875rem; line-height: 1.4; color: var(--color-text-secondary); }
+  .r dd { margin: 0; font-size: .9375rem; line-height: 1.4; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  @media (max-width: 30rem) {
+    .r { grid-template-columns: 1fr; }
+  }
+  .sp-note { font-size: .8125rem; line-height: 1.5; color: var(--color-text-secondary); }
+  .sp-done { width: 100%; min-height: 3rem; border: 0; border-radius: var(--radius-base); background: var(--color-accent-solid); color: var(--color-text-on-accent); font: inherit; font-weight: 700; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  .sp-done:active { scale: .98; }
+  @media (hover: hover) { .sp-done:hover { background: var(--color-accent-solid-hover); } }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* rings fill when the sheet opens */
+    .sp-pop:popover-open .ring::before { animation: fill 900ms var(--ease-expo) 150ms backwards; }
+    @keyframes fill { from { background: conic-gradient(var(--color-accent-solid) 0%, var(--color-border-subtle) 0); } }
+    .sp-pop:popover-open .sp-group { animation: sp-in 450ms var(--ease-out) backwards; }
+    .sp-pop:popover-open .sp-group:nth-of-type(2) { animation-delay: 60ms; }
+    .sp-pop:popover-open .sp-group:nth-of-type(3) { animation-delay: 120ms; }
+    .sp-pop:popover-open .sp-group:nth-of-type(4) { animation-delay: 180ms; }
+    .sp-pop:popover-open .sp-group:nth-of-type(5) { animation-delay: 240ms; }
+    @keyframes sp-in { from { opacity: 0; translate: 0 .5rem; } }
+  }
+</style>

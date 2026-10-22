@@ -1,6 +1,9 @@
 ---
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
+import { FULL, PRICING } from "../lib/offer";
+import { describe, eur, fill, nf, waste } from "../lib/waste";
+import CalcHelp from "./CalcHelp.astro";
 import LinkCatcher from "./LinkCatcher.astro";
 const p = copy.problem;
 const r = p.results;
@@ -9,18 +12,18 @@ const inputs = [
   { id: "cpc", ...p.inputs.cpc },
   { id: "msgs", ...p.inputs.msgs },
 ] as const;
+const tg = p.inputs.target;
 
-// Same math as the script below, so the no-JS page shows the example result.
-const nf = (n: number, d = 0) => new Intl.NumberFormat("it-IT", { maximumFractionDigits: d }).format(n);
-const eur = (n: number) => new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR", maximumFractionDigits: n < 10 ? 2 : 0 }).format(n);
-const fmt = (id: string, v: number) => (id === "msgs" ? nf(v) : eur(v));
-const budget = p.inputs.budget.value, cpc = p.inputs.cpc.value;
-const clicks = Math.round(budget / cpc);
-const msgs = Math.min(p.inputs.msgs.value, clicks);
-const gone = Math.max(0, clicks - msgs);
-const per100 = clicks ? Math.min(100, (msgs / clicks) * 100) : 0;
-const filled = msgs > 0 ? Math.min(100, Math.max(1, Math.round(per100))) : 0;
-const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)) * 100;
+// Same maths as the script below (src/lib/waste.ts), so the no-JS page shows the example result.
+const price = FULL ? PRICING.oneTime : PRICING.launch;
+const start = { budget: p.inputs.budget.value, cpc: p.inputs.cpc.value, msgs: p.inputs.msgs.value, target: tg.value };
+const w = waste(start);
+const v = describe(start, w, price) as unknown as Record<string, string>;
+const now = w.msgs > 0 ? Math.min(100, Math.max(1, Math.round(w.rate))) : 0;
+const more = w.above ? now : Math.max(now, Math.min(100, Math.round(tg.value)));
+const fmt = (id: string, n: number) => (id === "msgs" ? nf(n) : id === "target" ? `${nf(n, 1)}%` : eur(n));
+const pct = (i: { value: number; min: number; max: number }) => ((i.value - i.min) / (i.max - i.min)) * 100;
+const [yearBefore, yearAfter] = r.year.split("{year}");
 ---
 <section id="problema" class="section calc-sec" aria-labelledby="problem-title">
   <div class="wrap layout">
@@ -30,51 +33,87 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
         <p class="lead mt-5 text-text-secondary">{p.lead}</p>
       </div>
 
-      <form class="inputs" id="calc" aria-label="Calcolatore" data-summary={p.calcSummary}>
+      <form class="inputs" id="calc" aria-label="Calcolatore" data-summary={p.calcSummary} data-price={price}>
         {inputs.map((i) => (
           <div class="rng">
-            <label for={`c-${i.id}`}>{i.label}</label>
+            <div class="lbl"><label for={`c-${i.id}`}>{i.label}</label></div>
             <output for={`c-${i.id}`} id={`o-${i.id}`} class="val">{fmt(i.id, i.value)}</output>
             <button type="button" class="stp" data-for={`c-${i.id}`} data-d="-1" aria-label={`${p.less}: ${i.label}`}>−</button>
-            <input
-              type="range"
-              id={`c-${i.id}`}
-              name={i.id}
-              min={i.min}
-              max={i.max}
-              step={i.step}
-              value={i.value}
-              aria-valuetext={fmt(i.id, i.value)}
-              style={`--p:${pct(i)}%`}
-            />
+            <input type="range" id={`c-${i.id}`} name={i.id} min={i.min} max={i.max} step={i.step} value={i.value} aria-valuetext={fmt(i.id, i.value)} style={`--p:${pct(i)}%`} />
             <button type="button" class="stp" data-for={`c-${i.id}`} data-d="1" aria-label={`${p.more}: ${i.label}`}>+</button>
           </div>
         ))}
-        <p class="defaults">{p.defaultsNote}</p>
+        <p class="defaults">{p.defaultsNote} <CalcHelp id="calc-help" vals={describe(start, w, price)} tab="numbers" /></p>
+
+        <div class="rng hyp">
+          <div class="lbl">
+            <label for="c-target">{tg.label}</label>
+            <CalcHelp id="calc-help" vals={describe(start, w, price)} tab="limits" />
+          </div>
+          <output for="c-target" id="o-target" class="val">{fmt("target", tg.value)}</output>
+          <button type="button" class="stp" data-for="c-target" data-d="-1" aria-label={`${p.less}: ${tg.label}`}>−</button>
+          <input type="range" id="c-target" name="target" min={tg.min} max={tg.max} step={tg.step} value={tg.value} aria-valuetext={fmt("target", tg.value)} style={`--p:${pct(tg)}%`} />
+          <button type="button" class="stp" data-for="c-target" data-d="1" aria-label={`${p.more}: ${tg.label}`}>+</button>
+          <p class="hint">{tg.hint}</p>
+        </div>
       </form>
     </div>
 
     <div class="receipt-wrap">
-      <div class="paper"><div class="receipt" id="receipt">
-        <p class="r-title">{r.title}</p>
+      <div class="paper"><div class="receipt" id="receipt" data-state={w.above ? "above" : "gap"}>
+        <div class="r-head">
+          <p class="r-title">{r.title}</p>
+          <CalcHelp id="calc-help" vals={describe(start, w, price)} tab="calc" card />
+        </div>
+
         <dl class="rows">
-          <div class="row"><dt>{r.clicks}</dt><dd data-k="clicks">{nf(clicks)}</dd></div>
-          <div class="row"><dt>{r.gone}</dt><dd data-k="gone">{nf(gone)}</dd></div>
-          <div class="row total">
-            <dt data-k="perMsgLabel" data-yes={r.perMsg} data-no={r.perMsgNone}>{msgs > 0 ? r.perMsg : r.perMsgNone}</dt>
-            <dd data-k="perMsg">{msgs > 0 ? eur(budget / msgs) : "–"}</dd>
+          <div class="row"><dt>{r.clicks}</dt><dd data-k="clicks">{v.clicks}</dd></div>
+          <div class="row"><dt>{r.today}</dt><dd data-k="today">{v.msgs}</dd></div>
+          <div class="row gap-only"><dt data-tpl={r.extra}>{fill(r.extra, v)}</dt><dd data-k="missing">+{v.missing}</dd></div>
+          <div class="row total gap-only">
+            <dt>{r.total}</dt>
+            <dd><span data-k="wasted">{v.wasted}</span><small>{r.perMonth}</small></dd>
           </div>
         </dl>
 
+        <div class="verdict gap-only">
+          <p class="yr">{yearBefore}<strong data-k="year">{v.year}</strong>{yearAfter}</p>
+          <p class="pb" data-tpl={r.payback}>{fill(r.payback, v)}</p>
+        </div>
+
+        <div class="above-only above">
+          <p class="above-t">{r.above.title}</p>
+          <p class="above-x" data-tpl={r.above.text}>{fill(r.above.text, v)}</p>
+        </div>
+
+        <div class="cmp gap-only" aria-live="off">
+          <p class="cmp-c"><span>{r.compareNow}</span><strong data-k="perNow">{w.perNow === null ? "–" : v.perN}</strong></p>
+          <svg class="cmp-a" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 12h15m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          <p class="cmp-c to"><span>{r.compareWith}</span><strong data-k="perT">{v.perT}</strong></p>
+        </div>
+
         <div class="dots-box">
-          <p class="dots-title">{r.dotsPre} <strong data-k="per100">{nf(per100, 1)}</strong>.</p>
-          <div class="dots" aria-hidden="true" style={`--filled:${filled}`}>
-            {Array.from({ length: 100 }, (_, n) => <i class:list={{ on: n < filled }} style={`--d:${n}`}></i>)}
+          <p class="dots-title">{r.dotsPre} <strong data-k="per100">{v.rate}</strong>.<span class="gap-only"> {r.dotsPost} <strong data-k="t100">{v.t}</strong>.</span></p>
+          <div class="dots" aria-hidden="true">
+            {Array.from({ length: 100 }, (_, n) => <i class:list={{ on: n < now, more: n >= now && n < more }} style={`--d:${n}`}></i>)}
           </div>
-          <p class="legend" aria-hidden="true"><span class="k on"></span>{r.dotsLegendWrote}<span class="k"></span>{r.dotsLegendGone}</p>
+          <p class="legend" aria-hidden="true">
+            <span class="k on"></span>{r.dotsLegendNow}
+            <span class="k more gap-only"></span><span class="gap-only">{r.dotsLegendMore}</span>
+            <span class="k"></span>{r.dotsLegendGone}
+          </p>
         </div>
       </div></div>
       <p class="note">{p.note}</p>
+    </div>
+
+    <div class="why">
+      <h3 class="why-h">{p.why.headline}</h3>
+      <ul class="why-list reveal-stagger">
+        {p.why.items.map((it) => (
+          <li><p class="why-t">{it.title}</p><p class="why-x">{it.text}</p></li>
+        ))}
+      </ul>
     </div>
 
     <div class="closing reveal">
@@ -86,16 +125,16 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
 </section>
 
 <script>
+  import { describe, eur, fill, nf, waste } from "../lib/waste";
+
   const form = document.getElementById("calc") as HTMLFormElement | null;
   const rc = document.getElementById("receipt");
   if (form && rc) {
-    const nf = (n: number, d = 0) => new Intl.NumberFormat("it-IT", { maximumFractionDigits: d }).format(n);
-    const eur = (n: number) => new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR", maximumFractionDigits: n < 10 ? 2 : 0 }).format(n);
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const el = (k: string) => rc.querySelector<HTMLElement>(`[data-k="${k}"]`)!;
     const dots = Array.from(rc.querySelectorAll<HTMLElement>(".dots i"));
     const live = document.getElementById("calc-live")!;
-    const live0 = document.querySelector<HTMLElement>("#problema .dots-title")!;
+    const price = Number(form.dataset.price);
     const shown = new Map<string, number>();
     let liveT = 0;
 
@@ -116,38 +155,51 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
     };
 
     const num = (n: string) => Number((form.elements.namedItem(n) as HTMLInputElement).value);
+    const fmt = (name: string, v: number) => (name === "msgs" ? nf(v) : name === "target" ? `${nf(v, 1)}%` : eur(v));
+
     const update = () => {
       for (const inp of Array.from(form.querySelectorAll<HTMLInputElement>("input[type=range]"))) {
         const v = Number(inp.value);
-        const txt = inp.name === "msgs" ? nf(v) : eur(v);
+        const txt = fmt(inp.name, v);
         document.getElementById("o-" + inp.name)!.textContent = txt;
         inp.setAttribute("aria-valuetext", txt);
         inp.style.setProperty("--p", ((v - Number(inp.min)) / (Number(inp.max) - Number(inp.min))) * 100 + "%");
       }
-      const budget = num("budget"), cpc = num("cpc");
-      const clicks = Math.round(budget / cpc);
-      const msgs = Math.min(num("msgs"), clicks);
-      const gone = Math.max(0, clicks - msgs);
-      const per100 = clicks ? Math.min(100, (msgs / clicks) * 100) : 0;
-      const filled = msgs > 0 ? Math.min(100, Math.max(1, Math.round(per100))) : 0;
-      tween("clicks", clicks, (n) => nf(Math.round(n)));
-      tween("gone", gone, (n) => nf(Math.round(n)));
-      tween("per100", per100, (n) => nf(n, 1));
-      if (msgs > 0) {
-        el("perMsgLabel").textContent = el("perMsgLabel").dataset.yes!;
-        tween("perMsg", budget / msgs, (n) => eur(n));
-      } else {
-        el("perMsgLabel").textContent = el("perMsgLabel").dataset.no!;
-        shown.delete("perMsg");
-        el("perMsg").textContent = "–";
-      }
-      dots.forEach((d, i) => d.classList.toggle("on", i < filled));
+      const input = { budget: num("budget"), cpc: num("cpc"), msgs: num("msgs"), target: num("target") };
+      const w = waste(input);
+      const vals = describe(input, w, price) as unknown as Record<string, string>;
+
+      rc.dataset.state = w.above ? "above" : "gap";
+      tween("clicks", w.clicks, (n) => nf(Math.round(n)));
+      tween("today", w.msgs, (n) => nf(Math.round(n)));
+      tween("missing", w.missing, (n) => "+" + nf(Math.round(n)));
+      tween("wasted", w.wasted, (n) => eur(Math.round(n)));
+      tween("year", w.year, (n) => eur(Math.round(n)));
+      tween("per100", w.rate, (n) => nf(n, 1));
+      tween("t100", input.target, (n) => nf(n, 1) + "%");
+      if (w.perNow !== null) tween("perNow", w.perNow, (n) => eur(n));
+      else { shown.delete("perNow"); el("perNow").textContent = "–"; }
+      if (w.perTarget !== null) tween("perT", w.perTarget, (n) => eur(n));
+      else { shown.delete("perT"); el("perT").textContent = "–"; }
+
+      // Text built from templates: labels, payback line, the help card's formulas.
+      document.querySelectorAll<HTMLElement>("[data-tpl]").forEach((n) => { n.textContent = fill(n.dataset.tpl!, vals); });
+
+      const now = w.msgs > 0 ? Math.min(100, Math.max(1, Math.round(w.rate))) : 0;
+      const more = w.above ? now : Math.max(now, Math.min(100, Math.round(input.target)));
+      dots.forEach((d, i) => {
+        d.classList.toggle("on", i < now);
+        d.classList.toggle("more", i >= now && i < more);
+      });
+
       // Hand the numbers to the contact form (shown there, removable) once the visitor has used them.
-      const summary = (form.dataset.summary || "").replace("{budget}", eur(budget)).replace("{cpc}", eur(cpc)).replace("{msgs}", nf(num("msgs")));
+      const summary = (form.dataset.summary || "").replace("{budget}", vals.budget).replace("{cpc}", vals.cpc).replace("{msgs}", nf(input.msgs));
       document.dispatchEvent(new CustomEvent("besa:calc", { detail: summary }));
       clearTimeout(liveT);
       liveT = window.setTimeout(() => {
-        live.textContent = `${el("clicks").textContent} ${rc.querySelectorAll("dt")[0].textContent}. ${live0.textContent}`;
+        live.textContent = w.above
+          ? rc.querySelector(".above-t")!.textContent + " " + rc.querySelector(".above-x")!.textContent
+          : `${rc.querySelector(".total dt")!.textContent}: ${vals.wasted} ${rc.querySelector(".total small")!.textContent}.`;
       }, 700);
     };
     form.addEventListener("input", update);
@@ -160,6 +212,14 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
       inp.dispatchEvent(new Event("input", { bubbles: true }));
     });
     form.addEventListener("submit", (e) => e.preventDefault());
+
+    // Each "i" button opens the same card on its own tab.
+    document.querySelectorAll<HTMLElement>("[data-help-tab]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const r = document.querySelector<HTMLInputElement>(`input[name="calc-help-tab"][value="${b.dataset.helpTab}"]`);
+        if (r) r.checked = true;
+      });
+    });
   }
 </script>
 
@@ -167,26 +227,31 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
   .calc-sec { background: var(--color-surface-page); }
   .layout { display: grid; gap: 2.5rem; }
   @media (min-width: 64rem) {
-    .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 27rem); column-gap: 5rem; row-gap: 3rem; align-items: start; }
-    .closing { grid-column: 1 / -1; }
+    .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 28rem); column-gap: 5rem; row-gap: 4rem; align-items: start; }
+    .why, .closing { grid-column: 1 / -1; }
   }
-  .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; max-width: 16ch; }
+  .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; max-width: 18ch; text-wrap: balance; }
 
   /* ---- sliders ---- */
   .inputs { margin-top: 2.5rem; display: grid; gap: 1.75rem; max-width: 34rem; }
   /* label + value on top; with JS: [−] slider [+] underneath */
   .rng { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .5rem .75rem; }
-  .rng label { grid-column: 1 / 3; font-weight: 600; font-size: 1rem; line-height: 1.35; }
+  .rng .lbl { grid-column: 1 / 3; display: flex; align-items: center; gap: .6rem; }
+  .rng label { font-weight: 600; font-size: 1rem; line-height: 1.35; }
   .rng .val { grid-column: 3; justify-self: end; }
   .rng input { grid-column: 1 / -1; }
   :global(.js) .rng input { grid-column: 2; }
   .stp { display: none; }
   :global(.js) .stp { display: inline-grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border: 0; border-radius: 9999px; background: var(--color-surface-sunken); color: var(--color-accent-text); font: inherit; font-weight: 700; font-size: 1.25rem; line-height: 1; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
   :global(.js) .stp:active { scale: .92; }
-  .rng .stp:last-child { justify-self: end; }
+  .rng .stp:last-of-type { justify-self: end; }
   @media (hover: hover) { :global(.js) .stp:hover { background: var(--color-accent-subtle); } }
   .val { font-weight: 800; font-size: 1.375rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
-  .defaults { font-size: .875rem; color: var(--color-text-secondary); }
+  .defaults { display: flex; align-items: center; gap: .6rem; font-size: .875rem; color: var(--color-text-secondary); }
+
+  /* the one number that is our hypothesis, not theirs: set apart so it never reads as data */
+  .hyp { --ch-bg-in: var(--color-surface-page); padding: 1rem 1rem .75rem; border-radius: var(--radius-lg); background: var(--color-surface-subtle); }
+  .hyp .hint { grid-column: 1 / -1; font-size: .875rem; line-height: 1.4; color: var(--color-text-secondary); }
 
   input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 2.75rem; margin: 0; background: transparent; cursor: pointer; --track: linear-gradient(to right, var(--color-accent-solid) var(--p), var(--color-border-subtle) var(--p)); }
   input[type="range"]::-webkit-slider-runnable-track { height: .5rem; border-radius: 9999px; background: var(--track); }
@@ -209,15 +274,36 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
     /* serrated bottom edge */
     mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(var(--tooth) * 2) 100%;
   }
-  .r-title { text-align: center; font-weight: 800; font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary); padding-bottom: .9rem; margin: 0 auto .4rem; border-bottom: 2px dashed var(--color-border-subtle); max-width: none; }
+  .receipt[data-state="gap"] .above-only, .receipt[data-state="above"] .gap-only { display: none; }
+  .r-head { position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: .9rem; margin-bottom: .4rem; border-bottom: 2px dashed var(--color-border-subtle); }
+  .r-head :global(.ch-btn) { position: absolute; right: 0; }
+  .r-title { text-align: center; font-weight: 800; font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary); max-width: none; }
   .rows { margin: 0; display: grid; }
-  .row { display: flex; align-items: baseline; gap: .5rem; padding-block: .7rem; }
+  .row { display: flex; align-items: baseline; gap: .5rem; padding-block: .6rem; }
   .row dt { font-size: .9375rem; color: var(--color-text-secondary); flex: 0 1 auto; }
   .row::after { content: ""; order: 1; flex: 1 1 1rem; min-width: 1rem; border-bottom: 2px dotted var(--color-border-subtle); translate: 0 -.3rem; }
   .row dd { order: 2; margin: 0; font-weight: 800; font-size: 1.25rem; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
-  .total { margin-top: .5rem; padding-top: 1.1rem; border-top: 2px dashed var(--color-border-subtle); }
-  .total dt { color: var(--color-text-primary); font-weight: 700; }
-  .total dd { font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem); color: var(--color-accent-text); letter-spacing: -.03em; }
+  .total { margin-top: .5rem; padding-top: 1.1rem; border-top: 2px dashed var(--color-border-subtle); align-items: flex-end; }
+  .total dt { color: var(--color-text-primary); font-weight: 700; max-width: 12ch; line-height: 1.25; }
+  .total dd { display: grid; justify-items: end; color: var(--color-accent-text); }
+  .total dd span { font-size: clamp(2.25rem, 1.7rem + 2vw, 3rem); line-height: 1; letter-spacing: -.035em; }
+  .total dd small { font-size: .8125rem; font-weight: 600; letter-spacing: 0; color: var(--color-text-secondary); }
+
+  .verdict { margin-top: .9rem; display: grid; gap: .35rem; }
+  .yr { font-size: 1rem; font-weight: 600; }
+  .yr strong { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
+  .pb { font-size: .9375rem; line-height: 1.45; color: var(--color-text-secondary); }
+  .above { margin-top: .9rem; padding: 1rem; border-radius: var(--radius-base); background: var(--color-surface-subtle); }
+  .above-t { font-weight: 800; font-size: 1.0625rem; }
+  .above-x { margin-top: .35rem; font-size: .9375rem; line-height: 1.45; color: var(--color-text-secondary); }
+
+  /* cost of one message: today against the page */
+  .cmp { margin-top: 1.25rem; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: .5rem .75rem; }
+  .cmp-c { display: grid; gap: .15rem; }
+  .cmp-c span { font-size: .8125rem; line-height: 1.3; color: var(--color-text-secondary); }
+  .cmp-c strong { font-size: clamp(1.5rem, 1.25rem + 1vw, 1.875rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .cmp-c.to strong { color: var(--color-accent-text); }
+  .cmp-a { color: var(--color-text-secondary); }
 
   .dots-box { margin-top: 1.25rem; padding: 1.1rem; border-radius: var(--radius-base); background: var(--color-surface-sunken); }
   .dots-title { font-size: .9375rem; line-height: 1.4; }
@@ -225,23 +311,49 @@ const pct = (i: (typeof inputs)[number]) => ((i.value - i.min) / (i.max - i.min)
   .dots { margin-top: .9rem; display: grid; grid-template-columns: repeat(20, 1fr); gap: .3rem; }
   .dots i { display: block; aspect-ratio: 1; border-radius: 9999px; background: var(--color-border-subtle); }
   .dots i.on { background: var(--color-accent-solid); box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-accent-solid) 25%, transparent); }
-  .legend { margin-top: .75rem; display: flex; align-items: center; gap: .4rem; font-size: .8125rem; color: var(--color-text-secondary); }
+  .dots i.more { background: var(--color-surface-page); box-shadow: inset 0 0 0 2px var(--color-accent-solid); }
+  .legend { margin-top: .75rem; display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .4rem; font-size: .8125rem; color: var(--color-text-secondary); }
   .k { width: .65rem; height: .65rem; border-radius: 9999px; background: var(--color-border-subtle); }
   .k.on { background: var(--color-accent-solid); }
+  .k.more { background: var(--color-surface-page); box-shadow: inset 0 0 0 2px var(--color-accent-solid); }
   .k:not(:first-child) { margin-left: .75rem; }
-  .note { font-size: .8125rem; color: var(--color-text-secondary); }
+  .note { font-size: .8125rem; line-height: 1.45; color: var(--color-text-secondary); }
+
+  /* ---- why it happens: three plain facts, hairlines instead of cards ---- */
+  .why { padding-top: 2.5rem; border-top: 1px solid var(--color-border-subtle); }
+  .why-h { font-size: var(--text-h3); line-height: 1.2; font-weight: 800; letter-spacing: -.02em; }
+  .why-list { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; gap: 0; }
+  .why-list li { padding-block: 1.25rem; border-top: 1px solid var(--color-border-subtle); }
+  .why-list li:first-child { border-top: 0; padding-top: 0; }
+  .why-t { font-weight: 800; font-size: 1.1875rem; line-height: 1.25; letter-spacing: -.015em; }
+  .why-x { margin-top: .45rem; max-width: 38ch; color: var(--color-text-secondary); }
+  @media (min-width: 48rem) {
+    .why-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .why-list li { padding: 0 2rem 0 0; border-top: 0; }
+    .why-list li + li { padding-left: 2rem; border-left: 1px solid var(--color-border-subtle); }
+  }
+
   .closing { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem 2rem; padding-top: 2rem; border-top: 1px solid var(--color-border-subtle); }
   .closing :global(.lc-wrap) { flex: 1 1 20rem; max-width: 34rem; }
   .closing p { font-size: var(--text-h3); line-height: 1.3; font-weight: 700; letter-spacing: -.015em; max-width: 36ch; }
 
   @media (prefers-reduced-motion: no-preference) {
-    .dots i { transition: background-color 300ms var(--ease-out), scale 300ms var(--ease-expo); transition-delay: calc(var(--d) * 4ms); }
+    .dots i { transition: background-color 300ms var(--ease-out), box-shadow 300ms var(--ease-out), scale 300ms var(--ease-expo); transition-delay: calc(var(--d) * 4ms); }
     .dots i.on { animation: dot-on 500ms var(--ease-expo) backwards; animation-delay: calc(var(--d) * 4ms); }
+    .dots i.more { animation: dot-more 600ms var(--ease-expo) backwards; animation-delay: calc(var(--d) * 4ms + 150ms); }
     @keyframes dot-on { from { scale: .3; } }
+    @keyframes dot-more { from { scale: .3; opacity: 0; } }
+    .receipt[data-state="gap"] .cmp-a { animation: nudge 1.8s var(--ease-out) 1.2s 2; }
+    @keyframes nudge { 40% { translate: .3rem 0; } }
   }
-  /* the receipt prints as it scrolls in */
+  /* the receipt prints as it scrolls in: clip-path on desktop, where the card sits beside the sliders; on the
+     stacked layout clip-path plus the drop-shadow filter repaints every frame, so it only fades and slides there */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
+      .receipt { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+      @keyframes rise { from { opacity: 0; translate: 0 1.5rem; } to { opacity: 1; translate: none; } }
+    }
+    @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
       .receipt { animation: print linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
       @keyframes print { from { clip-path: inset(0 0 100% 0); translate: 0 -1rem; } to { clip-path: inset(0 0 0 0); translate: none; } }
     }

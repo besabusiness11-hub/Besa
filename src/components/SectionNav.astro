@@ -96,6 +96,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
   // ---- tracking: current section + how far through it you are ----
   let current = -2;
   let queued = false;
+  let lastP = "";
   const docTop = (el: Element) => el.getBoundingClientRect().top + scrollY;
   const update = () => {
     queued = false;
@@ -106,7 +107,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
     const start = active < 0 ? 0 : tops[active];
     const end = tops[active + 1] ?? (contact ? docTop(contact) : document.documentElement.scrollHeight);
     const p = Math.min(1, Math.max(0, (line - start) / Math.max(1, end - start)));
-    dock.style.setProperty("--p", p.toFixed(4));
+    const ps = p.toFixed(3);
+    if (ps !== lastP) { lastP = ps; dock.style.setProperty("--p", ps); }
 
     // hidden over the hero (it appears once the first section takes over) and at the contact form, the destination
     const away = active < 0 || (!!contact && contact.getBoundingClientRect().top < innerHeight * 0.6);

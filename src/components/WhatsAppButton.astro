@@ -1,0 +1,21 @@
+---
+// Chat-only WhatsApp button (no calls). Renders nothing until PUBLIC_WHATSAPP_NUMBER is set
+// (digits with country code, e.g. 393331234567), so it can be switched on later with an env change.
+const number = String(import.meta.env.PUBLIC_WHATSAPP_NUMBER ?? "").replace(/\D/g, "");
+const text = encodeURIComponent("Ciao, vi scrivo dal sito besaweb.com.");
+---
+{number.length >= 8 && (
+  <a class="wa" href={`https://wa.me/${number}?text=${text}`} target="_blank" rel="noopener noreferrer" aria-label="Scrivici su WhatsApp" data-umami-event="whatsapp_click">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 .1 5.3.1 11.9c0 2.1.6 4.1 1.6 5.9L0 24l6.4-1.7a11.9 11.9 0 0 0 5.6 1.4c6.6 0 11.9-5.3 11.9-11.9 0-3.2-1.2-6.2-3.400-8.300zM12 21.700c-1.800 0-3.500-.5-5-1.400l-.4-.2-3.800 1 1-3.700-.2-.4a9.700 9.700 0 0 1-1.500-5.100C2.100 6.500 6.500 2.100 12 2.100c2.600 0 5.100 1 6.900 2.900a9.700 9.700 0 0 1 2.900 6.900c0 5.400-4.400 9.800-9.800 9.800zm5.400-7.300c-.3-.1-1.700-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.100-.2.2-.3.2-.6.100-.3-.1-1.2-.4-2.300-1.400-.9-.8-1.400-1.700-1.600-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.600-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.300-1 1-1 2.500s1.100 2.900 1.2 3.100c.1.2 2.100 3.2 5.100 4.500.7.300 1.300.5 1.700.6.700.2 1.400.2 1.900.1.600-.1 1.700-.7 1.900-1.400.2-.7.2-1.2.2-1.400-.1-.1-.3-.2-.6-.3z"/></svg>
+  </a>
+)}
+<style>
+  .wa {
+    position: fixed; z-index: 25; right: max(1rem, env(safe-area-inset-right)); bottom: calc(5.5rem + env(safe-area-inset-bottom));
+    display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border-radius: 9999px;
+    background: oklch(0.62 0.17 150); color: #fff; box-shadow: 0 8px 24px oklch(0.2 0.04 266 / .3);
+    transition: scale 200ms var(--ease-out);
+  }
+  @media (hover: hover) { .wa:hover { scale: 1.06; } }
+  .wa:active { scale: .95; }
+</style>

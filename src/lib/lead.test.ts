@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildEmail, createRateLimiter, escapeHtml, parseLead, verifyTurnstile } from "./lead";
+import { buildEmail, createRateLimiter, escapeHtml, parseLead, replyToOf, verifyTurnstile } from "./lead";
 
 const base = { nome: "Mario Rossi", contatto: "mario@example.com", annuncio: "https://facebook.com/ads/1", privacy: "on" };
 
@@ -118,5 +118,23 @@ describe("hardening", () => {
     expect(await rb(r2)).toBeNull();
     const ok = new Request("http://x/", { method: "POST", body: "a=1", headers: { "content-type": "application/x-www-form-urlencoded" } });
     expect(await rb(ok)).toEqual({ a: "1" });
+  });
+});
+
+describe("campi offerta e reply-to", () => {
+  const base = { nome: "Test Prova", contatto: "test@example.com", privacy: "on" };
+  it("accetta pagamento e preventivo e li mette nell'email", () => {
+    const r = parseLead({ ...base, pagamento: "abbonamento", preventivo: "6 landing, stima €296 al mese" });
+    expect(r.kind).toBe("ok");
+    if (r.kind !== "ok") return;
+    expect(buildEmail(r.lead).text).toContain("Preferenza di pagamento: abbonamento");
+    expect(buildEmail(r.lead).text).toContain("Stima su misura: 6 landing");
+  });
+  it("replyTo solo se il contatto è un'email", () => {
+    const a = parseLead(base);
+    const b = parseLead({ ...base, contatto: "+39 333 1234567" });
+    if (a.kind !== "ok" || b.kind !== "ok") throw new Error("parse");
+    expect(replyToOf(a.lead)).toBe("test@example.com");
+    expect(replyToOf(b.lead)).toBeUndefined();
   });
 });

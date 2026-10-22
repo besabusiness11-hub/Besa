@@ -1,7 +1,6 @@
 ---
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
-import { todo } from "../lib/todo";
 const c = copy.inside;
 const f = c.features;
 // Phone rows in page order, top to bottom; row n names feature n. Labels share the row of the element they point at.
@@ -36,7 +35,7 @@ const kindOf = (i: number) => kinds[i];
       {f.map((x, i) => (
         <li data-kind={kindOf(i)}>
           <h3 class="t-h3">{x.title}</h3>
-          <p class="mt-1 text-text-secondary" set:html={todo(x.text)} />
+          <p class="mt-1 text-text-secondary">{x.text}</p>
         </li>
       ))}
     </ul>
@@ -145,8 +144,4 @@ const kindOf = (i: number) => kinds[i];
     .list li { padding-block: 1rem; }
   }
 
-  :global(.todo) {
-    display: inline; font-size: .8125rem; font-weight: 600; font-style: normal; color: var(--color-text-primary);
-    background: transparent; padding: .05rem .4rem; border: 1.5px dashed var(--color-accent-solid-hover); border-radius: .35rem;
-  }
 </style>

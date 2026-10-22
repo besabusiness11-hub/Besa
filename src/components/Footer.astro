@@ -1,52 +1,136 @@
 ---
+// Footer: a rounded ink panel rising out of the blue contact section, with a soft light along its top edge.
+// Layout after the "footer-section" component (brand column + link columns, staggered blur-in),
+// ported to Astro + CSS: no client JS, motion only via scroll-driven animations.
 import { Image } from "astro:assets";
 import logo from "../assets/logo-white.png";
 import { copy } from "../lib/copy";
-import { splitTodo } from "../lib/todo";
 const f = copy.footer;
 const year = new Date().getFullYear();
+const columns = [
+  { label: f.columns.page, links: copy.nav.links.map((l) => ({ title: l.label, href: l.href })) },
+  {
+    label: f.columns.contact,
+    links: [
+      { title: f.email, href: `mailto:${f.email}`, icon: "mail" },
+      { title: copy.nav.cta, href: "#contatto", icon: "send" },
+    ],
+  },
+  {
+    label: f.columns.legal,
+    links: [
+      { title: f.links.privacy, href: "/privacy-policy" },
+      { title: f.links.cookie, href: "/cookie-policy" },
+      { title: f.links.terms, href: "/termini" },
+    ],
+  },
+];
+// lucide icons (ISC), inlined
+const icons: Record<string, string> = {
+  mail: `<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>`,
+  send: `<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>`,
+};
 ---
-<footer class="foot on-blue">
-  <div class="wrap body">
-    <div class="brand">
-      <a href="/" class="mark" aria-label="BESA, torna in cima"><Image src={logo} alt="BESA" width={120} height={61} loading="lazy" /></a>
-      <p class="slogan">{f.slogan}</p>
+<div class="foot-bg">
+  <footer class="foot">
+    <span class="beam" aria-hidden="true"></span>
+
+    <div class="grid-f">
+      <div class="brand rv" style="--d:0">
+        <a href="/" class="mark" aria-label="BESA, torna in cima"><Image src={logo} alt="BESA" width={120} height={61} loading="lazy" /></a>
+        <p class="slogan">{f.slogan}</p>
+        <p class="legal">{f.legalLine}</p>
+      </div>
+
+      <div class="cols">
+        {columns.map((c, i) => (
+          <nav class="col rv" style={`--d:${i + 1}`} aria-label={c.label}>
+            <h3 class="col-h">{c.label}</h3>
+            <ul>
+              {c.links.map((l) => (
+                <li>
+                  <a href={l.href}>
+                    {"icon" in l && l.icon && <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={icons[l.icon]} />}
+                    <span>{l.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
+      </div>
     </div>
-    <div class="info">
-      <a class="mail" href={`mailto:${f.email}`}>{f.email}</a>
-      <p class="legal">
-        {splitTodo(f.legalLine).map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}
-      </p>
-    </div>
-    <nav class="links" aria-label="Link legali">
-      <a href="/privacy-policy">{f.links.privacy}</a>
-      <a href="/cookie-policy">{f.links.cookie}</a>
-    </nav>
-  </div>
-  <div class="wrap copy"><p>&copy; {year} BESA</p></div>
-</footer>
+
+    <p class="copy rv" style="--d:4">&copy; {year} besaweb. {f.rights}</p>
+  </footer>
+</div>
 
 <style>
+  /* the blue of the contact section continues behind the panel's rounded corners */
+  .foot-bg { background: var(--color-accent-solid); overflow: clip; }
   .foot {
-    --foot-soft: color-mix(in oklch, var(--color-text-on-inverse) 82%, transparent);
-    background: var(--color-surface-inverse); color: var(--color-text-on-inverse); padding-block: clamp(3rem, 2rem + 4vw, 5rem) 1.5rem; }
-  .body { display: grid; gap: 2rem; }
-  .mark { display: inline-flex; min-height: 2.75rem; align-items: center; }
-  .mark :global(img) { width: 7.5rem; height: auto; }
-  .slogan { font-weight: 800; font-style: italic; font-size: 1.25rem; margin-top: .75rem; letter-spacing: -.015em; }
-  .info { display: grid; gap: .5rem; justify-items: start; }
-  a { text-decoration: underline; text-decoration-color: color-mix(in oklch, var(--color-text-on-inverse) 60%, transparent); text-decoration-thickness: from-font; text-underline-offset: 3px; }
-  @media (hover: hover) {
-    a:hover { text-decoration-color: var(--color-text-on-inverse); }
+    --soft: color-mix(in oklch, var(--color-text-on-inverse) 62%, transparent);
+    --line: color-mix(in oklch, var(--color-text-on-inverse) 14%, transparent);
+    position: relative; isolation: isolate;
+    display: grid; gap: 2.5rem; padding: 3rem max(1.5rem, calc((100% - 72rem) / 2)) calc(1.5rem + env(safe-area-inset-bottom));
+    border-radius: 2rem 2rem 0 0; border-top: 1px solid var(--line);
+    background:
+      radial-gradient(35% 8rem at 50% 0%, oklch(1 0 0 / .08), transparent),
+      var(--color-surface-inverse);
+    color: var(--color-text-on-inverse);
   }
-  .mark { text-decoration: none; }
-  .mail, .links a { display: inline-flex; align-items: center; min-height: 2.75rem; font-weight: 500; }
-  .legal { color: var(--foot-soft); font-size: .875rem; }
-  .links { display: flex; flex-wrap: wrap; gap: 0 1.5rem; font-size: .9375rem; }
-  .copy { margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid color-mix(in oklch, var(--color-text-on-inverse) 20%, transparent); font-size: .875rem; color: var(--foot-soft); }
-  .foot :global(mark.todo) { background: transparent; color: var(--color-text-on-inverse); outline: 2px dashed color-mix(in oklch, var(--color-text-on-inverse) 70%, transparent); outline-offset: 1px; border-radius: 2px; padding: 0 .2em; }
-  @media (min-width: 48rem) {
-    .body { grid-template-columns: 1.2fr 1.2fr auto; align-items: start; gap: 3rem; }
-    .links { flex-direction: column; }
+  @media (min-width: 48rem) { .foot { border-radius: 3rem 3rem 0 0; padding-top: 4rem; } }
+  /* light that follows the pointer, as on the main pricing card */
+  .foot::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; background: radial-gradient(28rem circle at var(--mx, 50%) var(--my, 0%), oklch(1 0 0 / .14), transparent 60%); opacity: 0; transition: opacity 300ms var(--ease-out); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) { .foot:hover::before { opacity: 1; } }
+  /* the light along the top edge */
+  .beam { position: absolute; top: 0; left: 50%; width: 33%; height: 1px; translate: -50% -50%; border-radius: 9999px; background: oklch(1 0 0 / .45); filter: blur(4px); pointer-events: none; }
+
+  .grid-f { display: grid; gap: 2.5rem; }
+  @media (min-width: 64rem) { .grid-f { grid-template-columns: 1fr 2fr; gap: 3rem; } }
+
+  .mark { display: inline-flex; min-height: 2.75rem; align-items: center; }
+  .mark :global(img) { width: 6.5rem; height: auto; }
+  .slogan { margin-top: .75rem; font-weight: 800; font-style: italic; font-size: 1.25rem; letter-spacing: -.015em; }
+  .legal { margin-top: .75rem; font-size: .8125rem; color: var(--soft); }
+
+  .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.5rem; }
+  /* phones: Pagina | Legale side by side, Contatti (the long email) across the full width below */
+  @media (max-width: 39.99rem) { .col:nth-child(2) { grid-column: 1 / -1; order: 3; } }
+  @media (min-width: 40rem) { .cols { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .col-h { font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); }
+  .col ul { list-style: none; margin: .75rem 0 0; padding: 0; display: grid; }
+  .col a {
+    display: inline-flex; align-items: center; gap: .4rem; min-height: 2.5rem; max-width: 100%;
+    font-size: .9375rem; color: color-mix(in oklch, var(--color-text-on-inverse) 85%, transparent); text-decoration: none;
+    transition: color 300ms var(--ease-out), translate 300ms var(--ease-out);
+  }
+  .col a span { overflow-wrap: break-word; min-width: 0; }
+  .col a svg { flex: none; opacity: .8; }
+  @media (hover: hover) { .col a:hover { color: var(--color-text-on-inverse); translate: 2px 0; } }
+  .col a:focus-visible { outline-color: var(--color-focus-ring-on-accent); }
+
+  .copy { padding-top: 1.25rem; border-top: 1px solid var(--line); font-size: .8125rem; color: var(--soft); max-width: none; }
+
+  /* blur-in as the footer scrolls into view, one block after the other (no JS) */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .rv { animation: blur-in linear both; animation-timeline: view(); animation-range: entry calc(var(--d) * 8%) entry calc(60% + var(--d) * 8%); }
+      /* the panel is pulled up from the bottom edge as the page scrolls to its end, settling when fully in view */
+      .foot { transform-origin: 50% 100%; animation: pull-up cubic-bezier(.16, 1, .3, 1) both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+      @keyframes pull-up { from { translate: 0 100%; scale: .88; } to { translate: 0 0; scale: 1; } }
+      @keyframes blur-in { from { opacity: 0; filter: blur(4px); translate: 0 -8px; } to { opacity: 1; filter: none; translate: none; } }
+    }
   }
 </style>
+
+<script>
+  const foot = document.querySelector<HTMLElement>("footer.foot");
+  if (foot && matchMedia("(hover: hover) and (prefers-reduced-motion: no-preference)").matches) {
+    foot.addEventListener("pointermove", (e) => {
+      const r = foot.getBoundingClientRect();
+      foot.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      foot.style.setProperty("--my", `${e.clientY - r.top}px`);
+    });
+  }
+</script>

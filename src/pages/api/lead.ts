@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import nodemailer from "nodemailer";
-import { buildEmail, clientIp, createRateLimiter, MSG, parseLead, readBody, verifyTurnstile } from "../../lib/lead";
+import { buildEmail, clientIp, createRateLimiter, MSG, parseLead, readBody, replyToOf, verifyTurnstile } from "../../lib/lead";
 
 export const prerender = false;
 
@@ -70,7 +70,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       socketTimeout: 15000,
     });
     const mail = buildEmail(parsed.lead);
-    await transport.sendMail({ from, to, subject: mail.subject, text: mail.text, html: mail.html });
+    await transport.sendMail({ from, to, replyTo: replyToOf(parsed.lead), subject: mail.subject, text: mail.text, html: mail.html });
     console.info(`[lead ${rid}] inviata`);
     return json(200, { ok: true });
   } catch (err) {

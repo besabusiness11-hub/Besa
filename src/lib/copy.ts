@@ -1,11 +1,13 @@
-// Copy IT per la landing BESA. Solo dati, nessuna logica.
-// Token enfasi: {em}…{/em}. Ogni lacuna e’ marcata [TODO: …].
+// Copy IT per la landing BESA. Solo dati, nessuna logica (salvo la scelta dell’offerta).
+// Token enfasi: {em}…{/em}.
+// Le parti che cambiano tra fase di lancio e offerta completa leggono FULL e PRICING da offer.ts.
+import { eur, FULL, PRICING } from "./offer";
 
 export const copy = {
   meta: {
-    title: "Landing page per Meta Ads: più messaggi | BESA",
+    title: "Landing page per Meta Ads | BESA",
     description:
-      "Hai inserzioni Facebook o Instagram attive? Mandaci il link: costruiamo la landing page che porta chi clicca a scriverti, senza cambiare annuncio.",
+      "Costruiamo la landing page che porta chi clicca a scriverti, senza cambiare annuncio. La bozza è gratis e la provi prima di pagare.",
   },
 
   nav: {
@@ -30,16 +32,17 @@ export const copy = {
 
   hero: {
     headline: "Più messaggi dai click {em}che già paghi{/em}.",
-    lead: "Landing page per le tue inserzioni Facebook e Instagram. Ci mandi il link, al resto pensiamo noi.",
+    lead: "Costruiamo landing page ottimizzate per convertire i click in messaggi. Se ci mandi il link, al resto pensiamo noi.",
     cta: "Mandaci il tuo annuncio",
     note: "Ci basta un link. Il resto lo facciamo noi.",
-    keep: "Il tuo annuncio resta com’è, e la pagina la provi prima di decidere.",
+    keep: "Il tuo annuncio resta com’è. La bozza è gratis e la provi prima di pagare.",
+    eli5: "Non ti torna? Spiegamelo come se avessi cinque anni",
     compare: {
       legend: "Dove arriva chi clicca il tuo annuncio",
       before: "Oggi",
       after: "Con BESA",
-      captionBefore: "Atterra sul profilo: mille cose, nessuna domanda. Guarda, non trova, se ne va.",
-      captionAfter: "Atterra su una pagina fatta per quell’annuncio: stessa offerta, un pulsante. E ti scrive.",
+      captionBefore: "Atterra sul profilo o su un sito generico, trova tante cose, nessuna che gli dice cosa fare. Guarda velocemente e se ne va.",
+      captionAfter: "Atterra su una pagina fatta per quell’annuncio: con la stessa offerta, un pulsante chiaro su cosa fare. E ti scrive.",
       note: "Esempio illustrativo",
       ad: { name: "La tua attività", sponsored: "Sponsorizzato", offer: "La tua offerta", cta: "Scopri di più" },
       profile: { handle: "latuaattivita", link: "link in bio", doubts: ["Dove scrivo?", "Quanto costa?", "Era questa l’offerta?"] },
@@ -98,29 +101,103 @@ export const copy = {
   },
 
   problem: {
-    headline: "Quanto ti costa {em}chi clicca e se ne va{/em}?",
-    lead: "Metti i tuoi numeri. Il conto si fa qui, nel tuo browser: non salviamo niente.",
+    headline: "Quanti soldi delle tue inserzioni {em}non diventano messaggi{/em}?",
+    lead: "Meta ti fa pagare ogni click, che poi ti scrivano o no. Metti i tuoi numeri: ti mostriamo quanto spendi per click che non portano a niente.",
     defaultsNote: "Valori di esempio: metti i tuoi.",
     less: "Diminuisci",
     more: "Aumenta",
     inputs: {
       budget: { label: "Spendi in inserzioni al mese", min: 50, max: 5000, step: 50, value: 300 },
-      cpc: { label: "Paghi ogni click, più o meno", min: 0.1, max: 3, step: 0.05, value: 0.5 },
+      cpc: { label: "Quanto paghi ogni click (circa)", min: 0.1, max: 3, step: 0.05, value: 0.5 },
       msgs: { label: "Messaggi che ricevi al mese", min: 0, max: 150, step: 1, value: 6 },
+      target: {
+        label: "Con una pagina fatta bene ti scrive circa",
+        hint: "È la nostra ipotesi, non una promessa. Puoi cambiarla.",
+        min: 2,
+        max: 12,
+        step: 0.5,
+        value: 5,
+      },
     },
     results: {
-      clicks: "click pagati al mese",
       title: "Il tuo mese di inserzioni",
-      gone: "se ne vanno senza scriverti",
-      perMsg: "ti costa ogni messaggio",
-      perMsgNone: "nessun messaggio: ogni euro va via così",
+      clicks: "click che paghi",
+      today: "messaggi che ricevi oggi",
+      extra: "messaggi in più con una pagina al {t}%",
+      total: "Spesa che non ti porta messaggi",
+      perMonth: "al mese",
+      year: "In un anno: {year}",
+      payback: "La tua pagina costa {price}, una volta. Con questi numeri è lo spreco di {span}.",
+      compareNow: "Oggi un messaggio ti costa",
+      compareWith: "Con la pagina ti costerebbe",
+      compareNone: "nessun messaggio",
       dotsPre: "Su 100 persone che cliccano, oggi ti scrivono",
-      dotsLegendWrote: "ti scrive",
+      dotsPost: "Con una pagina fatta bene, circa",
+      dotsLegendNow: "ti scrive già",
+      dotsLegendMore: "ti scriverebbe",
       dotsLegendGone: "se ne va",
+      above: {
+        title: "Qui la pagina non è il problema.",
+        text: "Con questi numeri scrivi già più del {t}% di chi clicca. Se vuoi, guardiamo insieme dove si perde il resto: mandaci l’annuncio.",
+      },
     },
     calcSummary: "{budget} al mese · {cpc} a click · {msgs} messaggi al mese",
-    closing: "Di solito il problema non è l’annuncio: è la pagina dove arriva chi clicca. Lì lavoriamo noi.",
-    note: "Solo aritmetica sui numeri che inserisci. Non è una previsione.",
+    why: {
+      headline: "Perché si perdono.",
+      items: [
+        {
+          title: "Paghi al click, non al messaggio.",
+          text: "Meta ti addebita nel momento in cui qualcuno tocca l’annuncio. Se poi se ne va dopo due secondi, il click l’hai pagato lo stesso.",
+        },
+        {
+          title: "Chi clicca cerca una cosa sola.",
+          text: "Vuole sapere dove scrivere e quanto costa. Un profilo o un sito generico gli mette davanti dieci cose da guardare, e molti smettono di cercare.",
+        },
+        {
+          title: "Il telefono non aspetta.",
+          text: "Una pagina lenta o piena di cose perde le persone prima che leggano la prima riga. Le nostre sono leggere apposta.",
+        },
+      ],
+    },
+    closing: "Si risolve senza toccare l’annuncio né il budget: cambia solo la pagina dove atterra chi clicca. Lì lavoriamo noi.",
+    note: "Solo aritmetica sui numeri che inserisci e su un’ipotesi che scegli tu. Non è una previsione. Il calcolo resta nel tuo browser: non salviamo niente.",
+    help: {
+      button: "Come facciamo il conto?",
+      title: "Come facciamo il conto",
+      subtitle: "Quattro passaggi di aritmetica, con i tuoi numeri. Niente viene salvato.",
+      close: "Chiudi",
+      done: "Ho capito",
+      tabs: { calc: "Il conto", numbers: "I tuoi numeri", limits: "Quanto è affidabile" },
+      steps: [
+        { title: "Quanti click paghi", formula: "{budget} ÷ {cpc} = {clicks} click" },
+        { title: "Quanti ti scrivono oggi", formula: "{msgs} ÷ {clicks} = {rate}% dei click" },
+        {
+          title: "Quanti ti scriverebbero con la pagina",
+          formula: "{clicks} × {t}% = {pot} messaggi",
+          text: "Te ne mancano {missing}. Il {t}% è la nostra ipotesi: la puoi cambiare.",
+        },
+        {
+          title: "Quanto spendi senza risultato",
+          formula: "{missing} × {perT} = {wasted}",
+          text: "{perT} è quanto ti costerebbe ogni messaggio con quella resa ({budget} ÷ {pot}). Oggi ti costa {perN}.",
+        },
+      ],
+      numbers: {
+        intro: "Li trovi in Gestione inserzioni, sugli ultimi 30 giorni.",
+        items: [
+          { title: "Spesa mensile", text: "Colonna «Importo speso»." },
+          { title: "Costo per click", text: "Colonna «CPC (costo per click sul link)». Se non la vedi, dividi l’importo speso per i click sul link." },
+          { title: "Messaggi", text: "Conversazioni avviate (Messenger, WhatsApp, Instagram) più i moduli compilati. Non li ricordi? Metti una stima: il risultato resta indicativo." },
+        ],
+      },
+      limits: {
+        items: [
+          { title: "Il {t}% è un’ipotesi.", text: "Come riferimento, la mediana di molte landing page nel mondo è intorno al 6% (Unbounce, report 2024, tutti i settori). Noi partiamo più in basso, per prudenza." },
+          { title: "Il conto è prudente.", text: "Non contiamo i click persi prima ancora che la pagina si carichi: è un’altra perdita, in più rispetto a questa." },
+          { title: "Non è una garanzia.", text: "Il risultato vero dipende da offerta, prezzo e annuncio. Una buona pagina toglie un ostacolo, non fa miracoli." },
+        ],
+      },
+    },
   },
 
   fix: {
@@ -132,16 +209,16 @@ export const copy = {
     headline: "Come funziona: {em}mandi un link{/em}, al resto pensiamo noi.",
     steps: [
       {
-        title: "Mandi il link del tuo annuncio",
-        text: "Incollalo qui sotto: lo mettiamo nel modulo per te. Poi ci dici solo dove risponderti.",
+        title: "Ci mandi il tuo annuncio",
+        text: "Incolla il link qui sotto e dicci dove risponderti. Basta questo: niente moduli lunghi, niente chiamate.",
       },
       {
-        title: "Costruiamo la landing da lì",
-        text: "Partiamo da cosa prometti nell’annuncio: scriviamo i testi e prepariamo la pagina. Prima di andare online la vedi tu. [TODO: tempi di consegna dichiarati, da confermare con Benito]",
+        title: "Ti facciamo la bozza, gratis",
+        text: "Partiamo da cosa prometti nell’annuncio: scriviamo i testi e prepariamo la pagina. In 48 ore la apri dal telefono, su un indirizzo di prova. Non paghi niente e non ti impegni.",
       },
       {
-        title: "La pagina va online",
-        text: "Ti diciamo dove collegarla alle inserzioni. Poi guardiamo insieme com’è andata e cosa fare dopo.",
+        title: "Se ti piace, paghi e andiamo online",
+        text: "Firmi, ci mandi testi e foto e la pagina va online entro 5 giorni lavorativi. Poi la colleghi alle tue inserzioni: ti mandiamo la guida, oppure lo facciamo noi.",
       },
     ],
     demoTitle: "Prova prima di decidere",
@@ -158,8 +235,8 @@ export const copy = {
     items: [
       {
         id: "eta",
-        title: "Pagina di prova entro 1 giorno lavorativo",
-        text: "Ci mandi il link oggi, domani hai una pagina vera da aprire sul telefono.",
+        title: "Prima bozza in 48 ore",
+        text: "Ci mandi il link oggi, entro due giorni hai una pagina vera da aprire sul telefono.",
         steps: ["Ricevuto", "In lavorazione", "Pronta"],
       },
       {
@@ -176,8 +253,10 @@ export const copy = {
       },
       {
         id: "edits",
-        title: "Modifiche quando ti servono",
-        text: "Cambi offerta o annuncio? Con l’abbonamento ci scrivi e aggiorniamo la pagina.",
+        title: FULL ? "Modifiche quando ti servono" : "Correzioni dopo la messa online",
+        text: FULL
+          ? "Cambi offerta o annuncio? Con l’abbonamento ci scrivi e aggiorniamo la pagina."
+          : "Qualcosa da sistemare? Nei 30 giorni dopo la messa online le correzioni sono gratis.",
         chat: ["Da lunedì l’offerta cambia, aggiorniamo?", "Fatto, è già online."],
       },
       {
@@ -218,28 +297,52 @@ export const copy = {
         text: "WhatsApp, telefono o modulo: quello che usi davvero per rispondere ai clienti.",
       },
       {
-        title: "Tracciamento delle richieste",
-        text: "Possiamo collegare la pagina al Pixel di Meta, se lo vuoi. [TODO: confermare con Benito cosa e’ incluso nel tracciamento]",
+        title: "Sai quali annunci ti portano messaggi",
+        text: FULL
+          ? "Contiamo quando qualcuno ti scrive e lo diciamo a Meta (si chiama Pixel di Meta), così sai quali inserzioni funzionano. Più statistiche di visita che rispettano la privacy. L’abbonamento aggiunge un breve report mensile: visite, contatti, quanti visitatori ti scrivono."
+          : "Contiamo quando qualcuno ti scrive e lo diciamo a Meta (si chiama Pixel di Meta), così sai quali inserzioni funzionano. Più statistiche di visita che rispettano la privacy.",
       },
     ],
   },
 
   offer: {
-    headline: "Scegli come lavoriamo {em}insieme{/em}.",
-    lead: "Tre modi, stesso risultato: una landing fatta bene per le tue inserzioni.",
+    headline: FULL ? "Scegli come lavoriamo {em}insieme{/em}." : "La tua landing page, {em}a prezzo di lancio{/em}.",
+    lead: FULL
+      ? "Tre modi, stesso risultato: una landing fatta bene per le tue inserzioni."
+      : "Una pagina costruita sul tuo annuncio, pagata una volta sola.",
+    draftLine: "La bozza è gratis: la vedi prima di pagare.",
+    // Fase di lancio: un solo pacchetto. L’abbonamento si propone dopo, nel modulo.
+    launch: {
+      id: "una-tantum",
+      name: "Landing page",
+      tagline: "Una landing, pagata una volta.",
+      badge: "Prezzo di lancio",
+      price: `${eur(PRICING.launch)}`,
+      priceNote: `Una volta sola. Hosting (la pagina online) incluso per 12 mesi, poi ${eur(PRICING.hostingYear)} all’anno.`,
+      features: [
+        "La landing finita, collegata al tuo annuncio, con modulo contatti e conteggio dei contatti (Pixel di Meta)",
+        "2 giri di revisione prima della consegna",
+        "30 giorni di correzioni gratuite dopo la messa online",
+        "Hosting (la pagina resta online), certificato SSL (il lucchetto) ed email con i contatti inclusi",
+      ],
+      cta: "Scegli il pacchetto una tantum",
+      checkout: "",
+      more: { text: "Hai molte inserzioni attive?", cta: "Raccontaci cosa ti serve" },
+    },
     plans: [
       {
         id: "abbonamento",
         name: "Abbonamento",
         tagline: "Costruiamo la landing e la teniamo aggiornata quando ce lo chiedi.",
         highlight: true,
-        price: "[TODO: prezzo]",
-        priceNote: "[TODO: periodicità e durata minima]",
+        price: `${eur(PRICING.monthly)} al mese`,
+        priceNote: "Mensile, minimo 3 mesi.",
         features: [
           "Landing page costruita da noi",
-          "Modifiche su tua richiesta: nuova offerta, nuovo annuncio, testi aggiornati",
-          "Scrivi a noi direttamente quando serve una modifica",
-          "[TODO: numero di modifiche incluse al mese e tempi di risposta]",
+          "Modifiche ai contenuti illimitate: nuova offerta, nuovo annuncio, testi aggiornati",
+          "La struttura resta quella approvata: il design va approvato entro 48 ore dalla consegna",
+          "Rispondiamo entro 1 giorno lavorativo; le modifiche vanno online entro 2 giorni lavorativi",
+          "Hosting, certificato SSL ed email con i contatti inclusi, più un report mensile: visite, contatti, quanti visitatori ti scrivono",
         ],
         cta: "Scegli l’abbonamento",
         // Link di pagamento (es. Stripe Payment Link). Vuoto = il pulsante porta al modulo con il piano già scelto.
@@ -250,14 +353,14 @@ export const copy = {
         name: "Una tantum",
         tagline: "Una landing, pagata una volta.",
         highlight: false,
-        price: "[TODO: prezzo]",
-        priceNote: "[TODO: cosa è incluso e per quanto tempo]",
+        price: eur(PRICING.oneTime),
+        priceNote: `Una volta sola. Hosting (la pagina online) incluso per 12 mesi, poi ${eur(PRICING.hostingYear)} all’anno.`,
         features: [
-          "Una landing page costruita da noi",
-          "Consegna e messa online",
-          "[TODO: round di revisione inclusi e cosa succede dopo la consegna]",
+          "La landing finita, collegata al tuo annuncio, con modulo contatti e conteggio dei contatti (Pixel di Meta)",
+          "2 giri di revisione prima della consegna",
+          "Dopo la consegna: 30 giorni di correzioni gratuite; poi modifiche a preventivo, oppure passi all’abbonamento",
         ],
-        cta: "Scegli una tantum",
+        cta: "Scegli il pacchetto una tantum",
         checkout: "",
       },
       {
@@ -265,16 +368,40 @@ export const copy = {
         name: "Su misura",
         tagline: "Più campagne, esigenze particolari o qualcosa fuori dal solito.",
         highlight: false,
-        price: "[TODO: prezzo]",
-        priceNote: "[TODO: come si definisce il preventivo]",
+        price: `da ${eur(PRICING.customFrom)} al mese`,
+        priceNote: "Per chi ha più inserzioni attive: più pagine, meno per ciascuna.",
         features: [
-          "Ne parliamo e ti diciamo cosa serve davvero",
-          "Preventivo dopo aver visto il tuo caso",
+          "Compili un modulo con poche domande sul tuo caso",
+          "Preventivo scritto via email entro 2 giorni lavorativi",
+          "Una chiamata solo se la vuoi tu",
         ],
         cta: "Raccontaci cosa ti serve",
         checkout: "",
       },
     ],
+    // Preventivo interattivo (solo offerta completa): quante landing servono e come cambia il prezzo.
+    quote: {
+      title: "Quanto costa con più inserzioni?",
+      lead: "Muovi il cursore: il prezzo per pagina scende man mano che le pagine aumentano.",
+      label: "Landing page attive",
+      less: "Diminuisci",
+      more: "Aumenta",
+      min: PRICING.customIncluded,
+      max: 20,
+      value: 6,
+      totalLabel: "Su misura",
+      perMonth: "al mese",
+      perPage: "a pagina",
+      compare: "Confronto con gli altri piani",
+      rows: { sub: "Abbonamento ×{n}", once: "Una tantum ×{n}" },
+      once: "una volta",
+      perMonthShort: "/mese",
+      save: "Risparmi {amount} al mese rispetto a {n} abbonamenti singoli.",
+      below: `Con meno di ${PRICING.customIncluded} pagine conviene l’abbonamento.`,
+      note: "Stima indicativa. Il preventivo scritto arriva via email dopo il modulo.",
+      cta: "Chiedi il preventivo",
+      chip: "{n} landing, stima {total} al mese",
+    },
   },
 
   proof: {
@@ -287,24 +414,39 @@ export const copy = {
       "Scriviamo noi i testi, con te che controlli prima di andare online.",
       "Dopo la messa online guardiamo insieme cosa succede.",
     ],
-    caseStudies: "[TODO: casi reali con permesso del cliente, quando ci saranno]",
+    metrics: {
+      title: "Misurato su questo sito",
+      note: "Lighthouse di Google, da telefono. Numeri nostri, misurati su questa pagina: i risultati dei clienti li mostreremo quando ce ne saranno.",
+      spec: "Scheda tecnica",
+      items: [
+        { value: "99", label: "Punteggio Lighthouse da mobile" },
+        { value: "174 KB", label: "Peso totale della pagina" },
+        { value: "0 ms", label: "Tempo prima che la pagina risponda al tocco" },
+        { value: "0", label: "Elementi che saltano mentre carica" },
+      ],
+    },
   },
 
   team: {
     headline: "Chi siamo.",
     lead: "Siamo in due e parli direttamente con noi.",
+    linkedin: "LinkedIn",
     members: [
-      {
-        name: "Leo",
-        role: "Business, strategia, marketing e contenuti",
-        bio: "[TODO: conferma bio con Leo]",
-        photoAlt: "Ritratto di Leo",
-      },
       {
         name: "Benito",
         role: "Prodotto e sviluppo tecnico",
-        bio: "[TODO: conferma bio con Leo]",
+        bio: "Studio Business Creation insieme a Leo. Per BESA mi occupo della parte tecnica che non si vede. Ho costruito gli strumenti con cui troviamo le aziende che fanno pubblicità su Meta e la piattaforma interna da cui seguiamo ogni progetto, dal primo contatto alla pagina online. Se qualcosa si rompe dietro le quinte, sono io che lo sistemo.",
         photoAlt: "Ritratto di Benito",
+        linkedin: "https://www.linkedin.com/in/benito-giacometti-valentino-589840388/",
+        linkedinLabel: "Benito su LinkedIn",
+      },
+      {
+        name: "Leo",
+        role: "Business, strategia, marketing e contenuti",
+        bio: "Studio Business Creation & Entrepreneurship a H-FARM e da anni lancio progetti digitali. Per BESA mi occupo di strategia imprenditoriale e ho ideato il sistema che crea le tue landing page e le mantiene veloci, stabili e misurabili. Mi interessa una cosa sola: che la tua pagina trasformi i click che hai pagato in messaggi veri.",
+        photoAlt: "Ritratto di Leo",
+        linkedin: "https://www.linkedin.com/in/leonardo-margiotta-644126289/",
+        linkedinLabel: "Leo su LinkedIn",
       },
     ],
   },
@@ -318,7 +460,7 @@ export const copy = {
       },
       {
         q: "Non ho un annuncio attivo. Posso partire lo stesso?",
-        a: "[TODO: confermare se partiamo anche senza annuncio attivo, ad esempio da un profilo o da un’offerta descritta a parole]",
+        a: "Sì, se hai chiaro cosa vuoi promuovere. Mandaci il tuo @profilo e raccontaci l’offerta nelle note del modulo: partiamo da lì. Con un annuncio già attivo il risultato è più preciso, perché costruiamo la pagina sulla sua promessa.",
       },
       {
         q: "Ho già un sito. Mi serve comunque una landing?",
@@ -330,51 +472,64 @@ export const copy = {
       },
       {
         q: "Dove vedo la pagina prima di decidere?",
-        a: "All’inizio la pagina vive su un indirizzo di prova, non sul tuo dominio. La apri dal telefono, la provi, e ci dici cosa cambiare. [TODO: cosa succede per passare al dominio del cliente]",
+        a: "All’inizio la pagina vive su un indirizzo di prova, non sul tuo dominio. La apri dal telefono, la provi, e ci dici cosa cambiare. Quando ti convince la colleghiamo al tuo dominio: se ce l’hai la colleghiamo noi, se non ce l’hai lo registriamo per te (il primo anno è incluso). Il dominio (l’indirizzo del sito, tipo latuaattivita.it) resta sempre a tuo nome.",
       },
       {
-        q: "Serve il Pixel di Meta?",
-        a: "Non è obbligatorio per avere la landing. Il Pixel serve a misurare cosa succede dopo il click. Possiamo collegarlo se vuoi. [TODO: confermare con Benito se l’installazione del Pixel è inclusa in ogni piano]",
+        q: "Quando pago?",
+        a: "Solo dopo aver visto la bozza, e solo se ti convince. Poi firmi, ci mandi testi e foto e andiamo online. Collegare la pagina alle tue inserzioni è facile: ti mandiamo la guida, oppure lo facciamo noi.",
+      },
+      {
+        q: "Cos’è il Pixel di Meta e mi serve?",
+        a: "È un piccolo codice che dice a Meta quando qualcuno ti scrive dopo aver cliccato. Lo installiamo sempre, insieme al banner cookie che serve sulla tua pagina: senza, Meta non sa quali inserzioni funzionano.",
       },
       {
         q: "Quanto ci vuole per andare online?",
-        a: "[TODO: tempi di consegna dichiarati, da confermare con Benito]",
+        a: "La bozza arriva in 48 ore ed è gratis. La pagina va online entro 5 giorni lavorativi da quando firmi e ci mandi testi e foto.",
       },
       {
         q: "Chi mi segue dopo la messa online?",
-        a: "Siamo noi due, Leo e Benito. Con l’abbonamento puoi chiederci modifiche quando ti servono. [TODO: cosa è incluso dopo la consegna negli altri piani]",
+        a: FULL
+          ? "Siamo noi due, Leo e Benito. Con l’abbonamento ci scrivi quando serve una modifica ai contenuti. Con la formula una tantum hai 30 giorni di correzioni gratuite, poi le modifiche vanno a preventivo. Con il piano su misura vale quanto scritto nel preventivo (di base gli stessi 30 giorni)."
+          : "Siamo noi due, Leo e Benito. Dopo la messa online hai 30 giorni di correzioni gratuite; poi le modifiche vanno a preventivo.",
       },
       {
         q: "Gestite voi anche le inserzioni?",
-        a: "Il nostro lavoro è la landing page. [TODO: confermare se offriamo anche gestione campagne Meta]",
+        a: "No, ci occupiamo solo della pagina. Ti diciamo come collegarla all’inserzione e, se vuoi, ti diamo qualche consiglio sul testo dell’annuncio.",
       },
       {
         q: "Quanto costa?",
-        a: "Dipende dal piano che scegli. [TODO: prezzo e condizioni dei tre piani]",
+        a: FULL
+          ? `Dipende da quanto vuoi seguirla nel tempo. La una tantum costa ${eur(PRICING.oneTime)} una volta sola; l’abbonamento ${eur(PRICING.monthly)} al mese, con modifiche ai contenuti illimitate; il su misura parte da ${eur(PRICING.customFrom)} al mese per chi ha più inserzioni attive. In ogni caso hosting, certificato SSL ed email con i contatti sono inclusi. Il dominio (l’indirizzo del sito, tipo latuaattivita.it) resta a tuo nome: se ce l’hai lo colleghiamo, se no lo registriamo noi per te (il primo anno è incluso). La prima bozza la vedi prima di pagare.`
+          : `Una landing costa ${eur(PRICING.launch)}, una volta sola. Hosting, certificato SSL ed email con i contatti sono inclusi (l’hosting per 12 mesi, poi ${eur(PRICING.hostingYear)} all’anno). Il dominio (l’indirizzo del sito, tipo latuaattivita.it) resta a tuo nome: se ce l’hai lo colleghiamo, se no lo registriamo noi per te (il primo anno è incluso). La prima bozza la vedi prima di pagare.`,
       },
-      {
-        q: "Posso disdire l’abbonamento?",
-        a: "[TODO: condizioni di recesso e preavviso dell’abbonamento]",
-      },
+      ...(FULL
+        ? [
+            {
+              q: "Posso disdire l’abbonamento?",
+              a: `Sì. Dopo i primi 3 mesi disdici quando vuoi con 30 giorni di preavviso, senza penali. I mesi già iniziati non si rimborsano. Se vuoi fermarti senza perdere la pagina, puoi metterla in pausa a ${eur(PRICING.paused)} al mese per un massimo di 2 mesi: resta online, ma senza modifiche. Alla disdetta la pagina va offline, oppure la riscatti e diventa tua con un pagamento unico.`,
+            },
+          ]
+        : []),
       {
         q: "Cosa succede ai dati di chi compila la pagina?",
-        a: "Raccogliamo solo i campi che servono per essere ricontattati. Per i dettagli leggi l’informativa privacy. [TODO: link e testo definitivo della privacy, titolare del trattamento]",
+        a: "Raccogliamo solo i campi che servono per essere ricontattati. Il titolare del trattamento è Leonardo Margiotta. Le richieste che non diventano un lavoro le cancelliamo dopo 12 mesi. Trovi tutti i dettagli nell’informativa privacy.",
       },
     ],
   },
 
   finalCta: {
     headline: "Mandaci il link. {em}Ti rispondiamo noi{/em}.",
-    lead: "Guardiamo il tuo annuncio e prepariamo una pagina di prova da aprire sul telefono. Te la mandiamo su WhatsApp o via email entro 1 giorno lavorativo.",
+    lead: "Guardiamo il tuo annuncio e prepariamo la tua prima bozza da aprire sul telefono. Ti rispondiamo entro 1 giorno lavorativo e la bozza arriva in 48 ore, su WhatsApp o via email.",
+    hook: "In più ti diamo 3 consigli concreti sul tuo annuncio, entro 2 giorni lavorativi.",
     next: {
       title: "Cosa succede dopo",
       steps: [
         "Leggiamo il tuo annuncio: offerta, tono, a chi parli.",
-        "Prepariamo la pagina su un indirizzo di prova.",
+        "Prepariamo la bozza su un indirizzo di prova.",
         "Te la mandiamo: la apri dal telefono e ci dici cosa ne pensi.",
       ],
     },
-    preview: { forName: "Pagina di prova per", fallbackName: "te", from: "dal tuo annuncio su", title: "La tua offerta, come nell’annuncio", note: "Anteprima illustrativa: si aggiorna mentre compili." },
+    preview: { forName: "Bozza per", fallbackName: "te", from: "dal tuo annuncio su", title: "La tua offerta, come nell’annuncio", note: "Anteprima illustrativa: si aggiorna mentre compili." },
     cta: "Mandaci il tuo annuncio",
   },
 
@@ -389,11 +544,28 @@ export const copy = {
         { value: "prenotazione", label: "Prenotare", button: "Prenota ora" },
       ],
     },
+    payment: {
+      legend: "Se la bozza ti convince, come preferisci pagare?",
+      optional: "Facoltativo",
+      options: [
+        {
+          value: "una-volta",
+          label: `Una volta sola, ${eur(PRICING.launch)}`,
+          text: `Hosting incluso per 12 mesi, poi ${eur(PRICING.hostingYear)} all’anno. Le modifiche dopo i primi 30 giorni vanno a preventivo.`,
+        },
+        {
+          value: "abbonamento",
+          label: `Abbonamento, ${eur(PRICING.monthly)} al mese`,
+          text: `Modifiche ai contenuti illimitate, hosting, SSL e report mensile inclusi. Minimo 3 mesi, poi disdici con 30 giorni di preavviso. Puoi metterlo in pausa a ${eur(PRICING.paused)} al mese per tenere la pagina online.`,
+        },
+      ],
+    },
     calc: { label: "Dal calcolatore", remove: "Togli i numeri del calcolatore" },
     plan: { label: "Piano scelto", remove: "Togli il piano scelto" },
+    quote: { label: "Preventivo", remove: "Togli il preventivo" },
     checkoutCta: "Paga e inizia",
     progress: { of: "di 3", ready: "Pronto da inviare", label: "Domande completate" },
-    cardTitle: "La tua pagina di prova",
+    cardTitle: "La tua bozza",
     cardSub: "Tre domande. Il resto è facoltativo.",
     more: {
       summary: "Vuoi una prova più vicina al risultato finale? Qualche dettaglio in più",
@@ -421,13 +593,13 @@ export const copy = {
       fallbackTitle: "La tua offerta, come nell’annuncio",
       fallbackText: "Due righe chiare su cosa ottiene chi arriva.",
       in: "a",
-      by: "Pagina di prova per",
+      by: "Bozza per",
     },
     printer: {
-      label: "Riepilogo della tua pagina di prova",
+      label: "Riepilogo della tua bozza",
       brand: "BESA",
-      status: { draft: "Si compila mentre scrivi", printing: "Stampo il riepilogo…", complete: "Ricevuto: ci pensiamo noi" },
-      title: "Pagina di prova",
+      status: { draft: "Si compila mentre scrivi", printing: "Stampiamo il riepilogo…", complete: "Ricevuto: ci pensiamo noi" },
+      title: "Bozza",
       forName: "per",
       fallbackName: "te",
       rows: { attivita: "Attività", offerta: "Offerta", zona: "Zona", annuncio: "Annuncio", sito: "Logo/colori", obiettivo: "Pulsante", tono: "Tono", piano: "Piano" },
@@ -435,13 +607,13 @@ export const copy = {
       sections: "Cosa ci sarà",
       sectionList: ["Titolo preso dal tuo annuncio", "La tua offerta, spiegata in breve", "Un solo pulsante"],
       delivery: "Arriva su un indirizzo di prova",
-      eta: "Consegna: entro 1 giorno lavorativo",
+      eta: "Prima bozza: entro 48 ore",
       download: "Scarica il riepilogo",
-      file: "besa-riepilogo-pagina-di-prova.txt",
+      file: "besa-riepilogo-bozza.txt",
       thanks: "Grazie!",
       note: "Riepilogo illustrativo di quello che ci hai scritto.",
     },
-    reassure: "Pagina di prova entro 1 giorno lavorativo, su WhatsApp o via email.",
+    reassure: "Ti rispondiamo entro 1 giorno lavorativo. La prima bozza arriva in 48 ore e la vedi prima di pagare.",
     fields: {
       name: {
         label: "Nome",
@@ -465,11 +637,11 @@ export const copy = {
       linkLabel: "informativa privacy",
       error: "Per inviare la richiesta devi accettare la privacy.",
     },
-    submit: "Voglio la pagina di prova",
+    submit: "Voglio la mia bozza",
     submitting: "Invio in corso…",
     success: {
       title: "Ricevuto, grazie.",
-      text: "Guardiamo il tuo annuncio, prepariamo la pagina di prova e te la mandiamo entro 1 giorno lavorativo. Intanto stampiamo il riepilogo di quello che ci hai scritto.",
+      text: "Guardiamo il tuo annuncio, prepariamo la tua bozza. Ti rispondiamo entro 1 giorno lavorativo e la bozza arriva entro 48 ore. Intanto stampiamo il riepilogo di quello che ci hai scritto.",
     },
     errors: {
       generic: "Non siamo riusciti a inviare. Riprova tra poco o scrivici a info@besaweb.com.",
@@ -477,14 +649,110 @@ export const copy = {
     },
   },
 
+  eli5: {
+    title: "Facile facile.",
+    subtitle: "Un minuto, zero paroloni.",
+    close: "Chiudi",
+    scene: "Immagina un cartellone che porta la gente al tuo negozio. Ogni persona che arriva ti costa qualche centesimo. Ma l’ingresso è un corridoio con dieci porte e nessuna insegna: molti si perdono e tornano indietro.",
+    before: "Oggi",
+    after: "Con BESA",
+    beforeNote: "Dieci porte, nessuna insegna",
+    afterNote: "Una porta: scrivici qui",
+    blocks: [
+      {
+        title: "Il problema che non vedi",
+        text: "Paghi perché l’annuncio venga cliccato, poi mandi le persone sul tuo profilo o sul tuo sito: troppe cose, nessuna che dica «scrivimi qui». Il click l’hai già pagato, il messaggio non arriva.",
+      },
+      {
+        title: "Cosa facciamo noi",
+        text: "Apriamo una porta sola. Una pagina fatta apposta per quell’annuncio: la stessa offerta, due righe chiare e un pulsante per scriverti.",
+      },
+      {
+        title: "Come lo risolviamo",
+        text: "Ci mandi il link dell’annuncio. Noi facciamo la bozza, gratis, e la guardi dal telefono. Se ti piace, paghi e la colleghi all’annuncio.",
+      },
+    ],
+    closer: "Stesso annuncio, stesso budget. Cambia solo dove atterra chi clicca.",
+    done: "Ho capito, mandaci l’annuncio",
+  },
+
+  spec: {
+    title: "Scheda tecnica",
+    subtitle: "Per chi vuole vedere cosa c’è sotto. Tutto misurato su questa pagina.",
+    close: "Chiudi",
+    done: "Chiudi la scheda",
+    scoresLabel: "Lighthouse 12, mobile, rete lenta simulata",
+    scores: [
+      { value: "99", label: "Prestazioni" },
+      { value: "100", label: "Accessibilità" },
+      { value: "96", label: "Buone pratiche" },
+      { value: "100", label: "SEO" },
+    ],
+    groups: [
+      {
+        title: "Velocità da telefono",
+        rows: [
+          ["Primo contenuto visibile (FCP)", "1,2 s"],
+          ["Contenuto principale (LCP)", "2,0 s"],
+          ["Blocco del thread (TBT)", "0 ms"],
+          ["Spostamenti di layout (CLS)", "0"],
+          ["Risposta del server (TTFB)", "10 ms"],
+          ["Peso totale trasferito", "174 KB"],
+        ],
+      },
+      {
+        title: "Come è costruita",
+        rows: [
+          ["Generazione", "Pagine HTML pronte in anticipo (Astro, statico)"],
+          ["Stile", "Tailwind CSS 4, incluso nella pagina"],
+          ["JavaScript", "Circa 10 KB, nessun framework lato client"],
+          ["Font", "Inter ospitato da noi (niente Google Fonts): variabile in tondo, corsivo solo nel peso usato"],
+          ["Immagini", "2 file, 12 KB in tutto"],
+          ["Consegna", "Compressione Brotli, cache di un anno sui file con hash"],
+        ],
+      },
+      {
+        title: "Sicurezza e privacy",
+        rows: [
+          ["Intestazioni", "CSP restrittiva, X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy"],
+          ["Cookie", "Zero su questa pagina"],
+          ["Statistiche", "Umami ospitato da noi, rispetta Do Not Track"],
+          ["Modulo", "Validazione lato server, honeypot, limite di richieste, Cloudflare Turnstile invisibile"],
+        ],
+      },
+      {
+        title: "Accessibilità e SEO",
+        rows: [
+          ["WCAG 2.1 AA", "0 violazioni (axe-core)"],
+          ["Movimento", "Le animazioni si spengono con «riduci movimento»"],
+          ["Dati strutturati", "JSON-LD: Organization, Service, FAQPage"],
+          ["Indicizzazione", "Sitemap, canonical, lingua it"],
+        ],
+      },
+      {
+        title: "Nelle pagine dei clienti",
+        rows: [
+          ["Tracciamento", "Pixel di Meta, evento Lead all’invio del modulo e al click su WhatsApp"],
+          ["Cookie", "Banner incluso, perché il Pixel lo richiede"],
+          ["Incluso", "Hosting, certificato SSL, email con i contatti"],
+        ],
+      },
+    ],
+    note: "Misurato a ottobre 2026 sulla versione di produzione di questa pagina, in locale. Il 96 di Buone pratiche viene da un errore in console dello script di statistiche, che in locale non risponde.",
+  },
+
   footer: {
-    slogan: "Veloce. Pratico. Funzionale.",
+    slogan: "Landing page per chi fa pubblicità su Meta.",
     email: "info@besaweb.com",
-    legalLine: "[TODO: ragione sociale / P.IVA]",
+    // Aggiungere P.IVA e sede legale appena esistono.
+    legalLine: "besaweb · info@besaweb.com",
     links: {
       privacy: "Privacy",
       cookie: "Cookie",
+      terms: "Termini",
     },
+    columns: { page: "Pagina", contact: "Contatti", legal: "Legale" },
+    rights: "Tutti i diritti riservati.",
   },
 } as const;
 

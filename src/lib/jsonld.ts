@@ -1,28 +1,12 @@
 import { copy } from "./copy";
-import { hasTodo, splitTodo } from "./todo";
 
-const strip = (s: string) =>
-  splitTodo(s)
-    .filter((p) => !p.todo)
-    .map((p) => p.text)
-    .join("")
-    .replace(/\s+/g, " ")
-    .trim();
-
-/**
- * FAQPage JSON-LD from fully answered items only. Any item whose question or answer still
- * contains a [TODO] is skipped, so the markup always equals the visible text exactly.
- */
+/** FAQPage JSON-LD from the visible FAQ (already mode-aware in copy.ts), so markup equals page text exactly. */
 export function faqJsonLd() {
-  const mainEntity = copy.faq.items
-    .filter((it) => !hasTodo(it.q) && !hasTodo(it.a))
-    .map((it) => ({ q: strip(it.q), a: strip(it.a) }))
-    .filter((it) => it.q && it.a)
-    .map((it) => ({
-      "@type": "Question",
-      name: it.q,
-      acceptedAnswer: { "@type": "Answer", text: it.a },
-    }));
+  const mainEntity = copy.faq.items.map((it) => ({
+    "@type": "Question",
+    name: it.q,
+    acceptedAnswer: { "@type": "Answer", text: it.a },
+  }));
   return { "@context": "https://schema.org", "@type": "FAQPage", mainEntity };
 }
 
