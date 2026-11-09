@@ -1,5 +1,8 @@
 ---
 import LegalPage from "../components/LegalPage.astro";
+import { FEATURES } from "../lib/features";
+// Turnstile runs only with the dynamic form on (FEATURES.leadForm).
+const form = FEATURES.leadForm.enabled;
 ---
 <LegalPage
   title="Cookie policy | BESA"
@@ -15,8 +18,12 @@ import LegalPage from "../components/LegalPage.astro";
   <h2>Statistiche: Umami</h2>
   <p>Per capire quante persone visitano il sito usiamo Umami, un software di statistiche che gestiamo noi sui nostri server. Funziona senza cookie e non crea profili delle persone. Rispetta l’impostazione “Do Not Track” del browser.</p>
 
-  <h2>Modulo di contatto: Cloudflare Turnstile</h2>
-  <p>Nella pagina con il modulo può intervenire Cloudflare Turnstile, un controllo anti-spam. Interviene solo in relazione al modulo. Per sapere quali dati tratta vedi l’<a href="/privacy-policy">informativa privacy</a>.</p>
+  {form && (
+    <>
+      <h2>Modulo di contatto: Cloudflare Turnstile</h2>
+      <p>Nella pagina con il modulo può intervenire Cloudflare Turnstile, un controllo anti-spam. Interviene solo in relazione al modulo. Per sapere quali dati tratta vedi l’<a href="/privacy-policy">informativa privacy</a>.</p>
+    </>
+  )}
 
   <h2>Contatti</h2>
   <p>Per domande: <a href="mailto:info@besaweb.com">info@besaweb.com</a>.</p>

@@ -1,0 +1,148 @@
+---
+// "Il tuo messaggio": the ready-made email in a native popover, for when the mail app did not open
+// (desktop webmail, no default app). Same shell as LinkHelp/CalcHelp. Rendered once per page with
+// id="mail-card"; every "copy the message" button points at it. The templates travel in data-mail
+// (never data-tpl: Problem.astro rewrites the text of every [data-tpl]) so the browser builds the
+// draft without copy.ts. Without JS it still opens, with the generic draft.
+import { copy } from "../lib/copy";
+import { buildMailDraft, type MailTemplates } from "../lib/mail-draft";
+import { SITE } from "../lib/site";
+const m = copy.mail;
+const k = m.card;
+const tpl: MailTemplates = { to: SITE.email, subject: m.subject, body: m.body };
+const d = buildMailDraft({}, tpl);
+const fields = [
+  { id: "to", label: k.to, value: d.to },
+  { id: "subject", label: k.subject, value: d.subject },
+] as const;
+---
+<div
+  id="mail-card"
+  popover
+  class="mc-pop"
+  role="dialog"
+  aria-labelledby="mail-card-t"
+  data-mail={JSON.stringify(tpl)}
+  data-copied={k.copied}
+  data-live={k.copiedLive}
+>
+  <header class="mc-head">
+    <div>
+      <p id="mail-card-t" class="mc-t">{k.title}</p>
+      <p class="mc-sub">{k.subtitle.replace("{to}", SITE.email)}</p>
+    </div>
+    <button type="button" class="mc-x" popovertarget="mail-card" popovertargetaction="hide" aria-label={k.close}>
+      <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+    </button>
+  </header>
+
+  <div class="mc-body">
+    {fields.map((f) => (
+      <div class="mc-row">
+        <label class="mc-l" for={`mc-${f.id}`}>{f.label}</label>
+        <input id={`mc-${f.id}`} class="mc-v" type="text" readonly value={f.value} data-field={f.id} />
+        <button type="button" class="mc-copy" data-copy={f.id} aria-label={k.copyLabel.replace("{field}", f.label)}><span>{k.copy}</span></button>
+      </div>
+    ))}
+    <div class="mc-row mc-msg">
+      <div class="mc-msg-top">
+        <label class="mc-l" for="mc-body">{k.body}</label>
+        <button type="button" class="mc-copy" data-copy="body" aria-label={k.copyLabel.replace("{field}", k.body)}><span>{k.copy}</span></button>
+      </div>
+      <textarea id="mc-body" class="mc-v" readonly rows="9" data-field="body">{d.body}</textarea>
+    </div>
+    <p class="sr-only" aria-live="polite" id="mc-live"></p>
+    <button type="button" class="mc-done" popovertarget="mail-card" popovertargetaction="hide">{k.done}</button>
+  </div>
+</div>
+
+<script>
+  import { currentDraft, track } from "../lib/mail-state";
+  const pop = document.getElementById("mail-card");
+  if (pop) {
+    const val = (f: string) => pop.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[data-field="${f}"]`)!;
+    const live = document.getElementById("mc-live")!;
+    const names: Record<string, string> = {};
+    pop.querySelectorAll<HTMLLabelElement>(".mc-l").forEach((l) => { names[l.htmlFor.replace("mc-", "")] = l.textContent ?? ""; });
+
+    // Filled at every opening, from whatever the visitor typed or calculated so far.
+    pop.addEventListener("beforetoggle", (e) => {
+      if ((e as ToggleEvent).newState !== "open") return;
+      const d = currentDraft();
+      if (d) { val("to").value = d.to; val("subject").value = d.subject; val("body").value = d.body; }
+      track("mail_card_open");
+    });
+
+    // Insecure contexts have no Clipboard API: fall back to selecting the field and execCommand.
+    const write = async (el: HTMLInputElement | HTMLTextAreaElement) => {
+      try {
+        if (!navigator.clipboard) throw new Error("no clipboard");
+        await navigator.clipboard.writeText(el.value);
+        return true;
+      } catch {
+        el.focus(); el.select();
+        try { return document.execCommand("copy"); } catch { return false; } finally { el.setSelectionRange(0, 0); }
+      }
+    };
+    const timers = new WeakMap<HTMLElement, number>();
+    pop.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((b) => {
+      const label = b.querySelector("span")!;
+      const idle = label.textContent ?? "";
+      b.addEventListener("click", async () => {
+        const f = b.dataset.copy!;
+        const ok = await write(val(f));
+        if (!ok) { val(f).focus(); val(f).select(); return; }
+        track("mail_copy", { field: f });
+        label.textContent = pop.dataset.copied ?? "";
+        b.classList.add("is-done");
+        live.textContent = (pop.dataset.live ?? "").replace("{field}", names[f] ?? "");
+        clearTimeout(timers.get(b));
+        timers.set(b, window.setTimeout(() => { label.textContent = idle; b.classList.remove("is-done"); }, 1500));
+      });
+    });
+  }
+</script>
+
+<style>
+  .mc-pop { width: min(100% - 2rem, 32rem); max-height: calc(100dvh - 2rem); margin: auto; padding: 0; border: 0; border-radius: var(--radius-xl); background: var(--color-surface-page); color: var(--color-text-primary); box-shadow: 0 50px 100px -40px oklch(0.15 0.1 266 / .7); font-weight: 400; font-size: 1rem; line-height: 1.5; text-align: left; overflow: auto; overscroll-behavior: contain; }
+  .mc-pop::backdrop { background: oklch(0.2 0.08 266 / .5); }
+  @media (hover: hover) and (pointer: fine) { .mc-pop::backdrop { backdrop-filter: blur(3px); } }
+  .mc-pop :focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+  .mc-head { position: relative; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.5rem 1.5rem 1.25rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); overflow: hidden; }
+  .mc-head::after { content: ""; position: absolute; right: -3rem; top: -4rem; width: 11rem; height: 11rem; border-radius: 9999px; background: radial-gradient(closest-side, oklch(1 0 0 / .16), transparent); pointer-events: none; }
+  .mc-t { font-weight: 800; font-size: 1.25rem; line-height: 1.2; letter-spacing: -.02em; }
+  .mc-sub { margin-top: .35rem; font-size: .9375rem; color: var(--color-text-on-accent-muted); overflow-wrap: anywhere; }
+  .mc-x { position: relative; z-index: 1; flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; margin: -.5rem -.5rem 0 0; border: 0; border-radius: 9999px; background: color-mix(in oklab, var(--color-text-on-accent) 16%, transparent); color: var(--color-text-on-accent); cursor: pointer; transition: background-color 150ms var(--ease-out); }
+  @media (hover: hover) { .mc-x:hover { background: color-mix(in oklab, var(--color-text-on-accent) 26%, transparent); } }
+  .mc-head .mc-x:focus-visible { outline-color: var(--color-focus-ring-on-accent); }
+
+  /* the body reads like a mail composer: label column, value, copy button on each line */
+  .mc-body { padding: .5rem 1.5rem 1.5rem; }
+  .mc-row { display: grid; grid-template-columns: 4.75rem minmax(0, 1fr) auto; align-items: center; gap: .5rem; padding: .5rem 0; border-bottom: 1px solid var(--color-border-subtle); }
+  .mc-l { font-size: .875rem; font-weight: 700; color: var(--color-text-secondary); margin: 0; }
+  .mc-v { width: 100%; min-width: 0; min-height: 2.75rem; padding: .5rem .25rem; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--color-text-primary); font: inherit; font-size: 1rem; text-overflow: ellipsis; }
+  .mc-v:focus { outline: none; background: var(--color-surface-sunken); }
+  .mc-msg { display: block; border-bottom: 0; }
+  .mc-msg-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+  .mc-msg textarea { display: block; margin-top: .5rem; padding: .75rem .9rem; background: var(--color-surface-sunken); border-radius: var(--radius-base); resize: vertical; line-height: 1.5; font-size: .9375rem; }
+  .mc-copy { display: none; }
+  :global(.js) .mc-copy { display: inline-flex; align-items: center; justify-content: center; min-width: 5.5rem; min-height: 2.75rem; padding: 0 .9rem; border: 1.5px solid var(--color-border-subtle); border-radius: 9999px; background: var(--color-surface-page); color: var(--color-accent-text); font: inherit; font-size: .875rem; font-weight: 700; cursor: pointer; transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), border-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  :global(.js) .mc-copy:active { scale: .96; }
+  @media (hover: hover) { :global(.js) .mc-copy:hover { border-color: var(--color-accent-solid); } }
+  :global(.js) .mc-copy.is-done { background: var(--color-status-success); border-color: var(--color-status-success); color: var(--color-text-on-accent); }
+  .mc-done { margin-top: 1.25rem; width: 100%; min-height: 3rem; border: 0; border-radius: var(--radius-base); background: var(--color-accent-solid); color: var(--color-text-on-accent); font: inherit; font-weight: 700; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  .mc-done:active { scale: .98; }
+  @media (hover: hover) { .mc-done:hover { background: var(--color-accent-solid-hover); } }
+  @media (max-width: 26rem) { .mc-row { grid-template-columns: minmax(0, 1fr) auto; } .mc-row > .mc-l { grid-column: 1 / -1; } }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .mc-pop { opacity: 0; translate: 0 1rem; scale: .97; transition: opacity 220ms var(--ease-out), translate 450ms var(--ease-expo), scale 450ms var(--ease-expo), overlay 220ms allow-discrete, display 220ms allow-discrete; }
+    .mc-pop:popover-open { opacity: 1; translate: none; scale: 1; }
+    @starting-style { .mc-pop:popover-open { opacity: 0; translate: 0 1rem; scale: .97; } }
+    .mc-pop::backdrop { transition: opacity 220ms var(--ease-out), overlay 220ms allow-discrete, display 220ms allow-discrete; opacity: 0; }
+    .mc-pop:popover-open::backdrop { opacity: 1; }
+    @starting-style { .mc-pop:popover-open::backdrop { opacity: 0; } }
+    :global(.js) .mc-copy.is-done { animation: mc-pop 300ms var(--ease-expo); }
+    @keyframes mc-pop { 50% { scale: 1.06; } }
+  }
+</style>

@@ -1,19 +1,29 @@
 ---
-// Inline "paste your ad link" field. With JS it drops the link into the contact form and moves
-// the visitor there; without JS it is replaced by a plain link to the form (nothing typed is lost).
+// Inline "paste your ad link" field, in one of two modes (FEATURES.leadForm):
+// - form on:  with JS it drops the link into the contact form and moves the visitor there;
+// - form off: it opens the visitor's mail app with the draft (mail-state), then offers the MailCard
+//   popup in case nothing opened.
+// Without JS it is replaced by a plain link: to the form, or a mailto: with the subject.
 import { copy } from "../lib/copy";
+import { FEATURES } from "../lib/features";
+import { plainMailto } from "../lib/mail-draft";
+import { SITE } from "../lib/site";
 import LinkHelp from "./LinkHelp.astro";
 interface Props {
   id: string;
+  /** Umami "mail_open" where: which of the send points was used. */
+  where: "hero" | "steps" | "calc" | "offer";
   tone?: "blue" | "light";
   hint?: boolean;
   fallback?: string;
 }
-const { id, tone = "light", hint = false, fallback = copy.catcher.fallback } = Astro.props;
+const { id, where, tone = "light", hint = false, fallback = copy.catcher.fallback } = Astro.props;
 const c = copy.catcher;
+const mail = !FEATURES.leadForm.enabled;
+const mc = copy.mail.catcher;
 ---
 <div class:list={["lc-wrap", tone]}>
-  <form class="lc" data-catcher novalidate action="#contatto">
+  <form class="lc" data-catcher data-mode={mail ? "mail" : undefined} data-where={mail ? where : undefined} data-empty={mail ? mc.empty : undefined} data-opened={mail ? mc.opened : undefined} novalidate action={mail ? undefined : "#contatto"}>
     <div class="lc-top">
       <label class="lc-label" for={id}>{c.label}</label>
       <LinkHelp id={`${id}-help`} />
@@ -33,23 +43,56 @@ const c = copy.catcher;
         placeholder={c.placeholder}
       />
       <button type="submit" class="lc-btn">
-        <span>{c.button}</span>
+        <span>{mail ? mc.button : c.button}</span>
         <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
       </button>
     </div>
     {hint && <p class="lc-hint">{c.hint}</p>}
+    {mail && <p class="lc-err" role="alert"></p>}
+    {mail && (
+      <div class="lc-sent" hidden>
+        <p class="lc-ok" role="status"></p>
+        <button type="button" class="lc-retry" popovertarget="mail-card">{mc.retry}</button>
+      </div>
+    )}
   </form>
-  <a class="btn lc-fallback" href="#contatto">{fallback}</a>
+  <a class="btn lc-fallback" href={mail ? plainMailto(SITE.email, copy.mail.subject) : "#contatto"}>{fallback}</a>
 </div>
 
 <script>
   import { normalizeAdLink } from "../lib/link";
+  import { openMail, setLink } from "../lib/mail-state";
   // Share text, bare domains and @handles all become a usable link; anything else is passed as typed.
   const extract = (raw: string) => normalizeAdLink(raw) || raw.trim();
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   document.querySelectorAll<HTMLFormElement>("form[data-catcher]").forEach((form) => {
     const input = form.querySelector<HTMLInputElement>("input[type=text]")!;
+    if (form.dataset.mode === "mail") {
+      const err = form.querySelector<HTMLElement>(".lc-err")!;
+      const sent = form.querySelector<HTMLElement>(".lc-sent")!;
+      // Every field feeds the same draft: the last link typed anywhere wins.
+      input.addEventListener("input", () => {
+        setLink(extract(input.value));
+        if (err.textContent) { err.textContent = ""; input.removeAttribute("aria-invalid"); }
+      });
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const link = extract(input.value);
+        if (!link) {
+          err.textContent = form.dataset.empty ?? "";
+          input.setAttribute("aria-invalid", "true");
+          input.focus();
+          return;
+        }
+        setLink(link);
+        // Must run inside the submit gesture, or phones refuse to hand over to the mail app.
+        if (!openMail(form.dataset.where as "hero")) return;
+        sent.hidden = false;
+        sent.querySelector(".lc-ok")!.textContent = form.dataset.opened ?? "";
+      });
+      return;
+    }
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const target = document.getElementById("f-annuncio") as HTMLInputElement | null;
@@ -96,6 +139,19 @@ const c = copy.catcher;
     .lc-btn:hover svg { translate: 3px 0; }
   }
   .lc-hint { font-size: .9375rem; color: var(--color-text-secondary); }
+  .lc-err { font-size: .9375rem; font-weight: 600; color: var(--color-status-error); }
+  .lc-err:empty { display: none; }
+  .blue .lc-err { color: var(--color-text-on-accent); }
+  .lc-sent { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .75rem; font-size: .9375rem; }
+  .lc-sent[hidden] { display: none; }
+  .lc-ok { display: flex; align-items: center; gap: .4rem; margin: 0; font-weight: 600; }
+  .lc-ok::before { content: ""; flex: none; width: .5rem; height: .5rem; border-radius: 9999px; background: var(--color-status-success); }
+  .lc-retry { min-height: 2.75rem; padding: 0; border: 0; background: none; color: var(--color-accent-text); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; cursor: pointer; }
+  .blue .lc-retry { color: var(--color-text-on-accent); }
+  .lc-retry:focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; border-radius: .25rem; }
+  .blue .lc-retry:focus-visible { outline-color: var(--color-focus-ring-on-accent); }
+  @media (hover: hover) { .lc-retry:hover { color: var(--color-text-primary); } .blue .lc-retry:hover { color: var(--color-text-on-accent-muted); } }
+  @media (prefers-reduced-motion: no-preference) { .lc-sent:not([hidden]) { animation: lc-in 400ms var(--ease-expo); } @keyframes lc-in { from { opacity: 0; translate: 0 .35rem; } } }
   .blue .lc-hint { color: var(--color-text-on-accent-muted); }
   .light .lc-field { box-shadow: 0 0 0 1px var(--color-border-subtle), 0 14px 34px -20px oklch(0.2 0.1 266 / .35); }
   .light .lc-field:focus-within { box-shadow: 0 0 0 3px var(--color-focus-ring); }

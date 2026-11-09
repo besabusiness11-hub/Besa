@@ -1,0 +1,135 @@
+---
+// Final contact section while the dynamic form is off (FEATURES.leadForm = false): a small card with
+// our address (copyable), "Scrivici" (opens the mail app with the draft) and "Vedi il messaggio pronto"
+// (the MailCard popup). Keeps id="contatto" for the header CTA, the dock and the footer.
+// Without JS, "Scrivici" is a plain mailto: with the subject.
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+import { plainMailto } from "../lib/mail-draft";
+import { SITE } from "../lib/site";
+import MailCard from "./MailCard.astro";
+const c = copy.finalCta;
+const k = copy.mail.contact;
+const card = copy.mail.card;
+const href = plainMailto(SITE.email, copy.mail.subject);
+---
+<section id="contatto" class="on-blue bg-accent-solid text-[var(--color-text-on-accent)] section" aria-labelledby="contatto-title">
+  <div class="wrap layout">
+    <div class="intro">
+      <h2 id="contatto-title" class="t-h2" set:html={em(c.headline)} />
+      <p class="lead mt-6 text-[var(--color-text-on-accent-muted)]">{c.lead}</p>
+      <p class="hook mt-4">{c.hook}</p>
+      <div class="next">
+        <h3 class="next-t">{c.next.title}</h3>
+        <ol>
+          {c.next.steps.map((t) => <li>{t}</li>)}
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-copied={card.copied} data-live={card.copiedLive}>
+      <span class="env" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>
+      </span>
+      <h3 class="card-t">{k.title}</h3>
+      <p class="card-sub">{k.text}</p>
+
+      <div class="addr">
+        <div class="addr-v">
+          <span class="addr-l" id="cm-addr-l">{k.address}</span>
+          <input id="cm-addr" type="text" readonly value={SITE.email} aria-labelledby="cm-addr-l" />
+        </div>
+        <button type="button" class="copy" id="cm-copy" aria-label={card.copyLabel.replace("{field}", k.address)}><span>{card.copy}</span></button>
+      </div>
+
+      <div class="acts">
+        <a class="write" id="cm-write" href={href}>
+          <span>{k.write}</span>
+          <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </a>
+        <button type="button" class="see" popovertarget="mail-card">{k.see}</button>
+      </div>
+      <p class="reassure">{k.reassure}</p>
+      <p class="sr-only" aria-live="polite" id="cm-live"></p>
+    </div>
+  </div>
+  <MailCard />
+</section>
+
+<script>
+  import { openMail, track } from "../lib/mail-state";
+  const write = document.getElementById("cm-write");
+  write?.addEventListener("click", (e) => {
+    // With JS the draft carries the link and the numbers; if it cannot be built, the plain href still works.
+    if (openMail("contact")) e.preventDefault();
+  });
+
+  const card = document.querySelector<HTMLElement>("#contatto .card");
+  const btn = document.getElementById("cm-copy");
+  const addr = document.getElementById("cm-addr") as HTMLInputElement | null;
+  if (card && btn && addr) {
+    const label = btn.querySelector("span")!;
+    const idle = label.textContent ?? "";
+    let t = 0;
+    btn.addEventListener("click", async () => {
+      let ok = false;
+      try {
+        if (!navigator.clipboard) throw new Error("no clipboard");
+        await navigator.clipboard.writeText(addr.value);
+        ok = true;
+      } catch {
+        addr.focus(); addr.select();
+        try { ok = document.execCommand("copy"); } catch {}
+      }
+      if (!ok) return;
+      track("mail_copy", { field: "to" });
+      label.textContent = card.dataset.copied ?? "";
+      btn.classList.add("is-done");
+      document.getElementById("cm-live")!.textContent = (card.dataset.live ?? "").replace("{field}", document.getElementById("cm-addr-l")?.textContent ?? "");
+      clearTimeout(t);
+      t = window.setTimeout(() => { label.textContent = idle; btn.classList.remove("is-done"); }, 1500);
+    });
+  }
+</script>
+
+<style>
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  @media (min-width: 64rem) { .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 30rem); column-gap: 4rem; align-items: start; } }
+  .hook { font-weight: 700; color: var(--color-text-on-accent); }
+  .next { margin-top: 2rem; }
+  .next-t { font-size: 1rem; font-weight: 700; }
+  .next ol { list-style: none; margin: .9rem 0 0; padding: 0; display: grid; gap: .75rem; counter-reset: nx; }
+  .next li { counter-increment: nx; display: grid; grid-template-columns: 1.75rem 1fr; gap: .75rem; align-items: start; color: var(--color-text-on-accent-muted); line-height: 1.45; }
+  .next li::before { content: counter(nx); display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 9999px; font-size: .8125rem; font-weight: 800; color: var(--color-accent-text); background: var(--color-text-on-accent); }
+
+  .card { background: var(--color-surface-page); color: var(--color-text-primary); border-radius: var(--radius-xl); padding: clamp(1.25rem, .9rem + 1.6vw, 2rem); box-shadow: 0 40px 80px -40px oklch(0.15 0.1 266 / .8); }
+  .card :global(:focus-visible) { outline-color: var(--color-focus-ring); }
+  .env { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: 1rem; border-radius: 9999px; background: var(--color-accent-subtle); color: var(--color-accent-text); }
+  .card-t { font-size: 1.5rem; font-weight: 800; line-height: 1.15; letter-spacing: -.025em; }
+  .card-sub { margin-top: .5rem; color: var(--color-text-secondary); }
+
+  .addr { display: flex; align-items: center; gap: .75rem; margin-top: 1.5rem; padding: .5rem .5rem .5rem 1rem; border-radius: var(--radius-base); background: var(--color-surface-sunken); }
+  .addr-v { flex: 1; min-width: 0; display: grid; }
+  .addr-l { font-size: .8125rem; font-weight: 700; color: var(--color-text-secondary); }
+  .addr input { width: 100%; min-width: 0; min-height: 2rem; padding: 0; border: 0; background: transparent; color: var(--color-text-primary); font: inherit; font-size: 1.0625rem; font-weight: 700; text-overflow: ellipsis; }
+  .addr input:focus { outline: none; }
+  .copy { display: none; }
+  :global(.js) .copy { flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: 5.5rem; min-height: 2.75rem; padding: 0 .9rem; border: 1.5px solid var(--color-border-subtle); border-radius: 9999px; background: var(--color-surface-page); color: var(--color-accent-text); font: inherit; font-size: .875rem; font-weight: 700; cursor: pointer; transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), border-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  :global(.js) .copy:active { scale: .96; }
+  @media (hover: hover) { :global(.js) .copy:hover { border-color: var(--color-accent-solid); } }
+  :global(.js) .copy.is-done { background: var(--color-status-success); border-color: var(--color-status-success); color: var(--color-text-on-accent); }
+
+  .acts { display: grid; gap: .75rem; margin-top: 1.25rem; }
+  .write { display: flex; align-items: center; justify-content: center; gap: .5rem; min-height: 3.5rem; padding: .75rem 1.5rem; border-radius: var(--radius-base); background: var(--color-accent-solid); color: var(--color-text-on-accent); font-weight: 700; font-size: 1.0625rem; text-decoration: none; box-shadow: 0 14px 30px -14px oklch(0.448 0.193 268 / .9); transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  .write svg { transition: translate 250ms var(--ease-out); }
+  .write:active { scale: .98; }
+  @media (hover: hover) { .write:hover { background: var(--color-accent-solid-hover); } .write:hover svg { translate: 3px 0; } }
+  .see { min-height: 3rem; padding: .5rem 1rem; border: 1.5px solid var(--color-border-subtle); border-radius: var(--radius-base); background: var(--color-surface-page); color: var(--color-accent-text); font: inherit; font-weight: 700; cursor: pointer; transition: border-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  .see:active { scale: .98; }
+  @media (hover: hover) { .see:hover { border-color: var(--color-accent-solid); } }
+  .reassure { margin-top: .9rem; text-align: center; font-size: .875rem; color: var(--color-text-secondary); max-width: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .copy.is-done { animation: cm-pop 300ms var(--ease-expo); }
+    @keyframes cm-pop { 50% { scale: 1.06; } }
+  }
+</style>

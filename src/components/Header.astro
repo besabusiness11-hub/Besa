@@ -1,10 +1,9 @@
 ---
-import { copy } from "../lib/copy";
 import { Image } from "astro:assets";
 import logo from "../assets/logo-blue.png";
 import logoWhite from "../assets/logo-white.png";
 ---
-<!-- Logo centred, one clear CTA. Section navigation lives in SectionNav (right rail / bottom pill).
+<!-- Logo centred, nothing else: the page's CTAs live in the sections and in the SectionNav pill.
      data-tone / --hdr-bg follow the section under the bar (script below); data-top = still over the top of the page. -->
 <header class="site-header sticky top-0 z-10" data-tone="dark" data-top>
   <div class="wrap bar">
@@ -13,10 +12,7 @@ import logoWhite from "../assets/logo-white.png";
       <Image class="logo-ink" src={logo} alt="BESA" width={47} height={24} densities={[2, 3]} loading="eager" />
       <Image class="logo-white" src={logoWhite} alt="" width={47} height={24} densities={[2, 3]} loading="eager" />
     </a>
-    <a class="btn cta" href="#contatto">
-      <span>{copy.nav.cta}</span>
-      <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-    </a>
+    <span aria-hidden="true"></span>
   </div>
 </header>
 
@@ -99,9 +95,7 @@ import logoWhite from "../assets/logo-white.png";
 
   :global(.js) .site-header[data-tone="dark"] .logo-ink { display: none; }
   :global(.js) .site-header[data-tone="dark"] .logo-white { display: block; }
-  :global(.js) .site-header[data-tone="dark"] .cta { background: var(--color-text-on-accent); color: var(--color-accent-text); box-shadow: 0 8px 20px -10px oklch(0.15 0.08 266 / .7); }
   :global(.js) .site-header[data-tone="dark"] :focus-visible { outline-color: var(--color-focus-ring-on-accent); }
-  @media (hover: hover) { :global(.js) .site-header[data-tone="dark"] .cta:hover { background: var(--color-accent-subtle); } }
 
   /* reading progress: a hairline that fills as the page scrolls (CSS only) */
   .site-header::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--color-accent-solid); transform: scaleX(0); transform-origin: left; pointer-events: none; }
@@ -113,33 +107,18 @@ import logoWhite from "../assets/logo-white.png";
     }
   }
 
-  /* three columns, the logo in the true centre whatever the CTA width */
+  /* three columns, the logo in the true centre */
   .bar { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: .75rem; min-height: 3.5rem; }
   .brand { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; min-width: 2.75rem; }
   .brand :global(img) { height: 1.25rem; width: auto; }
-  .cta {
-    justify-self: end; min-height: 2.75rem !important; padding: .5rem .875rem .5rem 1rem !important; gap: .4rem !important;
-    font-size: .875rem; border-radius: 9999px !important; white-space: nowrap;
-    box-shadow: 0 8px 20px -10px oklch(0.448 0.193 268 / .8);
-  }
-  .cta svg { flex: none; transition: translate 250ms var(--ease-out); }
-  @media (hover: hover) { .cta:hover svg { translate: 3px 0; } }
 
   /* phones held sideways: a slimmer bar leaves more of the ~380px screen to the page */
   @media (orientation: landscape) and (max-height: 31.25rem) and (max-width: 63.99rem) {
     .bar { min-height: 3rem; }
   }
-  /* phones: the logo keeps the true centre, so the CTA gets compact enough to fit its third of the bar */
-  @media (max-width: 29.99rem) {
-    .bar { column-gap: .5rem; }
-    .cta { font-size: .8125rem; padding-inline: .8rem !important; }
-    .cta svg { display: none; }
-  }
-  @media (max-width: 22.5rem) { .cta { font-size: .75rem; padding-inline: .6rem !important; } }
 
   @media (min-width: 64rem) {
     .bar { min-height: 3.75rem; }
     .brand :global(img) { height: 1.5rem; }
-    .cta { font-size: .9375rem; padding-inline: 1.25rem 1.1rem !important; }
   }
 </style>

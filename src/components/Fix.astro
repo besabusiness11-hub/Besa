@@ -1,26 +1,11 @@
 ---
 import { copy } from "../lib/copy";
+import LitHeadline from "./LitHeadline.astro";
 const f = copy.fix;
-// One span per word so each can light up on scroll; {em} runs keep the accent.
-const words: { t: string; em: boolean }[] = [];
-let inEm = false;
-for (const raw of f.headline.split(" ")) {
-  let t = raw;
-  const open = t.includes("{em}");
-  const close = t.includes("{/em}");
-  t = t.replace("{em}", "").replace("{/em}", "");
-  if (open) inEm = true;
-  words.push({ t, em: inEm });
-  if (close) inEm = false;
-}
 ---
 <section class="statement section" aria-labelledby="fix-title">
   <div class="wrap">
-    <h2 id="fix-title" class="big">
-      {words.map((w, i) => (
-        <Fragment><span class:list={["w", { em: w.em }]} style={`--i:${i}`}>{w.t}</span>{" "}</Fragment>
-      ))}
-    </h2>
+    <LitHeadline id="fix-title" class="big" text={f.headline} />
     <p class="lead sub reveal">{f.lead}</p>
   </div>
 </section>
@@ -28,17 +13,5 @@ for (const raw of f.headline.split(" ")) {
 <style>
   .statement { background: var(--color-surface-subtle); }
   .big { font-size: clamp(2.75rem, 1.4rem + 6vw, 6rem); line-height: .98; letter-spacing: -0.04em; max-width: 13ch; }
-  .w { display: inline-block; }
   .sub { margin-top: 2rem; color: var(--color-text-secondary); max-width: 36ch; }
-
-  /* words go from faint to full as the line scrolls through the viewport */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .w { animation: lit linear both; animation-timeline: view(); animation-range: cover calc(12% + var(--i) * 5%) cover calc(26% + var(--i) * 5%); }
-      /* start values keep large-text contrast >= 3:1 even before scrolling (accent needs a higher floor) */
-      .w.em { animation-name: lit-em; }
-      @keyframes lit { from { opacity: .55; translate: 0 .15em; } to { opacity: 1; translate: none; } }
-      @keyframes lit-em { from { opacity: .78; translate: 0 .15em; } to { opacity: 1; translate: none; } }
-    }
-  }
 </style>

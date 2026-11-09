@@ -65,7 +65,10 @@ const tabs = [
       <section class="ch-panel p-limits" aria-label={h.tabs.limits}>
         <ul class="ch-list">
           {h.limits.items.map((it) => (
-            <li><p class="ch-st" data-tpl={it.title}>{fill(it.title, v)}</p><p class="ch-d">{it.text}</p></li>
+            <li>
+              <p class="ch-st" data-tpl={it.title}>{fill(it.title, v)}</p><p class="ch-d">{it.text}</p>
+              {"source" in it && <a class="ch-src" href={it.source.href} target="_blank" rel="noopener noreferrer">{it.source.label}</a>}
+            </li>
           ))}
         </ul>
       </section>
@@ -122,6 +125,8 @@ const tabs = [
   .ch-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
   .ch-list li { display: grid; gap: .2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border-subtle); }
   .ch-list li:last-child { padding-bottom: 0; border-bottom: 0; }
+  .ch-src { justify-self: start; display: inline-flex; align-items: center; min-height: 2.75rem; font-size: .875rem; font-weight: 600; color: var(--color-accent-text); text-decoration: underline; text-underline-offset: 3px; }
+  @media (hover: hover) { .ch-src:hover { color: var(--color-text-primary); } }
   .ch-done { margin-top: 1.5rem; width: 100%; min-height: 3rem; border: 0; border-radius: var(--radius-base); background: var(--color-accent-solid); color: var(--color-text-on-accent); font: inherit; font-weight: 700; cursor: pointer; transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
   .ch-done:active { scale: .98; }
   @media (hover: hover) { .ch-done:hover { background: var(--color-accent-solid-hover); } }

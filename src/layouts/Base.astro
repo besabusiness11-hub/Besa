@@ -60,6 +60,17 @@ const og = new URL(ogImage, SITE.url).href;
   <body>
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-30 focus:bg-surface-page focus:text-[var(--color-text-primary)] focus:p-3 focus:rounded-sm">Vai al contenuto</a>
     <slot />
+    <script>
+      // Every card (native popover) opens at its top, not where it was left last time.
+      // toggle events do not bubble, hence the capture listener. Reset while closing: the card is
+      // still rendered, so the next open has no frame at the old position; reset on open as a backup.
+      const top = (e: Event) => {
+        const el = e.target as HTMLElement;
+        if (el instanceof HTMLElement && el.hasAttribute("popover")) el.scrollTop = 0;
+      };
+      document.addEventListener("beforetoggle", (e) => { if ((e as ToggleEvent).newState === "closed") top(e); }, true);
+      document.addEventListener("toggle", (e) => { if ((e as ToggleEvent).newState === "open") top(e); }, true);
+    </script>
   </body>
 </html>
 

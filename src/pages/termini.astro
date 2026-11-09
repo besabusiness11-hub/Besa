@@ -1,69 +1,85 @@
 ---
 import LegalPage from "../components/LegalPage.astro";
-import { eur, PRICING } from "../lib/offer";
+import { eur, PRICING, VALIDATION } from "../lib/offer";
+// In "validation" there are no prices yet: a short placeholder, out of the sitemap and the footer.
+// The full terms stay here for "launch" and "full".
 ---
 <LegalPage
   title="Termini e condizioni | BESA"
-  description="Cosa è incluso, come si disdice, cosa succede alla pagina e al codice: le condizioni di BESA in una pagina."
+  description={VALIDATION
+    ? "Le condizioni del servizio di BESA arriveranno insieme all’offerta definitiva."
+    : "Cosa è incluso, come si disdice, cosa succede alla pagina e al codice: le condizioni di BESA in una pagina."}
   path="/termini"
   heading="Termini e condizioni"
+  noindex={VALIDATION}
 >
-  <p>Condizioni del servizio di landing page di BESA (besaweb). Sono brevi di proposito: se qualcosa non ti è chiaro, scrivici a <a href="mailto:info@besaweb.com">info@besaweb.com</a> prima di firmare.</p>
+  {VALIDATION ? (
+    <>
+      <p>Le condizioni definitive arriveranno con l’offerta. Stiamo definendo il servizio insieme ai primi clienti: prima di lavorare insieme ti mandiamo le condizioni per iscritto, da leggere con calma.</p>
+      <p>Per qualsiasi domanda scrivici a <a href="mailto:info@besaweb.com">info@besaweb.com</a>.</p>
+      <h2>Dati personali</h2>
+      <p>Trovi come trattiamo i dati nell’<a href="/privacy-policy">informativa privacy</a> e nella <a href="/cookie-policy">cookie policy</a>.</p>
+    </>
+  ) : (
+    <>
+      <p>Condizioni del servizio di landing page di BESA (besaweb). Sono brevi di proposito: se qualcosa non ti è chiaro, scrivici a <a href="mailto:info@besaweb.com">info@besaweb.com</a> prima di firmare.</p>
 
-  <h2>Chi vende</h2>
-  <p>Il servizio è offerto da Leonardo Margiotta per BESA (besaweb). Quando sarà attiva la partita IVA, i dati dell’attività saranno indicati qui e nella fattura.</p>
+      <h2>Chi vende</h2>
+      <p>Il servizio è offerto da Leonardo Margiotta per BESA (besaweb). Quando sarà attiva la partita IVA, i dati dell’attività saranno indicati qui e nella fattura.</p>
 
-  <h2>Cosa ricevi</h2>
-  <ul>
-    <li>Una landing page costruita sul tuo annuncio, collegata al modulo contatti e al Pixel di Meta, online su un nostro server.</li>
-    <li>Hosting, SSL ed email dei contatti inclusi. Per la una tantum l’hosting è incluso per 12 mesi, poi costa {eur(PRICING.hostingYear)} all’anno.</li>
-    <li>Prima bozza in 48 ore e messa online entro 5 giorni lavorativi da quando abbiamo testi e foto. La prima bozza la vedi prima di pagare.</li>
-    <li>Il dominio resta a tuo nome. Se non ce l’hai lo registriamo per te e il primo anno è incluso.</li>
-  </ul>
-
-  <h2>Una tantum</h2>
-  <ul>
-    <li>2 giri di revisione prima della consegna.</li>
-    <li>Dopo la consegna, 30 giorni di correzioni gratuite. Poi le modifiche si fanno a preventivo, oppure passi all’abbonamento.</li>
-    <li>Il pagamento è unico e si fa prima della messa online.</li>
-  </ul>
-
-  <h2>Abbonamento</h2>
-  <ul>
-    <li>{eur(PRICING.monthly)} al mese, durata minima 3 mesi.</li>
-    <li>Modifiche ai contenuti illimitate (testi, offerte, foto). La struttura della pagina resta quella approvata: il design va approvato entro 48 ore dalla consegna.</li>
-    <li>Rispondiamo entro 1 giorno lavorativo; le modifiche ai contenuti vanno online entro 2 giorni lavorativi.</li>
-    <li>Dopo i primi 3 mesi puoi disdire quando vuoi con 30 giorni di preavviso, senza penali. I mesi già iniziati non si rimborsano.</li>
-  </ul>
-
-  <h2>Pausa dell’abbonamento</h2>
-  <p>Puoi mettere in pausa l’abbonamento a {eur(PRICING.paused)} al mese per un massimo di 2 mesi. In pausa la pagina resta online, ma non facciamo modifiche finché non torni al tuo piano. Passati i 2 mesi puoi riprendere l’abbonamento oppure disdire: in quel caso la pagina va offline e la perdi.</p>
-
-  <h2>Disdetta e pagina offline</h2>
-  <p>Alla fine dell’abbonamento la pagina va offline, salvo che tu scelga di riscattarla come descritto qui sotto. Non cancelliamo i contenuti che ci hai dato: restano tuoi.</p>
-
-  <h2>Proprietà del codice</h2>
-  <p>La pagina è costruita con il sistema di BESA. Il codice sorgente resta di BESA e non è compreso nel prezzo. Se lo vuoi, hai due possibilità:</p>
-  <ul>
-    <li><strong>Copia statica.</strong> Su richiesta ti diamo una copia della pagina in HTML, pronta da pubblicare dove vuoi. Dopo la consegna la gestisci tu e noi non facciamo più modifiche.</li>
-    <li><strong>Codice sorgente completo,</strong> per continuare a lavorarci da solo. È a pagamento e il prezzo dipende da dove vieni:
+      <h2>Cosa ricevi</h2>
       <ul>
-        <li>abbonato da meno di 12 mesi: {eur(899)};</li>
-        <li>abbonato da 12 mesi o più: {eur(449)};</li>
-        <li>cliente una tantum che non è mai stato abbonato: {eur(749)}.</li>
+        <li>Una landing page costruita sul tuo annuncio, collegata al modulo contatti e al Pixel di Meta, online su un nostro server.</li>
+        <li>Hosting, SSL ed email dei contatti inclusi. Per la una tantum l’hosting è incluso per 12 mesi, poi costa {eur(PRICING.hostingYear)} all’anno.</li>
+        <li>Prima bozza in 48 ore e messa online entro 5 giorni lavorativi da quando abbiamo testi e foto. La prima bozza la vedi prima di pagare.</li>
+        <li>Il dominio resta a tuo nome. Se non ce l’hai lo registriamo per te e il primo anno è incluso.</li>
       </ul>
-    </li>
-  </ul>
 
-  <h2>Cosa non facciamo</h2>
-  <p>Ci occupiamo della pagina, non delle inserzioni: non gestiamo le campagne Meta. Non garantiamo un numero di contatti o di vendite: dipendono anche dal tuo annuncio e dal tuo budget.</p>
+      <h2>Una tantum</h2>
+      <ul>
+        <li>2 giri di revisione prima della consegna.</li>
+        <li>Dopo la consegna, 30 giorni di correzioni gratuite. Poi le modifiche si fanno a preventivo, oppure passi all’abbonamento.</li>
+        <li>Il pagamento è unico e si fa prima della messa online.</li>
+      </ul>
 
-  <h2>Materiali che ci dai</h2>
-  <p>Testi, foto e loghi che ci mandi devi poterli usare. Ne rispondi tu verso terzi.</p>
+      <h2>Abbonamento</h2>
+      <ul>
+        <li>{eur(PRICING.monthly)} al mese, durata minima 3 mesi.</li>
+        <li>Modifiche ai contenuti illimitate (testi, offerte, foto). La struttura della pagina resta quella approvata: il design va approvato entro 48 ore dalla consegna.</li>
+        <li>Rispondiamo entro 1 giorno lavorativo; le modifiche ai contenuti vanno online entro 2 giorni lavorativi.</li>
+        <li>Dopo i primi 3 mesi puoi disdire quando vuoi con 30 giorni di preavviso, senza penali. I mesi già iniziati non si rimborsano.</li>
+      </ul>
 
-  <h2>Dati personali</h2>
-  <p>Trovi come trattiamo i dati nell’<a href="/privacy-policy">informativa privacy</a> e nella <a href="/cookie-policy">cookie policy</a>.</p>
+      <h2>Pausa dell’abbonamento</h2>
+      <p>Puoi mettere in pausa l’abbonamento a {eur(PRICING.paused)} al mese per un massimo di 2 mesi. In pausa la pagina resta online, ma non facciamo modifiche finché non torni al tuo piano. Passati i 2 mesi puoi riprendere l’abbonamento oppure disdire: in quel caso la pagina va offline e la perdi.</p>
 
-  <h2>Legge applicabile</h2>
-  <p>Si applica la legge italiana. Se sei un consumatore restano validi i diritti che la legge ti riconosce.</p>
+      <h2>Disdetta e pagina offline</h2>
+      <p>Alla fine dell’abbonamento la pagina va offline, salvo che tu scelga di riscattarla come descritto qui sotto. Non cancelliamo i contenuti che ci hai dato: restano tuoi.</p>
+
+      <h2>Proprietà del codice</h2>
+      <p>La pagina è costruita con il sistema di BESA. Il codice sorgente resta di BESA e non è compreso nel prezzo. Se lo vuoi, hai due possibilità:</p>
+      <ul>
+        <li><strong>Copia statica.</strong> Su richiesta ti diamo una copia della pagina in HTML, pronta da pubblicare dove vuoi. Dopo la consegna la gestisci tu e noi non facciamo più modifiche.</li>
+        <li><strong>Codice sorgente completo,</strong> per continuare a lavorarci da solo. È a pagamento e il prezzo dipende da dove vieni:
+          <ul>
+            <li>abbonato da meno di 12 mesi: {eur(899)};</li>
+            <li>abbonato da 12 mesi o più: {eur(449)};</li>
+            <li>cliente una tantum che non è mai stato abbonato: {eur(749)}.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>Cosa non facciamo</h2>
+      <p>Ci occupiamo della pagina, non delle inserzioni: non gestiamo le campagne Meta. Non garantiamo un numero di contatti o di vendite: dipendono anche dal tuo annuncio e dal tuo budget.</p>
+
+      <h2>Materiali che ci dai</h2>
+      <p>Testi, foto e loghi che ci mandi devi poterli usare. Ne rispondi tu verso terzi.</p>
+
+      <h2>Dati personali</h2>
+      <p>Trovi come trattiamo i dati nell’<a href="/privacy-policy">informativa privacy</a> e nella <a href="/cookie-policy">cookie policy</a>.</p>
+
+      <h2>Legge applicabile</h2>
+      <p>Si applica la legge italiana. Se sei un consumatore restano validi i diritti che la legge ti riconosce.</p>
+    </>
+  )}
 </LegalPage>

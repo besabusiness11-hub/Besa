@@ -14,7 +14,7 @@ const c = h.compare;
       <h1 id="hero-title" class="h1" set:html={em(h.headline)} />
       <p class="lead">{h.lead}</p>
       <div class="actions">
-        <LinkCatcher id="lc-hero" tone="blue" fallback={h.cta} />
+        <LinkCatcher id="lc-hero" where="hero" tone="blue" fallback={h.cta} />
       </div>
       <p class="keep">
         <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
@@ -40,6 +40,12 @@ const c = h.compare;
           </label>
         </div>
       </fieldset>
+
+      <!-- under the toggle: the visitor reads what changes, then watches it happen in the scene below -->
+      <div class="cap">
+        <p class="cap-b"><strong>{c.before}:</strong> {c.captionBefore}</p>
+        <p class="cap-a"><strong>{c.after}:</strong> {c.captionAfter}</p>
+      </div>
 
       <div class="scene" aria-hidden="true">
         <div class="glow"></div>
@@ -94,11 +100,7 @@ const c = h.compare;
 
       </div>
 
-      <figcaption class="cap">
-        <p class="cap-b"><strong>{c.before}:</strong> {c.captionBefore}</p>
-        <p class="cap-a"><strong>{c.after}:</strong> {c.captionAfter}</p>
-        <span class="cap-note">{c.note}</span>
-      </figcaption>
+      <figcaption class="cap-note">{c.note}</figcaption>
     </figure>
   </div>
 </section>
@@ -302,19 +304,20 @@ const c = h.compare;
   .stage:has(#cmp-after:checked) .wire path { stroke-dasharray: none; opacity: 1; }
 
   /* captions: stacked in one cell so the height never jumps */
-  .cap { display: grid; justify-items: end; text-align: right; max-width: 30rem; justify-self: end; }
+  .cap { display: grid; justify-self: stretch; max-width: 30rem; width: 100%; margin-inline: auto; }
+  /* the text leans towards the side of the toggle that is on: "Oggi" left, "Con BESA" right */
+  .cap-b { justify-self: start; text-align: left; }
+  .cap-a { justify-self: end; text-align: right; }
   .cap-b, .cap-a { grid-area: 1 / 1; font-size: .9375rem; line-height: 1.45; color: var(--color-text-on-accent-muted); transition: opacity 300ms var(--ease-out); }
   .cap strong { color: var(--color-text-on-accent); }
   .cap-a { opacity: 0; visibility: hidden; }
   .stage:has(#cmp-after:checked) .cap-a { opacity: 1; visibility: visible; }
   .stage:has(#cmp-after:checked) .cap-b { opacity: 0; visibility: hidden; }
-  .cap-note { margin-top: .5rem; font-size: .75rem; color: var(--color-text-on-accent-muted); }
+  .cap-note { font-size: .75rem; color: var(--color-text-on-accent-muted); }
 
   /* ---- phones ---- */
   @media (max-width: 47.99rem) {
     .grid-h { gap: 2rem; padding-block: 2rem 2.5rem; }
-    /* the caption reads under the phone, in the same column as the copy above */
-    .cap { justify-self: stretch; justify-items: start; text-align: left; max-width: none; }
     .cap-b, .cap-a { max-width: 36ch; }
   }
   /* very narrow phones: the ad card and the phone overlap less when the scene is scaled down as a whole */

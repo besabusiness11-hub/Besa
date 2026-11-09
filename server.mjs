@@ -4,17 +4,21 @@
 import http from "node:http";
 import zlib from "node:zlib";
 
+// Data-only switchboard, loaded with Node's type stripping (the Dockerfile copies it next to this file).
+import { FEATURES } from "./src/lib/features.ts";
+
 const UMAMI = "https://umami.besaweb.com";
-const TURNSTILE = "https://challenges.cloudflare.com";
+// Turnstile origins only while the dynamic form is on (FEATURES.leadForm).
+const TURNSTILE = FEATURES.leadForm.enabled ? " https://challenges.cloudflare.com" : "";
 const HEADERS = {
   "Content-Security-Policy": [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-inline' ${UMAMI} ${TURNSTILE}`,
+    `script-src 'self' 'unsafe-inline' ${UMAMI}${TURNSTILE}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data:",
     "font-src 'self' data:",
-    `connect-src 'self' ${UMAMI} ${TURNSTILE}`,
-    `frame-src ${TURNSTILE}`,
+    `connect-src 'self' ${UMAMI}${TURNSTILE}`,
+    TURNSTILE ? `frame-src${TURNSTILE}` : "frame-src 'none'",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

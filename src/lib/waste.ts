@@ -60,9 +60,9 @@ export function paybackSpan(price: number, wasted: number): string | null {
   return days <= 60 ? `${days} ${days === 1 ? "giorno" : "giorni"}` : `${nf(Math.round((days / 30) * 2) / 2, 1)} mesi`;
 }
 
-/** Display strings for the help card and the receipt. */
-export function describe(i: WasteInput, w: Waste, price: number) {
-  return {
+/** Display strings for the help card and the receipt. Without a price ("validation") there is no payback line. */
+export function describe(i: WasteInput, w: Waste, price: number | null = null) {
+  const base = {
     budget: eur(i.budget),
     cpc: eur(i.cpc),
     msgs: nf(w.msgs),
@@ -75,9 +75,9 @@ export function describe(i: WasteInput, w: Waste, price: number) {
     perN: w.perNow === null ? "nessun messaggio" : eur(w.perNow),
     wasted: eur(w.wasted),
     year: eur(w.year),
-    price: eur(price),
-    span: paybackSpan(price, w.wasted) ?? "–",
   };
+  if (price === null) return base;
+  return { ...base, price: eur(price), span: paybackSpan(price, w.wasted) ?? "–" };
 }
 
 export type WasteStrings = ReturnType<typeof describe>;

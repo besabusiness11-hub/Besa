@@ -1,0 +1,39 @@
+---
+// Headline whose words go from faint to full, one after the other, as it scrolls through the viewport.
+// One span per word; {em} runs keep the accent. Used by Fix, HowItWorks and Inside.
+// The rest props carry the caller's scope attribute (data-astro-cid-*), so its scoped classes still apply.
+interface Props { text: string; id?: string; class?: string; as?: "h1" | "h2" | "h3" | "p"; [attr: `data-${string}`]: unknown }
+const { text, id, class: cls, as: Tag = "h2", ...rest } = Astro.props;
+const words: { t: string; em: boolean }[] = [];
+let inEm = false;
+for (const raw of text.split(" ")) {
+  const open = raw.includes("{em}");
+  const close = raw.includes("{/em}");
+  const t = raw.replace("{em}", "").replace("{/em}", "");
+  if (open) inEm = true;
+  words.push({ t, em: inEm });
+  if (close) inEm = false;
+}
+---
+<Tag {...rest} id={id} class:list={["lit", cls]} style={`--n:${Math.max(words.length - 1, 1)}`}>
+  {words.map((w, i) => (
+    <Fragment><span class:list={["w", { em: w.em }]} style={`--i:${i}`}>{w.t}</span>{" "}</Fragment>
+  ))}
+</Tag>
+
+<style>
+  .w { display: inline-block; }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* the whole line lights up over the same stretch of scroll (last word done by cover 56%),
+         however many words it has: each word starts min(5%, 30% / words) after the previous one */
+      .lit { --step: min(5%, 30% / var(--n)); }
+      .w { animation: lit linear both; animation-timeline: view(); animation-range: cover calc(12% + var(--i) * var(--step)) cover calc(26% + var(--i) * var(--step)); }
+      /* start values keep large-text contrast >= 3:1 even before scrolling (accent needs a higher floor) */
+      .w.em { animation-name: lit-em; }
+      @keyframes lit { from { opacity: .55; translate: 0 .15em; } to { opacity: 1; translate: none; } }
+      @keyframes lit-em { from { opacity: .78; translate: 0 .15em; } to { opacity: 1; translate: none; } }
+    }
+  }
+</style>

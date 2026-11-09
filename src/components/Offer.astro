@@ -1,8 +1,12 @@
 ---
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
+import { FEATURES } from "../lib/features";
 import { eur, FULL, PRICING } from "../lib/offer";
-const c = copy.offer;
+// Rendered only in "launch" and "full" (index.astro); "validation" has no offer copy and uses OfferValidation.
+const c = copy.offer!;
+// Payment links show only with the onlinePayment switch on and a checkout URL set.
+const pay = FEATURES.onlinePayment.enabled;
 const q = c.quote;
 const launch = c.launch;
 const main = c.plans.find((p) => p.highlight)!;
@@ -62,7 +66,7 @@ const pct = ((n0 - q.min) / (q.max - q.min)) * 100;
               {main.features.map((x) => <li>{x}</li>)}
             </ul>
             <div class="acts">
-              {main.checkout && <a class="btn" href={main.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
+              {pay && main.checkout && <a class="btn" href={main.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
               <a class:list={["btn", { ghost: !!main.checkout }]} href="#contatto" data-plan={main.id} data-plan-name={main.name}>{main.cta}</a>
             </div>
           </article>
@@ -77,7 +81,7 @@ const pct = ((n0 - q.min) / (q.max - q.min)) * 100;
                 <ul class="rfeat">
                   {p.features.map((x) => <li>{x}</li>)}
                 </ul>
-                {p.checkout && <a class="cta" href={p.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
+                {pay && p.checkout && <a class="cta" href={p.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
                 <a class="cta" href="#contatto" data-plan={p.id} data-plan-name={p.name}>{p.cta}</a>
               </article>
             ))}

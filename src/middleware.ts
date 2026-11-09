@@ -1,16 +1,19 @@
 import { defineMiddleware } from "astro:middleware";
+import { FEATURES } from "./lib/features";
 
+// Keep in sync with server.mjs.
 const UMAMI = "https://umami.besaweb.com";
-const TURNSTILE = "https://challenges.cloudflare.com";
+// Turnstile origins only while the dynamic form is on (FEATURES.leadForm).
+const TURNSTILE = FEATURES.leadForm.enabled ? " https://challenges.cloudflare.com" : "";
 
 const CSP = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' ${UMAMI} ${TURNSTILE}`,
+  `script-src 'self' 'unsafe-inline' ${UMAMI}${TURNSTILE}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self' data:",
-  `connect-src 'self' ${UMAMI} ${TURNSTILE}`,
-  `frame-src ${TURNSTILE}`,
+  `connect-src 'self' ${UMAMI}${TURNSTILE}`,
+  TURNSTILE ? `frame-src${TURNSTILE}` : "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

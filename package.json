@@ -11,7 +11,8 @@
     "start": "node server.mjs",
     "check": "astro check",
     "typecheck": "astro check",
-    "test": "vitest run"
+    "test": "vitest run",
+    "features": "node scripts/features.ts"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.7",

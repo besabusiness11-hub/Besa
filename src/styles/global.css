@@ -64,9 +64,15 @@
     touch-action: manipulation;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     overflow-wrap: break-word;
-    /* page scrollbar: thin, no track, a translucent thumb that reads on white, blue and ink sections alike */
-    scrollbar-width: thin; scrollbar-color: oklch(0.55 0.02 266 / .4) transparent;
+    /* No page scrollbar. A classic (non-overlay) bar sits in a gutter outside the page, so even a
+       "transparent" track shows the white canvas next to the blue and ink sections. The page still
+       scrolls with wheel, touch and keys; the header hairline and the dock ring show where you are. */
+    scrollbar-width: none;
   }
+  html::-webkit-scrollbar { display: none; }
+  /* cards (Eli5, CalcHelp, LinkHelp, SpecSheet, MailCard): still scroll, without a bar */
+  [popover] { scrollbar-width: none; }
+  [popover]::-webkit-scrollbar { display: none; }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
   html { scroll-padding-top: 5rem; }
   [id] { scroll-margin-top: 4rem; }

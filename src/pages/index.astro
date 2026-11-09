@@ -1,5 +1,6 @@
 ---
 import ContactForm from "../components/ContactForm.astro";
+import ContactMail from "../components/ContactMail.astro";
 import Faq from "../components/Faq.astro";
 import Features from "../components/Features.astro";
 import Fix from "../components/Fix.astro";
@@ -9,6 +10,7 @@ import Hero from "../components/Hero.astro";
 import HowItWorks from "../components/HowItWorks.astro";
 import Inside from "../components/Inside.astro";
 import Offer from "../components/Offer.astro";
+import OfferValidation from "../components/OfferValidation.astro";
 import Problem from "../components/Problem.astro";
 import Proof from "../components/Proof.astro";
 import SectionNav from "../components/SectionNav.astro";
@@ -16,6 +18,8 @@ import Team from "../components/Team.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
 import Base from "../layouts/Base.astro";
 import { copy } from "../lib/copy";
+import { FEATURES } from "../lib/features";
+import { VALIDATION } from "../lib/offer";
 import { faqJsonLd, organizationJsonLd, serviceJsonLd, websiteJsonLd } from "../lib/jsonld";
 ---
 <Base
@@ -33,11 +37,12 @@ import { faqJsonLd, organizationJsonLd, serviceJsonLd, websiteJsonLd } from "../
     <HowItWorks />
     <Features />
     <Inside />
-    <Offer />
+    {VALIDATION ? <OfferValidation /> : <Offer />}
     <Proof />
     <Team />
     <Faq />
-    <ContactForm />
+    {/* Switches live in src/lib/features.ts: the form stays in the code, off during validation. */}
+    {FEATURES.leadForm.enabled ? <ContactForm /> : <ContactMail />}
   </main>
   <Footer />
   <WhatsAppButton />

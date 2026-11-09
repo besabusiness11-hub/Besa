@@ -1,12 +1,9 @@
 ---
-import { Picture } from "astro:assets";
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
-import leo from "../assets/team-leo.jpg";
-import benito from "../assets/team-benito.jpg";
+import TeamAvatar from "./TeamAvatar.astro";
 
 const t = copy.team;
-const photos: Record<string, ImageMetadata> = { Leo: leo, Benito: benito };
 ---
 <section id="chi-siamo" class="section team" aria-labelledby="team-title">
   <div class="wrap">
@@ -15,35 +12,31 @@ const photos: Record<string, ImageMetadata> = { Leo: leo, Benito: benito };
       <p class="lead mt-5 text-[var(--color-text-secondary)]">{t.lead}</p>
     </div>
 
-    {/* Two cards side by side at every width. Scroll-driven entrance, hover lift, pointer light. */}
+    {/* Compact cards: the besamoji tile beside name, role and LinkedIn; the bio below. Each besamoji
+        greets once when its card scrolls in, and again on hover or focus; hovering the name or the tile
+        also pops a speech bubble ("Ciao, sono Leo!"). */}
     <div class="duo">
       {t.members.map((m, i) => (
-        <article class:list={["person", i === 0 ? "l" : "r"]}>
+        <article class:list={["person", i === 0 ? "l" : "r"]} data-who={m.name.toLowerCase()}>
           <div class="card">
-          <div class="frame">
-            <Picture
-              src={photos[m.name]}
-              formats={["avif", "webp"]}
-              widths={[240, 360, 480, 640]}
-              sizes="(min-width: 64rem) 28rem, 46vw"
-              width={480}
-              height={600}
-              alt={m.photoAlt}
-              loading="lazy"
-              decoding="async"
-              class="photo"
-            />
-          </div>
-          <div class="txt">
-            <h3 class="name">{m.name}</h3>
-            <p class="role">{m.role}</p>
+            <div class="head">
+              <div class="av-wrap">
+                <div class="av">
+                  <TeamAvatar who={m.name as "Leo" | "Ben"} label={m.photoAlt} />
+                </div>
+                <span class="hi" aria-hidden="true">{m.greeting}</span>
+              </div>
+              <div class="id">
+                <h3 class="name">{m.name}</h3>
+                <p class="role">{m.role}</p>
+                <a class="in" href={m.linkedin} rel="noopener noreferrer" target="_blank" aria-label={m.linkedinLabel}>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+                  <span>{t.linkedin}</span>
+                </a>
+              </div>
+            </div>
             <p class="bio" id={`bio-${i}`}>{m.bio}</p>
             <button type="button" class="more" aria-expanded="false" aria-controls={`bio-${i}`} hidden>Leggi tutto</button>
-            <a class="in" href={m.linkedin} rel="noopener noreferrer" target="_blank" aria-label={m.linkedinLabel}>
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
-              <span>{t.linkedin}</span>
-            </a>
-          </div>
           </div>
         </article>
       ))}
@@ -53,8 +46,9 @@ const photos: Record<string, ImageMetadata> = { Leo: leo, Benito: benito };
 
 <script>
   const cards = Array.from(document.querySelectorAll<HTMLElement>("#chi-siamo .person"));
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   // Pointer light on devices that hover.
-  if (matchMedia("(hover: hover) and (prefers-reduced-motion: no-preference)").matches) {
+  if (matchMedia("(hover: hover)").matches && !still) {
     cards.forEach((c) =>
       c.addEventListener("pointermove", (e) => {
         const r = c.getBoundingClientRect();
@@ -63,7 +57,16 @@ const photos: Record<string, ImageMetadata> = { Leo: leo, Benito: benito };
       }, { passive: true }),
     );
   }
-  // Narrow cards clamp the bio; the button reveals the rest (without JS the full text just shows).
+  // Each besamoji says hi once, when its card is well into view.
+  if (!still) {
+    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      io.unobserve(en.target);
+      en.target.classList.add("say-hi");
+    }), { threshold: 0.6 });
+    cards.forEach((c) => io.observe(c));
+  }
+  // Narrow screens clamp the bio; the button reveals the rest (without JS the full text just shows).
   cards.forEach((c) => {
     const bio = c.querySelector<HTMLElement>(".bio")!;
     const btn = c.querySelector<HTMLButtonElement>(".more")!;
@@ -91,47 +94,101 @@ const photos: Record<string, ImageMetadata> = { Leo: leo, Benito: benito };
   .intro { max-width: 40rem; margin-inline: auto; text-align: center; }
   .intro :global(p) { margin-inline: auto; }
 
-  .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; margin: 3rem auto 0; max-width: 62rem; align-items: stretch; }
-  @media (min-width: 48rem) { .duo { gap: 1.5rem; margin-top: 3.5rem; } }
+  .duo { display: grid; gap: 1rem; margin: 2.5rem auto 0; max-width: 72rem; }
+  @media (min-width: 48rem) { .duo { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-top: 3rem; align-items: stretch; } }
 
   .person { display: flex; }
   .card {
-    position: relative; isolation: isolate; overflow: hidden; display: flex; flex: 1; flex-direction: column;
-    padding: .5rem; border-radius: var(--radius-lg); background: var(--color-surface-subtle);
-    box-shadow: 0 1px 2px oklch(0.2 0.04 266 / .06);
+    position: relative; isolation: isolate; display: flex; flex: 1; flex-direction: column;
+    padding: clamp(1.125rem, .9rem + 1vw, 1.75rem); border-radius: var(--radius-xl); background: var(--color-surface-subtle);
     transition: translate 450ms var(--ease-expo), box-shadow 450ms var(--ease-out);
-    will-change: translate;
   }
-  @media (min-width: 48rem) { .card { padding: .75rem; border-radius: var(--radius-xl); } }
   /* soft light under the pointer */
-  .card::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(22rem circle at var(--mx, 50%) var(--my, 0%), oklch(1 0 0 / .7), transparent 60%); opacity: 0; transition: opacity 300ms var(--ease-out); }
+  /* no overflow: hidden on the card (the greeting bubble rises above it); the light keeps the radius itself */
+  .card::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: radial-gradient(20rem circle at var(--mx, 50%) var(--my, 0%), oklch(1 0 0 / .75), transparent 60%); opacity: 0; transition: opacity 300ms var(--ease-out); }
 
-  .frame { overflow: hidden; border-radius: calc(var(--radius-lg) - .5rem); aspect-ratio: 4 / 5; background: var(--color-surface-sunken); }
-  @media (min-width: 48rem) { .frame { border-radius: calc(var(--radius-xl) - .75rem); } }
-  .frame picture { display: block; width: 100%; height: 100%; transition: scale 700ms var(--ease-expo); }
-  .photo { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
-
-  .txt { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 1rem .5rem .5rem; }
-  @media (min-width: 48rem) { .txt { padding: 1.5rem 1rem 1rem; } }
-  .name { font-size: clamp(1.5rem, 1rem + 2.5vw, 2.5rem); line-height: 1; letter-spacing: -.035em; font-weight: 800; font-style: italic; }
-  .role { margin-top: .5rem; color: var(--color-accent-text); font-weight: 700; font-size: .9375rem; line-height: 1.35; }
-  .bio { margin-top: .75rem; margin-bottom: 1rem; font-size: .9375rem; line-height: 1.55; color: var(--color-text-secondary); max-width: 46ch; }
-  @media (min-width: 48rem) { .bio { font-size: 1rem; } }
-  .clamp:not(.open) .bio { display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
-  .more { margin-top: -.5rem; margin-bottom: .5rem; min-height: 2.75rem; padding: 0; border: 0; background: none; font: inherit; font-weight: 700; font-size: .9375rem; color: var(--color-accent-text); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
-
+  .head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.25rem; align-items: center; }
+  /* the besamoji tile: a squircle; inner radius stays concentric with the card */
+  .av-wrap { position: relative; }
+  .av { width: clamp(5.75rem, 4.5rem + 4vw, 8.5rem); aspect-ratio: 1; border-radius: 1.75rem; overflow: hidden; box-shadow: 0 14px 30px -16px oklch(0.448 0.193 268 / .8); }
+  .av :global(svg) { display: block; width: 100%; height: 100%; }
+  .id { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+  .name { font-size: clamp(1.625rem, 1.2rem + 1.4vw, 2.25rem); line-height: 1; letter-spacing: -.035em; font-weight: 800; font-style: italic; }
+  .role { margin-top: .4rem; color: var(--color-accent-text); font-weight: 700; font-size: .9375rem; line-height: 1.35; text-wrap: balance; }
   .in {
-    margin-top: auto; display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .5rem .875rem; border-radius: 9999px;
-    background: var(--color-surface-page); color: var(--color-accent-text); font-weight: 700; font-size: .9375rem; text-decoration: none;
+    margin-top: .75rem; display: inline-flex; align-items: center; gap: .45rem; min-height: 2.75rem; padding: .4rem .85rem; border-radius: 9999px;
+    background: var(--color-surface-page); color: var(--color-accent-text); font-weight: 700; font-size: .875rem; text-decoration: none;
     box-shadow: 0 0 0 1px var(--color-border-subtle); transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
   }
+  .bio { margin-top: 1.25rem; font-size: .9375rem; line-height: 1.6; color: var(--color-text-secondary); max-width: 52ch; text-wrap: pretty; }
+  @media (min-width: 48rem) { .bio { font-size: 1rem; } }
+  .clamp:not(.open) .bio { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .more { align-self: flex-start; margin-top: .25rem; min-height: 2.75rem; padding: 0; border: 0; background: none; font: inherit; font-weight: 700; font-size: .9375rem; color: var(--color-accent-text); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
   @media (hover: hover) {
     .in:hover { background: var(--color-accent-solid); color: var(--color-text-on-accent); box-shadow: none; }
   }
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .person:hover .card { translate: 0 -6px; box-shadow: var(--shadow-mock); }
+    .person:hover .card { translate: 0 -4px; box-shadow: var(--shadow-mock); }
     .person:hover .card::before { opacity: 1; }
-    .person:hover picture { scale: 1.04; }
+  }
+
+  /* the greeting: the sticker wiggles on its bottom edge, once on scroll-in and on hover/focus */
+  @media (prefers-reduced-motion: no-preference) {
+    .person :global(.sticker) { transform-box: fill-box; transform-origin: 50% 100%; }
+    .say-hi :global(.sticker), .person:is(:hover, :focus-within) :global(.sticker) { animation: wiggle 900ms var(--ease-out); }
+    @keyframes wiggle { 20% { rotate: -5deg; scale: 1.04; } 45% { rotate: 4deg; } 70% { rotate: -2deg; } }
+  }
+
+  /* speech bubble: rises above the tile, tail pointing down at the face, clear of the name being hovered.
+     Shown on hover of the name or the tile, on keyboard focus in the card, and once with the scroll-in hello. */
+  .hi {
+    --pop: cubic-bezier(.34, 1.56, .64, 1); /* slight overshoot: the bubble "pops" */
+    position: absolute; left: 50%; bottom: calc(100% + .6rem); z-index: 2;
+    padding: .45rem .8rem; border-radius: 9999px; white-space: nowrap;
+    background: var(--color-surface-inverse); color: var(--color-text-on-inverse); font-weight: 800; font-size: .875rem; line-height: 1.2; letter-spacing: -.01em;
+    box-shadow: 0 12px 24px -12px oklch(0.2 0.08 266 / .7);
+    transform-origin: 50% 100%; opacity: 0; scale: .5; translate: -50% .6rem; rotate: -6deg; pointer-events: none;
+    transition: opacity 160ms var(--ease-out), scale 160ms var(--ease-out), translate 160ms var(--ease-out), rotate 160ms var(--ease-out);
+  }
+  .hi::after { content: ""; position: absolute; left: 50%; top: 100%; width: .7rem; height: .7rem; margin: -.4rem 0 0 -.35rem; border-radius: .15rem; background: inherit; rotate: 45deg; }
+  .person:is(:has(.name:hover, .av-wrap:hover), :focus-within) .hi {
+    opacity: 1; scale: 1; translate: -50% 0; rotate: 0deg;
+    transition: opacity 200ms var(--ease-out), scale 550ms var(--pop), translate 550ms var(--ease-expo), rotate 650ms var(--pop);
+  }
+  .name { cursor: default; }
+  @media (prefers-reduced-motion: no-preference) {
+    /* the scroll-in hello: the bubble pops, holds while the sticker wiggles, then leaves */
+    .say-hi .hi { animation: hi-once 2.4s var(--ease-out) 150ms; }
+    @keyframes hi-once {
+      0% { opacity: 0; scale: .5; translate: -50% .6rem; rotate: -6deg; }
+      14% { opacity: 1; scale: 1.06; translate: -50% 0; rotate: 2deg; }
+      22%, 80% { opacity: 1; scale: 1; translate: -50% 0; rotate: 0deg; }
+      100% { opacity: 0; scale: .9; translate: -50% .25rem; rotate: 0deg; }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) { .hi { scale: 1; translate: -50% 0; rotate: 0deg; } }
+
+  /* the besamoji reacts to the same hover/focus as the bubble: the head perks up towards the name,
+     brows lift, cheeks blush, the closed smile opens into a grin, and the eyes blink once.
+     Parts are named in TeamAvatar.astro; transforms are in SVG user units (the tile is 208 wide). */
+  .person :global(.bm-cheek) { transition: opacity 300ms var(--ease-out); }
+  .person :global(.bm-smile) { transition: opacity 120ms var(--ease-out) 60ms; }
+  .person :global(.bm-grin) { opacity: 0; transform-box: fill-box; transform-origin: 50% 0; transition: opacity 120ms var(--ease-out), scale 160ms var(--ease-out); }
+  .person:is(:has(.name:hover, .av-wrap:hover), :focus-within) :global(.bm-cheek) { opacity: .95; }
+  .person:is(:has(.name:hover, .av-wrap:hover), :focus-within) :global(.bm-smile) { opacity: 0; transition-delay: 0ms; }
+  .person:is(:has(.name:hover, .av-wrap:hover), :focus-within) :global(.bm-grin) { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    /* pivot at the neck: both .bm-head groups (border and face) share it, so they move as one */
+    .person :global(.bm-head) { transform-box: view-box; transform-origin: 120px 160px; transition: rotate 450ms var(--ease-expo), translate 450ms var(--ease-expo); }
+    .person :global(.bm-brows) { transition: translate 300ms var(--ease-expo); }
+    .person :global(.bm-grin) { scale: 1 .3; }
+    .person :global(.bm-eye) { transform-box: fill-box; transform-origin: 50% 50%; }
+    .person:is(:has(.name:hover, .av-wrap:hover), :focus-within) :global(.bm-head) { rotate: 5deg; translate: 0 -3px; transition-timing-function: cubic-bezier(.34, 1.56, .64, 1); }
+    .person:is(:has(.name:hover, .av-wrap:hover), :focus-within) :global(.bm-brows) { translate: 0 -3.5px; }
+    .person:is(:has(.name:hover, .av-wrap:hover), :focus-within) :global(.bm-grin) { scale: 1; transition: opacity 120ms var(--ease-out), scale 380ms cubic-bezier(.34, 1.56, .64, 1); }
+    .person:is(:has(.name:hover, .av-wrap:hover), :focus-within) :global(.bm-eye) { animation: blink 260ms var(--ease-out) 350ms; }
+    @keyframes blink { 50% { scale: 1 .1; } }
   }
 
   /* each card rises into place as it scrolls into view, the two coming in from opposite sides */
@@ -140,9 +197,7 @@ const photos: Record<string, ImageMetadata> = { Leo: leo, Benito: benito };
       .person { animation: person-in linear both; animation-timeline: view(); animation-range: entry 5% entry 70%; }
       .l { --from: -1.25rem; }
       .r { --from: 1.25rem; animation-range: entry 15% entry 80%; }
-      .photo { animation: photo-in linear both; animation-timeline: view(); animation-range: entry 10% cover 50%; }
-      @keyframes person-in { from { opacity: 0; translate: var(--from) 2.5rem; scale: .97; } to { opacity: 1; translate: 0 0; scale: 1; } }
-      @keyframes photo-in { from { scale: 1.12; } to { scale: 1; } }
+      @keyframes person-in { from { opacity: 0; translate: var(--from) 2rem; scale: .98; } to { opacity: 1; translate: 0 0; scale: 1; } }
     }
   }
 </style>

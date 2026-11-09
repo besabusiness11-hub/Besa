@@ -18,7 +18,8 @@ RUN pnpm --filter "@besa/agency-site..." build
 # Self-contained production tree (prod deps only) for the runtime stage
 RUN pnpm --filter @besa/agency-site deploy --legacy --prod /out \
     && cp -r apps/agency-site/dist /out/dist \
-    && cp apps/agency-site/server.mjs /out/server.mjs
+    && cp apps/agency-site/server.mjs /out/server.mjs \
+    && mkdir -p /out/src/lib && cp apps/agency-site/src/lib/features.ts /out/src/lib/features.ts
 
 FROM node:24-slim AS runtime
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=4321

@@ -1,32 +1,51 @@
 ---
 import LegalPage from "../components/LegalPage.astro";
+import { FEATURES } from "../lib/features";
+// Two versions, following FEATURES.leadForm: with the form on, the sections on Brevo and Turnstile;
+// with the form off, contacts arrive by email. Both texts need a legal review before going live.
+const form = FEATURES.leadForm.enabled;
 ---
 <LegalPage
   title="Informativa privacy | BESA"
-  description="Come BESA tratta i dati personali raccolti tramite il modulo di contatto, ai sensi dell’art. 13 del Regolamento (UE) 2016/679."
+  description={form
+    ? "Come BESA tratta i dati personali raccolti tramite il modulo di contatto, ai sensi dell’art. 13 del Regolamento (UE) 2016/679."
+    : "Come BESA tratta i dati personali di chi ci scrive per email, ai sensi dell’art. 13 del Regolamento (UE) 2016/679."}
   path="/privacy-policy"
   heading="Informativa sulla privacy"
 >
-  <p>Questa informativa, resa ai sensi dell’art. 13 del Regolamento (UE) 2016/679 (GDPR), descrive come trattiamo i dati personali di chi ci scrive tramite il modulo di contatto di questo sito.</p>
+  <p>Questa informativa, resa ai sensi dell’art. 13 del Regolamento (UE) 2016/679 (GDPR), descrive come trattiamo i dati personali di chi ci scrive {form ? "tramite il modulo di contatto di questo sito" : "per email partendo da questo sito"}.</p>
 
   <h2>Titolare del trattamento</h2>
   <p>Leonardo Margiotta, che gestisce BESA (besaweb) come persona fisica. Quando sarà attiva la partita IVA, il titolare sarà l’intestatario della partita IVA e questa pagina verrà aggiornata con i dati dell’attività.</p>
   <p>Contatto per qualsiasi richiesta sulla privacy: <a href="mailto:info@besaweb.com">info@besaweb.com</a></p>
 
   <h2>Dati che raccogliamo</h2>
-  <p>Tramite il modulo di contatto raccogliamo solo i dati che inserisci tu:</p>
-  <ul>
-    <li>nome;</li>
-    <li>contatto WhatsApp o email;</li>
-    <li>link all’annuncio o al profilo;</li>
-    <li>se li indichi, le risposte facoltative sulla pagina che vuoi (obiettivo, piano scelto, attività, offerta, zona, sito, tono, note) e i numeri inseriti nel calcolatore, che puoi togliere prima dell’invio.</li>
-  </ul>
-  <p>Per il funzionamento tecnico del sito e del modulo vedi anche le sezioni su anti-spam e statistiche qui sotto.</p>
+  {form ? (
+    <>
+      <p>Tramite il modulo di contatto raccogliamo solo i dati che inserisci tu:</p>
+      <ul>
+        <li>nome;</li>
+        <li>contatto WhatsApp o email;</li>
+        <li>link all’annuncio o al profilo;</li>
+        <li>se li indichi, le risposte facoltative sulla pagina che vuoi (obiettivo, piano scelto, attività, offerta, zona, sito, tono, note) e i numeri inseriti nel calcolatore, che puoi togliere prima dell’invio.</li>
+      </ul>
+      <p>Per il funzionamento tecnico del sito e del modulo vedi anche le sezioni su anti-spam e statistiche qui sotto.</p>
+    </>
+  ) : (
+    <>
+      <p>Questo sito non ha un modulo che invia dati ai nostri server. Se ci scrivi, lo fai con la tua app di posta: il sito prepara solo il testo del messaggio, nel tuo browser. Riceviamo quindi solo quello che ci mandi tu:</p>
+      <ul>
+        <li>il tuo indirizzo email e il nome che compare come mittente;</li>
+        <li>quello che scrivi nel messaggio: di solito il link all’annuncio o al profilo e, se li lasci, i numeri inseriti nel calcolatore.</li>
+      </ul>
+      <p>Se ci scrivi per email, usiamo il tuo indirizzo e quello che scrivi per risponderti. Per il funzionamento tecnico del sito vedi anche la sezione sulle statistiche qui sotto.</p>
+    </>
+  )}
 
   <h2>Finalità e base giuridica</h2>
   <ul>
     <li><strong>Rispondere alla tua richiesta.</strong> Usiamo i dati per ricontattarti e darti riscontro. Base giuridica: art. 6, par. 1, lett. b) GDPR, misure precontrattuali adottate su tua richiesta.</li>
-    <li><strong>Consenso della casella del modulo.</strong> Dove il modulo prevede una casella da spuntare, il trattamento collegato si basa sul tuo consenso, art. 6, par. 1, lett. a) GDPR. Puoi revocarlo in ogni momento scrivendo a info@besaweb.com, senza pregiudicare i trattamenti precedenti.</li>
+    {form && <li><strong>Consenso della casella del modulo.</strong> Dove il modulo prevede una casella da spuntare, il trattamento collegato si basa sul tuo consenso, art. 6, par. 1, lett. a) GDPR. Puoi revocarlo in ogni momento scrivendo a info@besaweb.com, senza pregiudicare i trattamenti precedenti.</li>}
   </ul>
   <p>Non usiamo i tuoi dati per profilazione e non li vendiamo.</p>
 
@@ -36,14 +55,18 @@ import LegalPage from "../components/LegalPage.astro";
   <h2>Destinatari dei dati</h2>
   <ul>
     <li>Il provider di hosting: il sito è ospitato su un nostro server privato virtuale (VPS) gestito da noi.</li>
-    <li>Brevo, il servizio di invio email che trasmette la tua richiesta alla nostra casella (provider con sede nell’Unione europea).</li>
+    {form && <li>Brevo, il servizio di invio email che trasmette la tua richiesta alla nostra casella (provider con sede nell’Unione europea).</li>}
     <li>Zoho Mail, il servizio di posta che usiamo per ricevere e gestire le richieste.</li>
-    <li>Cloudflare, che fa passare il traffico del sito (rete e protezione) e fornisce il controllo anti-spam descritto qui sotto.</li>
+    <li>Cloudflare, che fa passare il traffico del sito (rete e protezione){form ? " e fornisce il controllo anti-spam descritto qui sotto" : ""}.</li>
   </ul>
   <p>I dati sono accessibili solo a chi in BESA ne ha bisogno per risponderti.</p>
 
-  <h2>Protezione anti-spam: Cloudflare Turnstile</h2>
-  <p>Il modulo usa Cloudflare Turnstile per distinguere le persone dai programmi automatici. Turnstile esegue una verifica nel tuo browser e invia a Cloudflare alcune informazioni tecniche sul dispositivo e sulla navigazione (ad esempio indirizzo IP e dati del browser) per decidere se la richiesta sia legittima. Lo usiamo solo nella pagina con il modulo e solo a questo scopo. Per i dettagli sul trattamento da parte di Cloudflare consulta la sua informativa privacy.</p>
+  {form && (
+    <>
+      <h2>Protezione anti-spam: Cloudflare Turnstile</h2>
+      <p>Il modulo usa Cloudflare Turnstile per distinguere le persone dai programmi automatici. Turnstile esegue una verifica nel tuo browser e invia a Cloudflare alcune informazioni tecniche sul dispositivo e sulla navigazione (ad esempio indirizzo IP e dati del browser) per decidere se la richiesta sia legittima. Lo usiamo solo nella pagina con il modulo e solo a questo scopo. Per i dettagli sul trattamento da parte di Cloudflare consulta la sua informativa privacy.</p>
+    </>
+  )}
 
   <h2>Statistiche: Umami</h2>
   <p>Misuriamo le visite con Umami, installato sui nostri server. Non usa cookie e non profila le persone. Per i dettagli vedi la <a href="/cookie-policy">cookie policy</a>.</p>
@@ -62,5 +85,5 @@ import LegalPage from "../components/LegalPage.astro";
   <p>Per esercitarli scrivi a <a href="mailto:info@besaweb.com">info@besaweb.com</a>. Hai inoltre il diritto di proporre reclamo al Garante per la protezione dei dati personali (<a href="https://www.garanteprivacy.it" rel="noopener">garanteprivacy.it</a>).</p>
 
   <h2>Conferimento dei dati</h2>
-  <p>Inserire i dati nel modulo è facoltativo, ma senza di essi non possiamo risponderti.</p>
+  <p>{form ? "Inserire i dati nel modulo è facoltativo, ma senza di essi non possiamo risponderti." : "Scriverci è facoltativo; senza il tuo indirizzo email non possiamo risponderti."}</p>
 </LegalPage>

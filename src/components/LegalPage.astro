@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import { Image } from "astro:assets";
 import logo from "../assets/logo-blue.png";
+import { VALIDATION } from "../lib/offer";
 
 interface Props {
   title: string;
@@ -16,7 +17,12 @@ const { title, description, path, heading, updated, noindex = false } = Astro.pr
 <Base title={title} description={description} path={path} noindex={noindex}>
   <header class="legal-header">
     <div class="wrap legal-header-in">
-      <a href="/" class="legal-mark" aria-label="BESA, torna alla home"><Image src={logo} alt="BESA" width={80} height={41} loading="eager" /></a>
+      <a href="/" class="legal-back" data-back>
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M16 10H5m4-5-5 5 5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        <span>Indietro</span>
+      </a>
+      <a href="/" class="legal-mark legal-brand" aria-label="BESA, torna alla home"><Image src={logo} alt="BESA" width={47} height={24} densities={[2, 3]} loading="eager" /></a>
+      <span aria-hidden="true"></span>
     </div>
   </header>
   <main id="main" class="legal wrap">
@@ -26,21 +32,38 @@ const { title, description, path, heading, updated, noindex = false } = Astro.pr
   </main>
   <footer class="legal-footer">
     <div class="wrap legal-footer-in">
-      <a href="/" class="legal-mark" aria-label="BESA"><Image src={logo} alt="BESA" width={64} height={33} /></a>
+      <a href="/" class="legal-mark" aria-label="BESA"><Image src={logo} alt="BESA" width={64} height={33} densities={[2, 3]} /></a>
       <nav aria-label="Link legali">
         <a href="/">Home</a>
         <a href="/privacy-policy">Privacy</a>
         <a href="/cookie-policy">Cookie</a>
-        <a href="/termini">Termini</a>
+        {/* In "validation" /termini is only a placeholder: no link, like the main footer. */}
+        {!VALIDATION && <a href="/termini">Termini</a>}
         <a href="mailto:info@besaweb.com">info@besaweb.com</a>
       </nav>
     </div>
   </footer>
 </Base>
 
+<script>
+  // "Indietro" goes back when the visitor came from this site, otherwise to the home.
+  document.querySelector<HTMLAnchorElement>("[data-back]")?.addEventListener("click", (e) => {
+    let sameSite = false;
+    try { sameSite = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch {}
+    if (sameSite && history.length > 1) { e.preventDefault(); history.back(); }
+  });
+</script>
+
 <style is:global>
   .legal-header { height: 4rem; border-bottom: 1px solid var(--color-border-subtle); background: var(--color-surface-page); }
-  .legal-header-in { height: 100%; display: flex; align-items: center; }
+  /* same bar as the home header: logo in the true centre, back link on the left */
+  .legal-header-in { height: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; }
+  .legal-brand { justify-self: center; }
+  .legal-brand img { display: block; height: 1.25rem; width: auto; }
+  @media (min-width: 64rem) { .legal-brand img { height: 1.5rem; } }
+  .legal-back { justify-self: start; display: inline-flex; align-items: center; gap: .4rem; min-height: 2.75rem; padding: 0 .9rem 0 .7rem; margin-left: -.7rem; border-radius: 9999px; color: var(--color-text-primary); font-size: .9375rem; font-weight: 700; text-decoration: none; transition: background-color 150ms var(--ease-out); }
+  .legal-back:focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+  @media (hover: hover) { .legal-back:hover { background: var(--color-surface-sunken); } }
   .legal-mark { display: inline-flex; align-items: center; min-height: 2.75rem; text-decoration: none; }
   .legal { max-width: 65ch; padding-block: clamp(2.5rem, 2rem + 3vw, 5rem); }
   .legal-updated { color: var(--color-text-secondary); font-size: .875rem; font-weight: 500; margin-top: 1rem; }

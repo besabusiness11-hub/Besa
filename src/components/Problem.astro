@@ -1,7 +1,7 @@
 ---
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
-import { FULL, PRICING } from "../lib/offer";
+import { OFFER_MODE, pagePrice } from "../lib/offer";
 import { describe, eur, fill, nf, waste } from "../lib/waste";
 import CalcHelp from "./CalcHelp.astro";
 import LinkCatcher from "./LinkCatcher.astro";
@@ -15,7 +15,8 @@ const inputs = [
 const tg = p.inputs.target;
 
 // Same maths as the script below (src/lib/waste.ts), so the no-JS page shows the example result.
-const price = FULL ? PRICING.oneTime : PRICING.launch;
+// No price in "validation": the payback line is not rendered and describe() gets no price.
+const price = pagePrice(OFFER_MODE);
 const start = { budget: p.inputs.budget.value, cpc: p.inputs.cpc.value, msgs: p.inputs.msgs.value, target: tg.value };
 const w = waste(start);
 const v = describe(start, w, price) as unknown as Record<string, string>;
@@ -33,7 +34,7 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
         <p class="lead mt-5 text-text-secondary">{p.lead}</p>
       </div>
 
-      <form class="inputs" id="calc" aria-label="Calcolatore" data-summary={p.calcSummary} data-price={price}>
+      <form class="inputs" id="calc" aria-label="Calcolatore" data-summary={p.calcSummary} data-price={price ?? undefined}>
         {inputs.map((i) => (
           <div class="rng">
             <div class="lbl"><label for={`c-${i.id}`}>{i.label}</label></div>
@@ -78,7 +79,7 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
 
         <div class="verdict gap-only">
           <p class="yr">{yearBefore}<strong data-k="year">{v.year}</strong>{yearAfter}</p>
-          <p class="pb" data-tpl={r.payback}>{fill(r.payback, v)}</p>
+          {r.payback && <p class="pb" data-tpl={r.payback}>{fill(r.payback, v)}</p>}
         </div>
 
         <div class="above-only above">
@@ -93,7 +94,7 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
         </div>
 
         <div class="dots-box">
-          <p class="dots-title">{r.dotsPre} <strong data-k="per100">{v.rate}</strong>.<span class="gap-only"> {r.dotsPost} <strong data-k="t100">{v.t}</strong>.</span></p>
+          <p class="dots-title">{r.dotsPre} <strong data-k="per100">{v.rate}</strong>.<span class="gap-only"> {r.dotsPost} <strong data-k="t100">{nf(Math.round(tg.value))}</strong>.</span></p>
           <div class="dots" aria-hidden="true">
             {Array.from({ length: 100 }, (_, n) => <i class:list={{ on: n < now, more: n >= now && n < more }} style={`--d:${n}`}></i>)}
           </div>
@@ -118,7 +119,7 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
 
     <div class="closing reveal">
       <p>{p.closing}</p>
-      <LinkCatcher id="lc-calc" tone="light" />
+      <LinkCatcher id="lc-calc" where="calc" tone="light" />
     </div>
     <p id="calc-live" class="sr-only" aria-live="polite"></p>
   </div>
@@ -134,7 +135,7 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
     const el = (k: string) => rc.querySelector<HTMLElement>(`[data-k="${k}"]`)!;
     const dots = Array.from(rc.querySelectorAll<HTMLElement>(".dots i"));
     const live = document.getElementById("calc-live")!;
-    const price = Number(form.dataset.price);
+    const price = form.dataset.price ? Number(form.dataset.price) : null;
     const shown = new Map<string, number>();
     let liveT = 0;
 
@@ -176,7 +177,8 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
       tween("wasted", w.wasted, (n) => eur(Math.round(n)));
       tween("year", w.year, (n) => eur(Math.round(n)));
       tween("per100", w.rate, (n) => nf(n, 1));
-      tween("t100", input.target, (n) => nf(n, 1) + "%");
+      // people out of 100, rounded like the dot grid below (not a percentage)
+      tween("t100", Math.round(input.target), (n) => nf(Math.round(n)));
       if (w.perNow !== null) tween("perNow", w.perNow, (n) => eur(n));
       else { shown.delete("perNow"); el("perNow").textContent = "–"; }
       if (w.perTarget !== null) tween("perT", w.perTarget, (n) => eur(n));

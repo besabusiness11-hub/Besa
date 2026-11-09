@@ -26,7 +26,7 @@ export function organizationJsonLd() {
     description: SITE.description,
     areaServed: { "@type": "Country", name: "Italia" },
     founder: [
-      { "@type": "Person", name: "Benito" },
+      { "@type": "Person", name: "Ben" },
       { "@type": "Person", name: "Leo" },
     ],
   };

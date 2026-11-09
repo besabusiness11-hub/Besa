@@ -67,7 +67,7 @@ const arrow = `<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true
           <h3>{edits.title}</h3>
           <p>{edits.text}</p>
         </div>
-        <a class="go" href="#piani"><span>{copy.offer.plans[0].cta}</span><Fragment set:html={arrow} /></a>
+        <a class="go" href="#piani"><span>{copy.offer?.plans[0].cta ?? copy.offerValidation.link}</span><Fragment set:html={arrow} /></a>
       </article>
 
       <article class="card c-try">

@@ -5,6 +5,7 @@
 import { Image } from "astro:assets";
 import logo from "../assets/logo-white.png";
 import { copy } from "../lib/copy";
+import { VALIDATION } from "../lib/offer";
 const f = copy.footer;
 const year = new Date().getFullYear();
 const columns = [
@@ -21,7 +22,8 @@ const columns = [
     links: [
       { title: f.links.privacy, href: "/privacy-policy" },
       { title: f.links.cookie, href: "/cookie-policy" },
-      { title: f.links.terms, href: "/termini" },
+      // In "validation" the terms are only a placeholder: no link until the offer is defined.
+      ...(VALIDATION ? [] : [{ title: f.links.terms, href: "/termini" }]),
     ],
   },
 ];

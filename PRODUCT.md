@@ -14,7 +14,7 @@ BESA builds landing pages made for Meta ad traffic: one goal, one action, fast. 
 
 ## Brand Personality
 
-Veloce, Pratico, Funzionale. Direct, informal "tu", a craftsperson's precision, no agency buzzwords. Two founders, Benito (product, tech) and Leo (business, strategy, marketing, content), speaking plainly.
+Veloce, Pratico, Funzionale. Direct, informal "tu", a craftsperson's precision, no agency buzzwords. Two founders, Ben (Benito; product, tech) and Leo (business, strategy, marketing, content), speaking plainly.
 
 ## Anti-references
 

@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import nodemailer from "nodemailer";
+import { FEATURES } from "../../lib/features";
 import { buildEmail, clientIp, createRateLimiter, MSG, parseLead, readBody, replyToOf, verifyTurnstile } from "../../lib/lead";
 
 export const prerender = false;
@@ -18,10 +19,14 @@ const wantsHtml = (request: Request) => {
   return a.includes("text/html") && !a.includes("application/json");
 };
 
+/** Form switched off (FEATURES.leadForm): the route does not exist, and the body is never read. */
+const off = () => new Response(null, { status: 404, headers: { "cache-control": "no-store" } });
+
 const redirect = (to: string) =>
   new Response(null, { status: 303, headers: { location: to, "cache-control": "no-store" } });
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
+  if (!FEATURES.leadForm.enabled) return off();
   const html = wantsHtml(request);
   const json = (status: number, body: { ok: true } | { ok: false; error: string }) =>
     html ? redirect(body.ok ? "/grazie" : "/?invio=errore#contatto") : jsonRes(status, body);
@@ -79,4 +84,4 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 };
 
-export const ALL: APIRoute = () => jsonRes(405, { ok: false, error: MSG.body });
+export const ALL: APIRoute = () => (FEATURES.leadForm.enabled ? jsonRes(405, { ok: false, error: MSG.body }) : off());

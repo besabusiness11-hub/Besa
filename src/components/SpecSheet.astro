@@ -26,7 +26,7 @@ const s = copy.spec;
     <div class="sp-scores" role="group" aria-label={s.scoresLabel}>
       {s.scores.map((x) => (
         <div class="sc" style={`--v:${x.value}`}>
-          <span class="ring"><b>{x.value}</b></span>
+          <span class="gauge"><b>{x.value}</b></span>
           <span class="lbl">{x.label}</span>
         </div>
       ))}
@@ -66,12 +66,12 @@ const s = copy.spec;
 
   .sp-body { padding: 1.5rem; display: grid; gap: 1.75rem; }
 
-  /* Lighthouse rings: conic gradient filled to the score */
+  /* Lighthouse rings: conic gradient filled to the score. Not ".ring": that is a Tailwind utility (1px box-shadow). */
   .sp-scores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; }
   .sc { display: grid; justify-items: center; gap: .5rem; text-align: center; }
-  .ring { position: relative; display: grid; place-items: center; width: 4rem; aspect-ratio: 1; }
-  .ring::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: conic-gradient(var(--color-accent-solid) calc(var(--v) * 1%), var(--color-border-subtle) 0); -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 calc(100% - 4px)); mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 calc(100% - 4px)); }
-  .ring b { position: relative; font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
+  .gauge { position: relative; display: grid; place-items: center; width: 4rem; aspect-ratio: 1; }
+  .gauge::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: conic-gradient(var(--color-accent-solid) calc(var(--v) * 1%), var(--color-border-subtle) 0); -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 calc(100% - 4px)); mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 calc(100% - 4px)); }
+  .gauge b { position: relative; font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
   .lbl { font-size: .8125rem; line-height: 1.25; font-weight: 600; color: var(--color-text-secondary); }
   .sp-meth { margin-top: -1rem; text-align: center; font-size: .8125rem; color: var(--color-text-secondary); }
 
@@ -92,7 +92,7 @@ const s = copy.spec;
 
   @media (prefers-reduced-motion: no-preference) {
     /* rings fill when the sheet opens */
-    .sp-pop:popover-open .ring::before { animation: fill 900ms var(--ease-expo) 150ms backwards; }
+    .sp-pop:popover-open .gauge::before { animation: fill 900ms var(--ease-expo) 150ms backwards; }
     @keyframes fill { from { background: conic-gradient(var(--color-accent-solid) 0%, var(--color-border-subtle) 0); } }
     .sp-pop:popover-open .sp-group { animation: sp-in 450ms var(--ease-out) backwards; }
     .sp-pop:popover-open .sp-group:nth-of-type(2) { animation-delay: 60ms; }

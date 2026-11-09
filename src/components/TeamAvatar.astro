@@ -1,0 +1,119 @@
+---
+// "Besamoji", sticker style: flat fills, one ink outline, a white die-cut border, a slight tilt.
+// Minimal on purpose (no photos of faces): likeness comes from hair, collar and expression.
+// Team.astro wiggles the .sticker group on hover/focus and once on scroll-in, and animates the reaction:
+// .bm-head tilts over the shoulders, .bm-brows lift, .bm-eye blinks, .bm-cheek blushes, .bm-smile turns into .bm-grin.
+interface Props { who: "Leo" | "Ben"; label: string; class?: string }
+const { who, label, class: cls } = Astro.props;
+const leo = who === "Leo";
+
+const INK = "#0f1729";
+const skin = leo ? "#f4c8ab" : "#e9b892";
+const blush = leo ? "#ef9f86" : "#e0957a";
+const cloth = leo ? "#1d2b4f" : "#1b1e26";
+const hair = leo ? "#d98a4e" : "#9a6b43";
+const hairLight = leo ? "#eaa56f" : "#b8885c";
+const tilt = leo ? -6 : 6;
+
+// Shared geometry (240 x 240 tile). Head r46 at (120,112); body runs past the bottom edge.
+// Hair is clipped to the head and only its hairline is outlined, so the head keeps one clean outline.
+const id = `bm-${who.toLowerCase()}`;
+const body = "M50 238c0-42 31-66 70-66s70 24 70 66v40H50Z";
+const hairFill = leo
+  ? "M66 30H174V124H172C168 112 162 104 152 99C142 94 132 92 120 92C108 92 98 94 88 99C78 104 72 112 68 124H66Z"
+  : "M66 30h108v86c-6-12-14-20-26-22-8 10-20 10-26-6q-2-4-4 0c-6 16-18 16-26 6-12 2-20 10-26 22Z";
+const hairline = leo
+  ? "M68 124C72 112 78 104 88 99C98 94 108 92 120 92C132 92 142 94 152 99C162 104 168 112 172 124"
+  : "M66 116c6-12 14-20 26-22 8 10 20 10 26-6q2-4 4 0c6 16 18 16 26 6 12 2 20 10 26 22";
+---
+{/* drawn on a 240 grid, framed tight on the bust so the sticker fills the tile */}
+<svg class={cls} viewBox="16 26 208 208" role="img" aria-label={label}>
+  <defs>
+    <clipPath id={`${id}-head`}><circle cx="120" cy="112" r="46" /></clipPath>
+  </defs>
+  <rect width="240" height="240" fill="#2844bd" />
+  <circle cx="120" cy="112" r="96" fill="#fff" opacity=".06" />
+
+  <g transform={`rotate(${tilt} 120 150)`}>
+    <g class="sticker">
+      {/* die-cut white border: the same silhouette, stroked wide */}
+      <g fill="#fff" stroke="#fff" stroke-width="18" stroke-linejoin="round">
+        <path d={body} />
+        <rect x="107" y="150" width="26" height="34" rx="8" />
+        {/* the head's share of the border moves with the head, but stays under the neck */}
+        <g class="bm-head">
+          <circle cx="73" cy="117" r="10" />
+          <circle cx="167" cy="117" r="10" />
+          <circle cx="120" cy="112" r="46" />
+        </g>
+      </g>
+
+      <g stroke={INK} stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+        {/* neck behind the body, then the crewneck seam (Leo: white polo collar points inside it) */}
+        <rect x="107" y="150" width="26" height="34" rx="8" fill={skin} />
+        <path d={body} fill={cloth} />
+        {leo && (
+          <>
+            <path d="M101 175c12 10 26 10 38 0l-3.5-6c-9 7.5-22 7.5-31 0Z" fill="#fff" />
+          </>
+        )}
+        {!leo && <path d="M97 178c13 12 33 12 46 0" fill="none" />}
+
+      </g>
+
+      {/* the head moves on its own, pivoting at the neck (Team.astro) */}
+      <g class="bm-head">
+      <g stroke={INK} stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+        {/* ears, head */}
+        <circle cx="73" cy="117" r="10" fill={skin} />
+        <circle cx="167" cy="117" r="10" fill={skin} />
+        <circle cx="120" cy="112" r="46" fill={skin} stroke="none" />
+      </g>
+
+      {/* hair, clipped to the head; highlight; then the hairline and the head outline on top */}
+      <g clip-path={`url(#${id}-head)`}>
+        <path d={hairFill} fill={hair} />
+        {leo
+          ? (
+              <>
+                <path d="M99 78c6-4 13-6 21-6.5" fill="none" stroke={hairLight} stroke-width="4" stroke-linecap="round" />
+                {/* buzz-cut texture */}
+                <path d="M101 84l1 3M131 80l-.5 3M146 86l-1.5 2.5M89 92l1.5 2.5" fill="none" stroke="#c0733c" stroke-width="2.5" stroke-linecap="round" opacity=".7" />
+              </>
+            )
+          : <path d="M117 73c-2 6-6 10-11 13M124 73c3 5 7 8 12 10" fill="none" stroke={hairLight} stroke-width="3.5" stroke-linecap="round" />}
+        <path d={hairline} fill="none" stroke={INK} stroke-width={leo ? 3.5 : 4.5} stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+      <circle cx="120" cy="112" r="46" fill="none" stroke={INK} stroke-width="4.5" />
+
+      {/* cheeks */}
+      <ellipse class="bm-cheek" cx="94" cy={leo ? 131 : 134} rx="7.5" ry="4.5" fill={blush} opacity=".55" />
+      <ellipse class="bm-cheek" cx="146" cy={leo ? 131 : 134} rx="7.5" ry="4.5" fill={blush} opacity=".55" />
+
+      {/* face: brows, eyes, mouth */}
+      <g fill="none" stroke={INK} stroke-width="4" stroke-linecap="round">
+        {leo ? (
+          <>
+            <path class="bm-brows" d="M97 104.5q7-3.5 14 0M129 104.5q7-3.5 14 0" />
+            <path class="bm-smile" d="M108 132q12 11 24 0" />
+          </>
+        ) : (
+          <>
+            <path class="bm-brows" d="M97 110h14M129 107.5q7-3.5 14-.5" />
+            {/* wink */}
+            <path d="M98.5 122q5.5-5 11 0" />
+            <path class="bm-smile" d="M109 137q11 7 22-3" />
+          </>
+        )}
+      </g>
+      {/* hover grin: open mouth with a tongue, hidden until the reaction */}
+      <g class="bm-grin">
+        <path d={leo ? "M106.5 130h27q-1.5 15-13.5 15t-13.5-15Z" : "M107.5 134q12 1.5 24-4q-1.5 14-12.5 14.5q-10 .5-11.5-10.5Z"} fill={INK} stroke={INK} stroke-width="3" stroke-linejoin="round" />
+        <ellipse cx={leo ? 120 : 120.5} cy={leo ? 140.5 : 141} rx="6.5" ry="3.2" fill="#e8727a" />
+      </g>
+      {leo && <circle class="bm-eye" cx="104" cy="118" r="4.5" fill={INK} />}
+      <circle class="bm-eye" cx="136" cy={leo ? 118 : 121.5} r="4.5" fill={INK} />
+      </g>
+    </g>
+  </g>
+</svg>

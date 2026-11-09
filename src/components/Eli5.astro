@@ -15,7 +15,6 @@ const e = copy.eli5;
   <header class="ez-head">
     <div>
       <p id={`${id}-t`} class="ez-t">{e.title}</p>
-      <p class="ez-sub">{e.subtitle}</p>
     </div>
     <button type="button" class="ez-x" popovertarget={id} popovertargetaction="hide" aria-label={e.close}>
       <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
@@ -68,7 +67,6 @@ const e = copy.eli5;
   .ez-head { position: relative; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.5rem 1.5rem 1.25rem; background: var(--color-accent-solid); color: var(--color-text-on-accent); overflow: hidden; }
   .ez-head::after { content: ""; position: absolute; right: -3rem; top: -4rem; width: 11rem; height: 11rem; border-radius: 9999px; background: radial-gradient(closest-side, oklch(1 0 0 / .16), transparent); pointer-events: none; }
   .ez-t { font-weight: 800; font-size: 1.5rem; line-height: 1.15; letter-spacing: -.025em; }
-  .ez-sub { margin-top: .3rem; font-size: .9375rem; color: var(--color-text-on-accent-muted); }
   .ez-x { position: relative; z-index: 1; flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; margin: -.5rem -.5rem 0 0; border: 0; border-radius: 9999px; background: color-mix(in oklab, var(--color-text-on-accent) 16%, transparent); color: var(--color-text-on-accent); cursor: pointer; transition: background-color 150ms var(--ease-out), rotate 300ms var(--ease-expo); }
   @media (hover: hover) { .ez-x:hover { background: color-mix(in oklab, var(--color-text-on-accent) 26%, transparent); rotate: 90deg; } }
   .ez-head .ez-x:focus-visible { outline-color: var(--color-focus-ring-on-accent); }

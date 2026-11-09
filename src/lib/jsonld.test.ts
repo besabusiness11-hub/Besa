@@ -18,7 +18,7 @@ describe("jsonld", () => {
     expect(o.name).toBe("BESA");
     expect(o.url).toBe(SITE.url);
     expect(o.email).toBe("info@besaweb.com");
-    expect(o.founder.map((f) => f.name)).toEqual(["Benito", "Leo"]);
+    expect(o.founder.map((f) => f.name)).toEqual(["Ben", "Leo"]);
     for (const k of ["address", "vatID", "taxID", "telephone", "aggregateRating", "review", "sameAs", "priceRange"])
       expect(o).not.toHaveProperty(k);
   });

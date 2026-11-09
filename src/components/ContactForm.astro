@@ -1,7 +1,7 @@
 ---
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
-import { FULL } from "../lib/offer";
+import { LAUNCH } from "../lib/offer";
 import LinkHelp from "./LinkHelp.astro";
 import ReceiptPrinter from "./ReceiptPrinter.astro";
 import DemoMonitor from "./DemoMonitor.astro";
@@ -102,7 +102,7 @@ const labels = JSON.stringify({
           </div>
         </fieldset>
 
-        {!FULL && (
+        {LAUNCH && f.payment && (
           <fieldset class="pay">
             <legend>{f.payment.legend} <span class="opt">{f.payment.optional}</span></legend>
             {f.payment.options.map((o) => (

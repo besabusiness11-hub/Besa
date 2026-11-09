@@ -1,0 +1,59 @@
+---
+// Offer section in OFFER_MODE = "validation": no prices. The offer is built on the visitor's ads after
+// they have seen the draft, so the section explains the method (three facts) and ends in the link field.
+// Keeps id="piani" so the nav, dock and footer links still land here.
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+import LinkCatcher from "./LinkCatcher.astro";
+const c = copy.offerValidation;
+---
+<section id="piani" class="offer section" aria-labelledby="offer-title">
+  <div class="wrap panel">
+    <div class="text reveal">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h2 id="offer-title" class="t-h2 max-w-[16ch]" set:html={em(c.headline)} />
+      <p class="lead mt-5 text-text-secondary">{c.lead}</p>
+    </div>
+
+    <div class="card reveal">
+      <ol class="points">
+        {c.points.map((p, i) => (
+          <li style={`--i:${i}`}>
+            <span class="n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+            <div>
+              <p class="k">{p.key}</p>
+              <p class="t">{p.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="start">
+        <LinkCatcher id="lc-offer" where="offer" tone="light" fallback={c.cta} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .panel { display: grid; gap: 2.5rem; }
+  @media (min-width: 64rem) { .panel { grid-template-columns: minmax(0, 1fr) minmax(0, 30rem); column-gap: 5rem; align-items: center; } }
+  .eyebrow { margin-bottom: 1rem; font-size: .875rem; font-weight: 700; letter-spacing: .02em; color: var(--color-accent-text); }
+
+  /* the method as three facts, then the one way in: same white-card language as the contact card */
+  .card { border-radius: var(--radius-xl); background: var(--color-surface-page); padding: clamp(1.25rem, .9rem + 1.6vw, 2rem); box-shadow: 0 0 0 1px var(--color-border-subtle), 0 40px 80px -48px oklch(0.2 0.1 266 / .45); }
+  .points { list-style: none; margin: 0; padding: 0; display: grid; }
+  .points li { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: .75rem; padding-block: 1rem; border-bottom: 1px solid var(--color-border-subtle); }
+  .points li:first-child { padding-top: 0; }
+  .n { font-size: .8125rem; font-weight: 800; color: var(--color-accent-text); font-variant-numeric: tabular-nums; padding-top: .3rem; }
+  .k { font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
+  .t { margin-top: .2rem; font-size: .9375rem; line-height: 1.45; color: var(--color-text-secondary); }
+  .start { margin-top: 1.5rem; }
+  .start :global(.lc) { width: 100%; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .points li { animation: pt-in linear both; animation-timeline: view(); animation-range: entry calc(10% + var(--i) * 8%) entry calc(55% + var(--i) * 8%); }
+      @keyframes pt-in { from { opacity: 0; translate: 0 .75rem; } }
+    }
+  }
+</style>
