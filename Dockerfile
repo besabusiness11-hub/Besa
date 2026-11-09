@@ -1,30 +1,33 @@
-# Build context = monorepo root:
-#   docker build -f apps/agency-site/Dockerfile -t besa-agency-site .
+# Build context = repo root:
+#   docker build -t besa-agency-site .
 FROM node:24-slim AS base
 ENV PNPM_HOME=/pnpm PATH=/pnpm:$PATH CI=true
 RUN corepack enable
-WORKDIR /repo
+WORKDIR /app
 
 FROM base AS build
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
-COPY apps/agency-site/package.json apps/agency-site/
-COPY packages ./packages
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm install --frozen-lockfile --filter "@besa/agency-site..."
-COPY apps/agency-site apps/agency-site
+    pnpm install --frozen-lockfile
+COPY . .
 ARG PUBLIC_SITE_URL=https://besaweb.com
 ENV PUBLIC_SITE_URL=$PUBLIC_SITE_URL
-RUN pnpm --filter "@besa/agency-site..." build
-# Self-contained production tree (prod deps only) for the runtime stage
-RUN pnpm --filter @besa/agency-site deploy --legacy --prod /out \
-    && cp -r apps/agency-site/dist /out/dist \
-    && cp apps/agency-site/server.mjs /out/server.mjs \
-    && mkdir -p /out/src/lib && cp apps/agency-site/src/lib/features.ts /out/src/lib/features.ts
+RUN pnpm build
+
+# Production dependencies only, for the runtime stage
+FROM base AS prod-deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile --prod
 
 FROM node:24-slim AS runtime
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=4321
-WORKDIR /app/apps/agency-site
-COPY --from=build --chown=node:node /out ./
+WORKDIR /app
+COPY --from=prod-deps --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/package.json ./package.json
+COPY --from=build --chown=node:node /app/dist ./dist
+COPY --from=build --chown=node:node /app/server.mjs ./server.mjs
+COPY --from=build --chown=node:node /app/src/lib/features.ts ./src/lib/features.ts
 USER node
 EXPOSE 4321
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \

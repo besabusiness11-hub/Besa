@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@11.5.3",
+  "engines": {
+    "node": ">=24 <25"
+  },
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "og": "node scripts/og.mjs",
@@ -25,11 +29,12 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.6",
+    "@astrojs/check": "^0.9.10",
     "@types/canvas-confetti": "1.9.0",
     "@types/node": "^24",
     "@types/nodemailer": "^7.0.0",
     "axe-core": "^4.14.0",
+    "esbuild": "0.28.2",
     "playwright": "^1.64.0",
     "typescript": "~5.9.3",
     "vitest": "^4.1.11"

@@ -1,6 +1,6 @@
 # Deploy su Coolify
 
-Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Pagine prerenderizzate, dinamici solo `/api/lead` e `/healthz`.
+Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Repo autonoma (non più nel monorepo `besa-platform`): `docker build -t besa-agency-site .` dalla root, testabile in locale con `docker run -p 4321:4321 besa-agency-site`. Pagine prerenderizzate, dinamici solo `/api/lead` e `/healthz`.
 
 **Interruttori**: cosa è acceso (modulo dinamico, modalità offerta, pagamento online, pulsante WhatsApp) si decide in `src/lib/features.ts`, non con variabili d'ambiente. Si cambia il file, si fa commit e Coolify ripubblica. `pnpm features` stampa cosa è spento, perché e la checklist per riaccenderlo.
 
@@ -9,10 +9,10 @@ Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Pagine prerenderi
 ## 1. Staging su new.besaweb.com
 
 1. DNS: record `A` `new.besaweb.com` -> IP del VPS (se Cloudflare: proxy attivo, SSL "Full (strict)").
-2. Coolify -> Project -> **+ New Resource** -> **Public/Private Repository** (GitHub) -> repo `besa-platform`, branch `feat/besa-2-0-site`.
+2. Coolify -> Project -> **+ New Resource** -> **Private Repository (GitHub App o Deploy Key)** -> repo `besabusiness11-hub/Besa`, branch `main`.
 3. Build Pack: **Dockerfile**.
-   - Base Directory: `/` (la build context deve essere la root del monorepo)
-   - Dockerfile Location: `/apps/agency-site/Dockerfile`
+   - Base Directory: `/` (root della repo)
+   - Dockerfile Location: `/Dockerfile`
    - Ports Exposes: `4321`
 4. Domains: `https://new.besaweb.com`
 5. Environment Variables (vedi `.env.example`):
