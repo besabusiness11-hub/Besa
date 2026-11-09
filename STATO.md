@@ -1,6 +1,6 @@
 # Stato del sito besaweb.com
 
-Aggiornato il 3 novembre 2026. Per la situazione sempre aggiornata lancia `pnpm features` dentro `apps/agency-site`: legge direttamente il file degli interruttori.
+Aggiornato il 3 novembre 2026. Per la situazione sempre aggiornata lancia `pnpm features` nella cartella del sito: legge direttamente il file degli interruttori.
 
 ## In breve
 
@@ -32,7 +32,7 @@ I prezzi delle modalità `launch` e `full` sono in `src/lib/offer.ts`.
 
 ## Come cambiare lo stato del sito
 
-Tutto si decide in **un solo file**: `apps/agency-site/src/lib/features.ts`.
+Tutto si decide in **un solo file**: `src/lib/features.ts`.
 
 1. Apri il file.
 2. Fai la modifica che ti serve:
