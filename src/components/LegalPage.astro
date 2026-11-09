@@ -3,6 +3,8 @@ import Base from "../layouts/Base.astro";
 import { Image } from "astro:assets";
 import logo from "../assets/logo-blue.png";
 import { VALIDATION } from "../lib/offer";
+import { copy } from "../lib/copy";
+import { legalLinks } from "../lib/footer-links";
 
 interface Props {
   title: string;
@@ -13,6 +15,8 @@ interface Props {
   noindex?: boolean;
 }
 const { title, description, path, heading, updated, noindex = false } = Astro.props;
+// The page you are on is not linked again (on /cookie-policy there is no "Cookie").
+const links = legalLinks(path, copy.footer.links, { terms: !VALIDATION });
 ---
 <Base title={title} description={description} path={path} noindex={noindex}>
   <header class="legal-header">
@@ -35,10 +39,7 @@ const { title, description, path, heading, updated, noindex = false } = Astro.pr
       <a href="/" class="legal-mark" aria-label="BESA"><Image src={logo} alt="BESA" width={64} height={33} densities={[2, 3]} /></a>
       <nav aria-label="Link legali">
         <a href="/">Home</a>
-        <a href="/privacy-policy">Privacy</a>
-        <a href="/cookie-policy">Cookie</a>
-        {/* In "validation" /termini is only a placeholder: no link, like the main footer. */}
-        {!VALIDATION && <a href="/termini">Termini</a>}
+        {links.map((l) => <a href={l.href}>{l.title}</a>)}
         <a href="mailto:info@besaweb.com">info@besaweb.com</a>
       </nav>
     </div>

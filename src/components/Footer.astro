@@ -6,6 +6,7 @@ import { Image } from "astro:assets";
 import logo from "../assets/logo-white.png";
 import { copy } from "../lib/copy";
 import { VALIDATION } from "../lib/offer";
+import { legalLinks } from "../lib/footer-links";
 const f = copy.footer;
 const year = new Date().getFullYear();
 const columns = [
@@ -19,12 +20,8 @@ const columns = [
   },
   {
     label: f.columns.legal,
-    links: [
-      { title: f.links.privacy, href: "/privacy-policy" },
-      { title: f.links.cookie, href: "/cookie-policy" },
-      // In "validation" the terms are only a placeholder: no link until the offer is defined.
-      ...(VALIDATION ? [] : [{ title: f.links.terms, href: "/termini" }]),
-    ],
+    // Shared with the legal pages' footer, which drops the page you are on.
+    links: legalLinks(Astro.url.pathname, f.links, { terms: !VALIDATION }),
   },
 ];
 // lucide icons (ISC), inlined
