@@ -31,17 +31,19 @@ Se dopo una modifica il CSS sembra vecchio: `pnpm exec astro dev stop` e rilanci
 | `pnpm build` | Build di produzione in `dist/` (prima genera `public/og/home.png` con Playwright; senza Chromium tiene il PNG già committato) |
 | `pnpm start` | Serve la build (`HOST=127.0.0.1 PORT=4321 pnpm start`; senza `HOST` ascolta solo su IPv6) |
 | `pnpm features` | Stampa cosa è spento, perché e come riaccenderlo |
+| `pnpm admin` | Dev server con il pannello in locale: http://127.0.0.1:4321/keystatic |
 
-## Interruttori
+## Interruttori e pannello
 
-Cosa è acceso si decide in un solo file, [`src/lib/features.ts`](src/lib/features.ts), non con variabili d'ambiente: si modifica, si fa commit e Coolify ripubblica.
+Cosa è acceso, le sezioni della home, i prezzi, i link di pagamento, il numero WhatsApp e i dati aziendali stanno in `src/data/site/*.json` e si cambiano dal **pannello** `/keystatic` (Keystatic): login con GitHub, ogni «Save» è un commit su `main` e Coolify ripubblica. In locale `pnpm admin` apre lo stesso pannello che scrive i file su disco, per vedere le modifiche prima di pubblicarle. Configurazione: [`DEPLOY.md`](DEPLOY.md), sezione 4.
 
-- `OFFER_MODE`: `"validation"` (senza prezzi, attiva ora), `"launch"`, `"full"`.
-- `FEATURES.leadForm`: modulo dinamico al posto dell'email.
-- `FEATURES.onlinePayment`: link di pagamento nell'offerta.
-- `FEATURES.whatsappButton`: pulsante chat (serve anche `PUBLIC_WHATSAPP_NUMBER`).
+- Modalità offerta: `validation` (senza prezzi, attiva ora), `launch`, `full`.
+- `leadForm`: modulo dinamico al posto dell'email.
+- `onlinePayment`: link di pagamento nell'offerta.
+- `whatsappButton`: pulsante chat (serve anche il numero, nel pannello).
+- Sezioni della home: ognuna si accende e spegne; apertura e contatti restano sempre.
 
-Ogni interruttore spento ha il suo `whyOff` e la checklist `reEnable`, verificati dai test.
+Spiegazioni e checklist di ogni interruttore (`whyOff`, `reEnable`) restano in [`src/lib/features.ts`](src/lib/features.ts), verificate dai test, e compaiono nel pannello sotto ogni interruttore.
 
 ## Struttura
 
@@ -49,10 +51,13 @@ Ogni interruttore spento ha il suo `whyOff` e la checklist `reEnable`, verificat
 src/
   components/   sezioni della pagina (Hero, Problem, HowItWorks, Offer, Faq, …)
   layouts/      Base.astro
-  lib/          copy.ts (tutti i testi), features.ts, offer.ts, lead.ts, mail-draft.ts, jsonld.ts + test
-  pages/        index, grazie, privacy-policy, cookie-policy, termini, 404, api/lead, healthz, sitemap, robots
+  data/site/    stato modificabile dal pannello: switches, sections, offer, contacts (JSON)
+  admin/        il pannello Keystatic come componente React
+  lib/          copy.ts (tutti i testi), features.ts, offer.ts, sections.ts, contacts.ts, lead.ts, mail-draft.ts, jsonld.ts + test
+  pages/        index, grazie, privacy-policy, cookie-policy, termini, 404, api/lead, healthz, sitemap, robots, keystatic, api/keystatic
   styles/       global.css (token di design)
   middleware.ts CSP per le route dinamiche
+keystatic.config.ts  schema del pannello
 server.mjs      entry di produzione: header di sicurezza, compressione, cache, X-Robots-Tag
 scripts/        immagine OG, favicon, controllo del flusso email, stampa interruttori
 docs/specs/     specifica della fase di validazione
@@ -64,7 +69,8 @@ Tutti i testi italiani stanno in `src/lib/copy.ts`. Regole di design e di brand 
 
 Elenco completo e commentato in [`.env.example`](.env.example).
 
-- **Build**: `PUBLIC_SITE_URL`, `PUBLIC_NOINDEX=true` (solo staging), `PUBLIC_WHATSAPP_NUMBER`.
+- **Build**: `PUBLIC_SITE_URL`, `PUBLIC_NOINDEX=true` (solo staging), `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`.
+- **Runtime, pannello**: `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`.
 - **Runtime, solo con `leadForm` acceso**: `SMTP_*`, `MAIL_TO`, `MAIL_FROM`, `TURNSTILE_SECRET`.
 - **Produzione**: `TRUSTED_PROXY=cloudflare`, altrimenti tutti i visitatori finiscono nello stesso limite di richieste.
 

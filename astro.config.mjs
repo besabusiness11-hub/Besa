@@ -1,12 +1,15 @@
 // @ts-check
 import node from "@astrojs/node";
+import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
 
 export default defineConfig({
   site: process.env.PUBLIC_SITE_URL ?? "https://besaweb.com",
-  output: "static", // pages prerendered; only src/pages/api/lead.ts opts out
+  output: "static", // pages prerendered; only /api/lead, /keystatic and /api/keystatic opt out
   adapter: node({ mode: "standalone" }),
+  // React only for the admin panel (/keystatic, src/pages/keystatic): no public page ships React.
+  integrations: [react()],
   trailingSlash: "never",
   compressHTML: true,
   // the dev toolbar sits bottom-centre, exactly where the section dock lives (dev-only setting)

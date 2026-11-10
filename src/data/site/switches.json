@@ -1,0 +1,13 @@
+{
+  "offerMode": "validation",
+  "leadForm": {
+    "enabled": false,
+    "offSince": "2026-11-02"
+  },
+  "onlinePayment": {
+    "enabled": false
+  },
+  "whatsappButton": {
+    "enabled": false
+  }
+}

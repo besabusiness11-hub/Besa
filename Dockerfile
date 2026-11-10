@@ -12,7 +12,13 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 COPY . .
 ARG PUBLIC_SITE_URL=https://besaweb.com
 ENV PUBLIC_SITE_URL=$PUBLIC_SITE_URL
-RUN pnpm build
+# Slug of the GitHub App behind the /keystatic login (public, baked into the admin bundle).
+ARG PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=
+ENV PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=$PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
+# Edits from the admin panel land on main without a local test run: the tests (no amounts in
+# validation copy, no [TODO], valid switches) gate the build, so a bad edit fails here and Coolify
+# keeps the previous container online.
+RUN pnpm test && pnpm build
 
 # Production dependencies only, for the runtime stage
 FROM base AS prod-deps
@@ -28,6 +34,7 @@ COPY --from=build --chown=node:node /app/package.json ./package.json
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --from=build --chown=node:node /app/server.mjs ./server.mjs
 COPY --from=build --chown=node:node /app/src/lib/features.ts ./src/lib/features.ts
+COPY --from=build --chown=node:node /app/src/data/site/switches.json ./src/data/site/switches.json
 USER node
 EXPOSE 4321
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \

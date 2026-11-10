@@ -1,11 +1,12 @@
 ---
-// Chat-only WhatsApp button (no calls). Shown only when FEATURES.whatsappButton is on AND
-// PUBLIC_WHATSAPP_NUMBER is set (digits with country code, e.g. 393331234567): the number is data,
-// the switch is in features.ts. Switch on with no number: the build warns and renders nothing.
+// Chat-only WhatsApp button (no calls). Shown only when FEATURES.whatsappButton is on AND a number is
+// set (digits with country code, e.g. 393331234567): from the panel (contacts.json), else
+// PUBLIC_WHATSAPP_NUMBER. Switch on with no number: the build warns and renders nothing.
+import { whatsappNumber } from "../lib/contacts";
 import { FEATURES } from "../lib/features";
-const number = String(import.meta.env.PUBLIC_WHATSAPP_NUMBER ?? "").replace(/\D/g, "");
+const number = whatsappNumber();
 const on = FEATURES.whatsappButton.enabled;
-if (on && number.length < 8) console.warn("[features] whatsappButton è acceso ma PUBLIC_WHATSAPP_NUMBER manca o non è valido: il pulsante non compare.");
+if (on && number.length < 8) console.warn("[features] whatsappButton è acceso ma il numero WhatsApp manca o non è valido: il pulsante non compare.");
 const text = encodeURIComponent("Ciao, vi scrivo dal sito besaweb.com.");
 ---
 {on && number.length >= 8 && (

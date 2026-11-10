@@ -1,5 +1,7 @@
 # Spec: sito agenzia in fase di validazione
 
+> **Aggiornamento 2026-11-10**: la decisione «niente pannello online» è superata. Lo stato degli interruttori (più sezioni, prezzi, link di pagamento, numero WhatsApp e dati aziendali) sta in `src/data/site/*.json` e si modifica dal pannello Keystatic `/keystatic`; `features.ts` tiene solo spiegazioni e checklist. Vedi `DEPLOY.md` sezione 4 e `CLAUDE.md`. Il resto della spec resta valido.
+
 Stato: da sviluppare. Scritta il 2026-11-02 dopo le domande a Leo. Ramo di partenza: `feat/besa-2-0-site` (commit `7dd0622`).
 Cartella di lavoro: `apps/agency-site/`. Leggi prima `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`.
 

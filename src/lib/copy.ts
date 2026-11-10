@@ -4,14 +4,18 @@
 // le controllano tutte; i componenti usano la costante `copy`, costruita con gli interruttori attuali.
 // In "validation" non compare nessun importo: i blocchi con i prezzi (offer, form.payment) mancano del tutto.
 import { FEATURES, OFFER_MODE, type OfferMode } from "./features";
-import { eur, PRICING } from "./offer";
+import { legalLine } from "./contacts";
+import { CHECKOUT, eur, PRICING } from "./offer";
+import { anchorOn, SECTIONS, type SectionState } from "./sections";
 
 export interface CopyOptions {
   /** Modulo dinamico acceso (FEATURES.leadForm): cambia le frasi che parlano del «modulo». */
   leadForm?: boolean;
+  /** Sezioni visibili (sections.json): le voci di menu delle sezioni nascoste spariscono. */
+  sections?: SectionState;
 }
 
-export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enabled }: CopyOptions = {}) {
+export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enabled, sections = SECTIONS }: CopyOptions = {}) {
   const FULL = mode === "full";
   const V = mode === "validation";
   /** Blocchi con importi: assenti in "validation". */
@@ -35,7 +39,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
         { label: V ? "Offerta" : "Piani", href: "#piani" },
         { label: "Chi siamo", href: "#chi-siamo" },
         { label: "FAQ", href: "#faq" },
-      ],
+      ].filter((l) => anchorOn(l.href, sections)),
       sections: {
         label: "Sezioni della pagina",
         title: "In questa pagina",
@@ -411,7 +415,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
           "Hosting (la pagina resta online), certificato SSL (il lucchetto) ed email con i contatti inclusi",
         ],
         cta: "Scegli il pacchetto una tantum",
-        checkout: "",
+        checkout: CHECKOUT.launch,
         more: { text: "Hai molte inserzioni attive?", cta: "Raccontaci cosa ti serve" },
       },
       plans: [
@@ -430,8 +434,8 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
             "Hosting, certificato SSL ed email con i contatti inclusi, più un report mensile: visite, contatti, quanti visitatori ti scrivono",
           ],
           cta: "Scegli l’abbonamento",
-          // Link di pagamento (es. Stripe Payment Link). Vuoto = il pulsante porta al modulo con il piano già scelto.
-          checkout: "",
+          // Link di pagamento (es. Stripe Payment Link), dal pannello. Vuoto = il pulsante porta al modulo con il piano già scelto.
+          checkout: CHECKOUT.abbonamento,
         },
         {
           id: "una-tantum",
@@ -446,7 +450,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
             "Dopo la consegna: 30 giorni di correzioni gratuite; poi modifiche a preventivo, oppure passi all’abbonamento",
           ],
           cta: "Scegli il pacchetto una tantum",
-          checkout: "",
+          checkout: CHECKOUT["una-tantum"],
         },
         {
           id: "su-misura",
@@ -461,7 +465,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
             "Una chiamata solo se la vuoi tu",
           ],
           cta: "Raccontaci cosa ti serve",
-          checkout: "",
+          checkout: CHECKOUT["su-misura"],
         },
       ],
       // Preventivo interattivo (solo offerta completa): quante landing servono e come cambia il prezzo.
@@ -863,7 +867,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
           rows: [
             ["WCAG 2.1 AA", "0 violazioni (axe-core)"],
             ["Movimento", "Le animazioni si spengono con «riduci movimento»"],
-            ["Dati strutturati", "JSON-LD: Organization, Service, FAQPage"],
+            ["Dati strutturati", sections.faq ? "JSON-LD: Organization, Service, FAQPage" : "JSON-LD: Organization, Service"],
             ["Indicizzazione", "Sitemap, canonical, lingua it"],
           ],
         },
@@ -882,8 +886,8 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
     footer: {
       slogan: "Landing page per chi fa pubblicità su Meta.",
       email: "info@besaweb.com",
-      // Aggiungere P.IVA e sede legale appena esistono.
-      legalLine: "besaweb · info@besaweb.com",
+      // Ragione sociale, P.IVA e sede si inseriscono dal pannello (Contatti e dati aziendali).
+      legalLine: legalLine(),
       links: {
         privacy: "Privacy",
         cookie: "Cookie",

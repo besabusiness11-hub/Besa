@@ -67,7 +67,7 @@ const pct = ((n0 - q.min) / (q.max - q.min)) * 100;
             </ul>
             <div class="acts">
               {pay && main.checkout && <a class="btn" href={main.checkout} rel="noopener">{copy.form.checkoutCta}</a>}
-              <a class:list={["btn", { ghost: !!main.checkout }]} href="#contatto" data-plan={main.id} data-plan-name={main.name}>{main.cta}</a>
+              <a class:list={["btn", { ghost: pay && !!main.checkout }]} href="#contatto" data-plan={main.id} data-plan-name={main.name}>{main.cta}</a>
             </div>
           </article>
 

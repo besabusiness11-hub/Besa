@@ -3,7 +3,10 @@
 // visual on top, copy below; on hover the copy lifts and a "start here" link slides in.
 import { copy } from "../lib/copy";
 import { em } from "../lib/em";
+import { anchorOn } from "../lib/sections";
 const f = copy.features;
+// Cross-links to other sections: hidden when their target section is switched off in the panel.
+const navLabel = (href: string) => copy.nav.links.find((l) => l.href === href)?.label ?? "";
 const [eta, link, channel, edits, tryIt, people] = f.items;
 const arrow = `<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 ---
@@ -67,7 +70,7 @@ const arrow = `<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true
           <h3>{edits.title}</h3>
           <p>{edits.text}</p>
         </div>
-        <a class="go" href="#piani"><span>{copy.offer?.plans[0].cta ?? copy.offerValidation.link}</span><Fragment set:html={arrow} /></a>
+        {anchorOn("#piani") && <a class="go" href="#piani"><span>{copy.offer?.plans[0].cta ?? copy.offerValidation.link}</span><Fragment set:html={arrow} /></a>}
       </article>
 
       <article class="card c-try">
@@ -79,7 +82,7 @@ const arrow = `<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true
           <h3>{tryIt.title}</h3>
           <p>{tryIt.text}</p>
         </div>
-        <a class="go" href="#come-funziona"><span>{copy.nav.links[1].label}</span><Fragment set:html={arrow} /></a>
+        {anchorOn("#come-funziona") && <a class="go" href="#come-funziona"><span>{navLabel("#come-funziona")}</span><Fragment set:html={arrow} /></a>}
       </article>
 
       <article class="card c-people">
@@ -92,7 +95,7 @@ const arrow = `<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true
           <h3>{people.title}</h3>
           <p>{people.text}</p>
         </div>
-        <a class="go" href="#chi-siamo"><span>{copy.nav.links[4].label}</span><Fragment set:html={arrow} /></a>
+        {anchorOn("#chi-siamo") && <a class="go" href="#chi-siamo"><span>{navLabel("#chi-siamo")}</span><Fragment set:html={arrow} /></a>}
       </article>
     </div>
   </div>

@@ -1,6 +1,6 @@
 # Stato del sito besaweb.com
 
-Aggiornato il 3 novembre 2026. Per la situazione sempre aggiornata lancia `pnpm features` nella cartella del sito: legge direttamente il file degli interruttori.
+Aggiornato il 10 novembre 2026. La situazione sempre aggiornata è nel **pannello** (besaweb.com/keystatic) oppure, dalla cartella del sito, con `pnpm features`.
 
 ## In breve
 
@@ -28,21 +28,26 @@ Il sito è in **fase di validazione**:
 | `launch` | Una landing page a 390 € |
 | `full` | Tre piani (Abbonamento, Una tantum, Su misura) e il cursore per il preventivo |
 
-I prezzi delle modalità `launch` e `full` sono in `src/lib/offer.ts`.
+I prezzi delle modalità `launch` e `full` si cambiano dal pannello, pagina «Offerta e prezzi».
 
-## Come cambiare lo stato del sito
+## Come cambiare lo stato del sito: il pannello
 
-Tutto si decide in **un solo file**: `src/lib/features.ts`.
+Tutto si cambia dal **pannello**: **besaweb.com/keystatic**.
 
-1. Apri il file.
-2. Fai la modifica che ti serve:
-   - **Per cambiare modalità**, modifica la riga `export const OFFER_MODE: OfferMode = "validation";` e scrivi `"launch"` o `"full"` al posto di `"validation"`.
-   - **Per accendere o spegnere una funzione**, trova il suo blocco (`leadForm`, `onlinePayment` o `whatsappButton`) e cambia `enabled: false` in `enabled: true`, o viceversa.
-3. Salva, fai commit e push. Coolify ripubblica il sito in pochi minuti.
+1. Apri il pannello e premi «Log in with GitHub». Entra con l'account GitHub che ha accesso alla repo del sito: gli altri account vedono il pannello ma non possono salvare.
+2. A sinistra trovi quattro pagine:
+   - **Modalità e funzioni**: la modalità dell'offerta (validazione, lancio, completa) e gli interruttori del modulo dinamico, del pagamento online e del pulsante WhatsApp. Sotto ogni interruttore c'è scritto perché è spento e cosa serve prima di accenderlo.
+   - **Sezioni della home**: accendi o spegni le sezioni della pagina (calcolatore, come funziona, offerta, chi siamo, FAQ…). Una sezione spenta sparisce anche dal menu delle sezioni e dal footer. L'apertura e la sezione contatti restano sempre accese.
+   - **Offerta e prezzi**: i prezzi e i link di pagamento (per esempio Stripe) di ogni piano.
+   - **Contatti e dati aziendali**: numero WhatsApp, ragione sociale, partita IVA e sede (compaiono nel footer). Lascia vuoto quello che non esiste ancora.
+3. Premi **Save**. È la pubblicazione: il sito si aggiorna da solo in pochi minuti.
+4. Per tornare al sito c'è il pulsante «Torna al sito» in basso.
 
-Puoi controllare il risultato in locale prima di pubblicare con `pnpm dev`, poi apri http://127.0.0.1:4321.
+**Vuoi vedere il risultato prima di pubblicare?** Dalla cartella del sito lancia `pnpm admin`: si apre lo stesso pannello in locale (http://127.0.0.1:4321/keystatic) e il sito nell'altra scheda (http://127.0.0.1:4321) cambia mentre salvi, senza pubblicare niente. Quando va bene, fai commit e push.
 
-**Prima di accendere qualcosa, fai la sua checklist.** Ogni funzione spenta ha nel file una lista `reEnable` con quello che serve prima di riaccenderla, e `pnpm features` la stampa. Se riaccendi il modulo senza aver configurato l'invio delle email, le richieste dei visitatori non arrivano.
+**Se qualcosa non va, il sito non si rompe.** Prima di ogni pubblicazione partono i controlli automatici (per esempio: nessun prezzo visibile in validazione). Se un salvataggio non li passa, la pubblicazione si ferma e online resta la versione precedente.
+
+**Prima di accendere qualcosa, fai la sua checklist.** Se riaccendi il modulo senza aver configurato l'invio delle email, le richieste dei visitatori non arrivano.
 
 ### Le checklist in breve
 
@@ -53,11 +58,11 @@ Puoi controllare il risultato in locale prima di pubblicare con `pnpm dev`, poi 
   - Un invio di prova dal sito pubblicato.
   - Le pagine privacy e cookie si aggiornano da sole quando accendi il modulo: fai comunque rileggere i testi.
 - **Pagamento online (`onlinePayment`)**
-  - Un link di pagamento (per esempio Stripe) in `src/lib/copy.ts`, nel campo `checkout` dei piani.
+  - Un link di pagamento (per esempio Stripe) nel pannello, «Offerta e prezzi».
   - P.IVA attiva.
   - Termini approvati dal commercialista.
 - **Pulsante WhatsApp (`whatsappButton`)**
-  - Imposta la variabile `PUBLIC_WHATSAPP_NUMBER` su Coolify (formato `393331234567`) e porta `enabled` a `true`.
+  - Inserisci il numero nel pannello, «Contatti e dati aziendali» (formato `393331234567`), poi accendi l'interruttore.
   - Se accendi il pulsante senza numero, il pulsante non compare e la build stampa un avviso.
 
 ## Cosa cambia in automatico con la modalità `validation`
@@ -68,6 +73,8 @@ Puoi controllare il risultato in locale prima di pubblicare con `pnpm dev`, poi 
 - Dal calcolatore sparisce la riga "La tua pagina costa…".
 
 ## Prima di andare online
+
+- Attiva il pannello: crea la GitHub App e metti le sue chiavi su Coolify (istruzioni passo passo in `DEPLOY.md`, sezione 4). Finché non lo fai, il pannello online mostra il login ma non funziona; in locale (`pnpm admin`) funziona già.
 
 - Prova il flusso email su un iPhone e su un Android: il messaggio deve aprirsi con destinatario, oggetto e testo giusti.
 - Prova anche il popup e i tre pulsanti "Copia".

@@ -20,27 +20,29 @@ import Base from "../layouts/Base.astro";
 import { copy } from "../lib/copy";
 import { FEATURES } from "../lib/features";
 import { VALIDATION } from "../lib/offer";
+import { SECTIONS as on } from "../lib/sections";
 import { faqJsonLd, organizationJsonLd, serviceJsonLd, websiteJsonLd } from "../lib/jsonld";
 ---
 <Base
   title={copy.meta.title}
   description={copy.meta.description}
   path="/"
-  jsonLd={[organizationJsonLd(), serviceJsonLd(), websiteJsonLd(), faqJsonLd()]}
+  jsonLd={[organizationJsonLd(), serviceJsonLd(), websiteJsonLd(), ...(on.faq ? [faqJsonLd()] : [])]}
 >
   <Header />
   <SectionNav />
   <main id="main">
     <Hero />
-    <Problem />
-    <Fix />
-    <HowItWorks />
-    <Features />
-    <Inside />
-    {VALIDATION ? <OfferValidation /> : <Offer />}
-    <Proof />
-    <Team />
-    <Faq />
+    {/* Sections are switched on and off from the /keystatic panel (src/data/site/sections.json). */}
+    {on.problema && <Problem />}
+    {on.fix && <Fix />}
+    {on.comeFunziona && <HowItWorks />}
+    {on.servizio && <Features />}
+    {on.cosaInclude && <Inside />}
+    {on.piani && (VALIDATION ? <OfferValidation /> : <Offer />)}
+    {on.proof && <Proof />}
+    {on.chiSiamo && <Team />}
+    {on.faq && <Faq />}
     {/* Switches live in src/lib/features.ts: the form stays in the code, off during validation. */}
     {FEATURES.leadForm.enabled ? <ContactForm /> : <ContactMail />}
   </main>

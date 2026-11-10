@@ -1,0 +1,13 @@
+{
+  "prices": {
+    "launch": 390,
+    "oneTime": 449,
+    "monthly": 79,
+    "paused": 19,
+    "hostingYear": 99,
+    "customFrom": 149,
+    "customIncluded": 3,
+    "customExtra": 49
+  },
+  "checkout": {}
+}
