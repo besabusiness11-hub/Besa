@@ -30,6 +30,7 @@ Dependency quirks (all deliberate): pnpm enforces a minimum release age, so pin 
 - Own routes instead of the `@keystatic/astro` integration (not installed as integration): `src/pages/keystatic/[...params].astro` (BESA colours via Keystar's `--kui-color-scale-indigo*`, "Torna al sito" button) and `src/pages/api/keystatic/[...params].ts` (503 without secrets, 404 for local mode outside dev). React (`@astrojs/react`) is used only there.
 - Keystatic omits empty fields when saving, and TS infers types from the JSON: readers (`features.ts`, `offer.ts`, `sections.ts`, `contacts.ts`) cast via `unknown`, tolerate missing keys and throw on invalid values so a bad save fails the build. Adding a field = schema in `keystatic.config.ts` + reader + `admin.test.ts`.
 - Labels, `whyOff`, `reEnable` stay in `features.ts` and appear as help text under each toggle.
+- `security.allowedDomains` in `astro.config.mjs` trusts the proxy's forwarded host/proto for `besaweb.com` and subdomains: without it the OAuth `redirect_uri` is `http://` behind Coolify and GitHub login fails.
 
 ### Switches (`src/lib/features.ts`, state in `src/data/site/switches.json`)
 `OFFER_MODE` ("validation" | "launch" | "full") plus `FEATURES` (`leadForm`, `onlinePayment`, `whatsappButton`); each switch carries `whyOff` + a `reEnable` checklist (tested). No env override: change the JSON (panel or by hand) and redeploy. Current: validation, everything off.

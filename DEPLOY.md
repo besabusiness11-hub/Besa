@@ -93,7 +93,8 @@ Poi entra, cambia una cosa innocua (per esempio la data «Spento dal»), Save: s
 ### 4.4 Anteprima prima di pubblicare
 
 - **In locale (subito, nessuna configurazione)**: `pnpm admin`, poi `http://127.0.0.1:4321/keystatic` in una scheda e `http://127.0.0.1:4321` nell'altra. In locale il pannello scrive i file sul disco e il sito si ricarica da solo. Quando va bene: commit e push a mano.
-- **Online, con un branch (facoltativo)**: nel pannello, menu del branch in alto a sinistra -> crea un branch (prefisso `admin/`), salva lì, poi «Create pull request». Con le **Preview Deployments** di Coolify attive (app collegata via GitHub App: Configuration -> Preview Deployments, URL tipo `{{pr_id}}.new.besaweb.com`, con `PUBLIC_NOINDEX=true` tra le variabili delle preview) ogni pull request ha il suo indirizzo di anteprima. Merge della pull request su GitHub = pubblicazione.
+- **Online, con un branch (facoltativo)**: nel pannello, menu del branch in alto a sinistra -> crea un branch (prefisso `admin/`), salva lì, poi «Create pull request». Con le **Preview Deployments** di Coolify attive (app collegata via GitHub App: Configuration -> Preview Deployments, URL tipo `{{pr_id}}.new.besaweb.com`, con `PUBLIC_NOINDEX=true` tra le variabili delle preview) ogni pull request ha il suo indirizzo di anteprima. Merge della pull request su GitHub = pubblicazione. Le modifiche si fanno sempre dal pannello di besaweb.com (sul branch); l'indirizzo di anteprima serve solo a guardare il sito, quindi non va aggiunto alle callback della GitHub App.
+- Il login funziona dietro Coolify/Cloudflare perché `astro.config.mjs` (`security.allowedDomains`) si fida di `X-Forwarded-Host`/`X-Forwarded-Proto` solo per `besaweb.com` e i suoi sottodomini in https: così il pannello costruisce la callback `https://besaweb.com/...`. Se cambi dominio, aggiorna quella lista e le callback della GitHub App.
 
 ## Note operative
 

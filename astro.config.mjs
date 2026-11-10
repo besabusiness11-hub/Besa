@@ -11,6 +11,15 @@ export default defineConfig({
   // React only for the admin panel (/keystatic, src/pages/keystatic): no public page ships React.
   integrations: [react()],
   trailingSlash: "never",
+  // Behind Coolify (Traefik) and Cloudflare the app sees plain http on an internal host. Trust the
+  // proxy's X-Forwarded-Host/Proto for our own domains only, so SSR routes see https://besaweb.com:
+  // the /keystatic GitHub login builds its OAuth redirect_uri from the request URL.
+  security: {
+    allowedDomains: [
+      { hostname: "besaweb.com", protocol: "https" },
+      { hostname: "**.besaweb.com", protocol: "https" },
+    ],
+  },
   compressHTML: true,
   // the dev toolbar sits bottom-centre, exactly where the section dock lives (dev-only setting)
   devToolbar: { enabled: false },

@@ -30,7 +30,8 @@ import { faqJsonLd, organizationJsonLd, serviceJsonLd, websiteJsonLd } from "../
   jsonLd={[organizationJsonLd(), serviceJsonLd(), websiteJsonLd(), ...(on.faq ? [faqJsonLd()] : [])]}
 >
   <Header />
-  <SectionNav />
+  {/* No dock when every section listed in it is switched off. */}
+  {copy.nav.links.length > 0 && <SectionNav />}
   <main id="main">
     <Hero />
     {/* Sections are switched on and off from the /keystatic panel (src/data/site/sections.json). */}

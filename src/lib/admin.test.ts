@@ -79,7 +79,8 @@ describe("contatti e offerta", () => {
     expect(whatsappNumber("+39 333 123 4567", "")).toBe("393331234567");
     expect(whatsappNumber("", "39 333 765 4321")).toBe("393337654321");
     expect(whatsappNumber("393331234567", "390000000000")).toBe("393331234567");
-    expect(whatsappNumber(undefined, undefined)).toBe("");
+    expect(whatsappNumber("", "")).toBe("");
+    expect(whatsappNumber(null, null)).toBe("");
   });
 
   it("la riga legale mostra solo i dati che esistono", () => {

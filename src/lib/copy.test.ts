@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { buildCopy, copy } from "./copy";
 import { FEATURES, OFFER_MODE, OFFER_MODES } from "./features";
+import { SECTION_KEYS, type SectionState } from "./sections";
+
+// Every section on, so the checks cover all the copy whatever the panel currently hides.
+const allOn = Object.fromEntries(SECTION_KEYS.map((k) => [k, true])) as SectionState;
 
 const strings = (v: unknown, out: string[] = []): string[] => {
   if (typeof v === "string") out.push(v);
@@ -10,7 +14,7 @@ const strings = (v: unknown, out: string[] = []): string[] => {
 };
 
 // Every mode, with the form on and off: the invariants hold for all of them.
-const variants = OFFER_MODES.flatMap((mode) => [true, false].map((leadForm) => ({ mode, leadForm, c: buildCopy(mode, { leadForm }) })));
+const variants = OFFER_MODES.flatMap((mode) => [true, false].map((leadForm) => ({ mode, leadForm, c: buildCopy(mode, { leadForm, sections: allOn }) })));
 
 describe.each(variants)("copy ($mode, modulo $leadForm)", ({ c }) => {
   const all = strings(c);
@@ -89,8 +93,8 @@ describe("fase di validazione (validation)", () => {
   });
 
   it("voce di menu «Offerta» al posto di «Piani»", () => {
-    expect(buildCopy("validation").nav.links.map((l) => l.label)).toContain("Offerta");
-    expect(buildCopy("launch").nav.links.map((l) => l.label)).toContain("Piani");
+    expect(buildCopy("validation", { sections: allOn }).nav.links.map((l) => l.label)).toContain("Offerta");
+    expect(buildCopy("launch", { sections: allOn }).nav.links.map((l) => l.label)).toContain("Piani");
   });
 
   it("con il modulo spento nessuna frase rimanda al «modulo» del sito", () => {

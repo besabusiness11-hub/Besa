@@ -23,7 +23,8 @@ const columns = [
     // Shared with the legal pages' footer, which drops the page you are on.
     links: legalLinks(Astro.url.pathname, f.links, { terms: !VALIDATION }),
   },
-];
+  // A column left empty (e.g. every section switched off in the panel) is not shown.
+].filter((c) => c.links.length > 0);
 // lucide icons (ISC), inlined
 const icons: Record<string, string> = {
   mail: `<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>`,
