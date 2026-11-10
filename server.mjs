@@ -1,7 +1,7 @@
 // Production entry. The @astrojs/node static handler serves prerendered files
 // BEFORE Astro middleware runs, so security headers are applied here at the
 // HTTP layer for every response (static + dynamic). Keep in sync with src/middleware.ts.
-// SSR routes (/api/*, /keystatic) get their final CSP from the middleware, which overwrites this one;
+// SSR routes (/api/*, /admin) get their final CSP from the middleware, which overwrites this one;
 // the admin panel's wider CSP lives only there.
 import http from "node:http";
 import zlib from "node:zlib";
@@ -47,7 +47,7 @@ function applyCache(req, res) {
       if (url.startsWith("/_astro/")) {
         // Hashed build output: cache forever.
         res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-      } else if (url === "/keystatic" || url.startsWith("/keystatic/")) {
+      } else if (/^\/(admin|keystatic)(\/|$)/.test(url)) {
         // Admin panel: never cached (its CSP and noindex come from src/middleware.ts).
         res.setHeader("Cache-Control", "no-store");
       } else if (!url.startsWith("/api/") && /^(text\/html)/i.test(String(res.getHeader("Content-Type") ?? ""))) {
@@ -116,7 +116,7 @@ function compress(req, res) {
 // Staging: PUBLIC_NOINDEX=true adds X-Robots-Tag everywhere. Transactional/utility URLs are
 // always noindex (never in the sitemap), also at header level.
 const NOINDEX_ALL = ["true", "1"].includes(String(process.env.PUBLIC_NOINDEX ?? ""));
-const NOINDEX_PATH = /^\/(api\/|keystatic(\/|$)|grazie(\.html)?$|404(\.html)?$|healthz$)/;
+const NOINDEX_PATH = /^\/(api\/|admin(\/|$)|keystatic(\/|$)|grazie(\.html)?$|404(\.html)?$|healthz$)/;
 
 const origCreateServer = http.createServer;
 http.createServer = (...args) => {

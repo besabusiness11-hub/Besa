@@ -13,7 +13,7 @@ const json = (name: string) => JSON.parse(readFileSync(resolve(root, `src/data/s
 const singletons = keystatic.singletons!;
 const allOn = Object.fromEntries(SECTION_KEYS.map((k) => [k, true])) as SectionState;
 
-describe("pannello /keystatic", () => {
+describe("pannello /admin", () => {
   it("ogni singleton scrive un file che il sito legge", () => {
     for (const [name, s] of Object.entries(singletons)) {
       expect(s.path).toBe(`src/data/site/${name}`);

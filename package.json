@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "admin": "astro dev --host 127.0.0.1 && node -e \"console.log('Pannello (modalità locale): http://127.0.0.1:4321/keystatic')\"",
+    "admin": "astro dev --host 127.0.0.1 && node -e \"console.log('Pannello (modalità locale): http://127.0.0.1:4321/admin')\"",
     "og": "node scripts/og.mjs",
     "prebuild": "pnpm og",
     "build": "astro build",

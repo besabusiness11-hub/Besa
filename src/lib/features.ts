@@ -1,6 +1,6 @@
 // Interruttori del sito: cosa è acceso, cosa è spento e perché.
 // Lo STATO (modalità, acceso/spento, data di spegnimento) sta in src/data/site/switches.json, che si
-// modifica dal pannello /keystatic (ogni salvataggio è un commit su main, Coolify ripubblica) o a mano.
+// modifica dal pannello /admin (ogni salvataggio è un commit su main, Coolify ripubblica) o a mano.
 // Qui restano le spiegazioni: etichette, motivo, checklist per riaccendere, file toccati.
 // Nessun import tranne quel JSON: lo leggono Astro, i test, `pnpm features` e server.mjs (Node con
 // rimozione dei tipi; il Dockerfile copia questo file e il JSON accanto a server.mjs).

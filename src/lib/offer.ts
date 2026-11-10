@@ -1,6 +1,6 @@
 // Prices and the offer mode helpers. The mode itself lives in features.ts (OFFER_MODE), the single
 // switchboard of the site: flip it there and redeploy. The modes are documented next to it.
-// The amounts live in src/data/site/offer.json, editable from the /keystatic panel.
+// The amounts live in src/data/site/offer.json, editable from the /admin panel.
 import json from "../data/site/offer.json" with { type: "json" };
 import { OFFER_MODE, type OfferMode } from "./features";
 

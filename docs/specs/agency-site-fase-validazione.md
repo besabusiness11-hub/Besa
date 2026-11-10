@@ -1,6 +1,8 @@
 # Spec: sito agenzia in fase di validazione
 
-> **Aggiornamento 2026-11-10**: la decisione «niente pannello online» è superata. Lo stato degli interruttori (più sezioni, prezzi, link di pagamento, numero WhatsApp e dati aziendali) sta in `src/data/site/*.json` e si modifica dal pannello Keystatic `/keystatic`; `features.ts` tiene solo spiegazioni e checklist. Vedi `DEPLOY.md` sezione 4 e `CLAUDE.md`. Il resto della spec resta valido.
+> **Aggiornamento 2026-11-10**: la decisione «niente pannello online» è superata. Lo stato degli interruttori (più sezioni, prezzi, link di pagamento, numero WhatsApp e dati aziendali) sta in `src/data/site/*.json` e si modifica dal pannello Keystatic `/admin`; `features.ts` tiene solo spiegazioni e checklist. Vedi `DEPLOY.md` sezione 4 e `CLAUDE.md`. Il resto della spec resta valido.
+>
+> **Aggiornamento 2026-11-10 (prezzo)**: per decisione del titolare la validazione mostra un solo importo, €49 per creare e mettere online la pagina (`SETUP_PRICE` in `src/lib/copy.ts`). I costi di gestione si propongono per iscritto solo dopo il primo mese e solo se la pagina ha portato più contatti del mese prima, senza cifre sul sito. Le righe sotto che vietano ogni importo valgono per tutto il resto (niente «gratis», niente listino).
 
 Stato: da sviluppare. Scritta il 2026-11-02 dopo le domande a Leo. Ramo di partenza: `feat/besa-2-0-site` (commit `7dd0622`).
 Cartella di lavoro: `apps/agency-site/`. Leggi prima `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`.

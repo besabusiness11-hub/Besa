@@ -1,4 +1,4 @@
-// Contact and company data from the /keystatic panel (src/data/site/contacts.json).
+// Contact and company data from the /admin panel (src/data/site/contacts.json).
 // Empty fields are simply not shown: never fill them with placeholders.
 import json from "../data/site/contacts.json" with { type: "json" };
 

@@ -1,0 +1,368 @@
+diff --git a/dist/index-5d64e651.js b/dist/index-5d64e651.js
+index e10498113a7ef57235eb4d5864c190a0d14a5f09..8e95d476b705a81f96acc312b81032652e739c02 100644
+--- a/dist/index-5d64e651.js
++++ b/dist/index-5d64e651.js
+@@ -72,7 +72,7 @@ function RouterProvider(props) {
+   if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
+     t1 = function navigate(url_0, replace) {
+       const newUrl = new URL(url_0, window.location.href);
+-      if (newUrl.origin !== window.location.origin || !newUrl.pathname.startsWith("/keystatic")) {
++      if (newUrl.origin !== window.location.origin || !newUrl.pathname.startsWith("/admin")) {
+         window.location.assign(newUrl);
+         return;
+       }
+@@ -110,7 +110,7 @@ function RouterProvider(props) {
+   let parsedUrl;
+   if ($[4] !== url) {
+     parsedUrl = new URL(url);
+-    const replaced = parsedUrl.pathname.replace(/^\/keystatic\/?/, "");
++    const replaced = parsedUrl.pathname.replace(/^\/admin\/?/, "");
+     t4 = replaced === "" ? [] : replaced.split("/").map(decodeURIComponent);
+     $[4] = url;
+     $[5] = t4;
+@@ -1306,7 +1306,7 @@ async function redirectToCloudAuth(from, config) {
+   const url = new URL(`${KEYSTATIC_CLOUD_API_URL}/oauth/authorize`);
+   url.searchParams.set('state', state);
+   url.searchParams.set('client_id', config.cloud.project);
+-  url.searchParams.set('redirect_uri', `${window.location.origin}/keystatic/cloud/oauth/callback`);
++  url.searchParams.set('redirect_uri', `${window.location.origin}/admin/cloud/oauth/callback`);
+   url.searchParams.set('response_type', 'code');
+   url.searchParams.set('code_challenge_method', 'S256');
+   url.searchParams.set('code_challenge', code_challenge);
+@@ -2831,7 +2831,7 @@ function useConfig() {
+ // -----------------------------------------------------------------------------
+ 
+ const AppStateContext = /*#__PURE__*/createContext({
+-  basePath: '/keystatic'
++  basePath: '/admin'
+ });
+ function useAppState() {
+   const appState = useContext(AppStateContext);
+@@ -5055,7 +5055,7 @@ function CollabAddToPathProvider(props) {
+     }
+     const avatars = [];
+     for (const [clientId, val] of awarenessStates) {
+-      if (clientId === yjsInfo.awareness.clientID || !val.user || router.href !== `/keystatic/branch/${val.branch}/${val.location}` || !Array.isArray(val.path) || !areArraysEqual(val.path, props.path)) {
++      if (clientId === yjsInfo.awareness.clientID || !val.user || router.href !== `/admin/branch/${val.branch}/${val.location}` || !Array.isArray(val.path) || !areArraysEqual(val.path, props.path)) {
+         continue;
+       }
+       avatars.push(val.user);
+diff --git a/dist/keystatic-core-api-generic.js b/dist/keystatic-core-api-generic.js
+index aabdb1a49688d48a681ca4e06fb68ee7ca1e0869..73afdc523ecf95150e1caed5b97d1330c666ff7d 100644
+--- a/dist/keystatic-core-api-generic.js
++++ b/dist/keystatic-core-api-generic.js
+@@ -126,7 +126,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+         return createdGithubApp(req, options === null || options === void 0 ? void 0 : options.slugEnvName);
+       }
+       if (joined === 'github/login' || joined === 'github/repo-not-found' || joined === 'github/logout') {
+-        return redirect('/keystatic/setup');
++        return redirect('/admin/setup');
+       }
+       return {
+         status: 404,
+@@ -170,7 +170,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+           })
+         });
+       }
+-      return redirect('/keystatic', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
++      return redirect('/admin', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
+     }
+     if (joined === 'github/created-app') {
+       return {
+@@ -248,7 +248,7 @@ async function githubOauthCallback(req, config) {
+       status: 200
+     };
+   }
+-  return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
++  return redirect(`/admin${from ? `/${from}` : ''}`, headers);
+ }
+ async function getTokenCookies(tokenData, config) {
+   const headers = [['Set-Cookie', cookie.serialize('keystatic-gh-access-token', tokenData.access_token, {
+@@ -324,7 +324,7 @@ async function refreshGitHubAuth(req, config) {
+ async function githubRepoNotFound(req, config) {
+   const headers = await refreshGitHubAuth(req, config);
+   if (headers) {
+-    return redirect('/keystatic/repo-not-found', headers);
++    return redirect('/admin/repo-not-found', headers);
+   }
+   return githubLogin(req, config);
+ }
+diff --git a/dist/keystatic-core-api-generic.node.js b/dist/keystatic-core-api-generic.node.js
+index b4c82e2d82fcb7fb3fa05835047d92a88866a608..91c6724beb2956bc46fc0f7572f4bb4db9851eba 100644
+--- a/dist/keystatic-core-api-generic.node.js
++++ b/dist/keystatic-core-api-generic.node.js
+@@ -89,7 +89,7 @@ ${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.slug} # https://github.c
+   const newEnv = prevEnv ? `${prevEnv}\n\n${toAddToEnv}` : toAddToEnv;
+   await fs.writeFile('.env', newEnv);
+   await wait(200);
+-  return redirect('/keystatic/created-github-app?slug=' + ghAppDataResult.slug);
++  return redirect('/admin/created-github-app?slug=' + ghAppDataResult.slug);
+ }
+ function localModeApiHandler(config, localBaseDirectory) {
+   const baseDirectory = path.resolve(localBaseDirectory !== null && localBaseDirectory !== void 0 ? localBaseDirectory : process.cwd());
+@@ -329,7 +329,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+         return createdGithubApp(req, options === null || options === void 0 ? void 0 : options.slugEnvName);
+       }
+       if (joined === 'github/login' || joined === 'github/repo-not-found' || joined === 'github/logout') {
+-        return redirect('/keystatic/setup');
++        return redirect('/admin/setup');
+       }
+       return {
+         status: 404,
+@@ -373,7 +373,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+           })
+         });
+       }
+-      return redirect('/keystatic', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
++      return redirect('/admin', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
+     }
+     if (joined === 'github/created-app') {
+       return {
+@@ -451,7 +451,7 @@ async function githubOauthCallback(req, config) {
+       status: 200
+     };
+   }
+-  return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
++  return redirect(`/admin${from ? `/${from}` : ''}`, headers);
+ }
+ async function getTokenCookies(tokenData, config) {
+   const headers = [['Set-Cookie', cookie.serialize('keystatic-gh-access-token', tokenData.access_token, {
+@@ -527,7 +527,7 @@ async function refreshGitHubAuth(req, config) {
+ async function githubRepoNotFound(req, config) {
+   const headers = await refreshGitHubAuth(req, config);
+   if (headers) {
+-    return redirect('/keystatic/repo-not-found', headers);
++    return redirect('/admin/repo-not-found', headers);
+   }
+   return githubLogin(req, config);
+ }
+diff --git a/dist/keystatic-core-api-generic.node.react-server.js b/dist/keystatic-core-api-generic.node.react-server.js
+index fb21fd02779d5dc48d5bfe7e9ad13e6449e3a5ad..ce207d5664c3c5f60f9cdae0d97d8c540dfafb24 100644
+--- a/dist/keystatic-core-api-generic.node.react-server.js
++++ b/dist/keystatic-core-api-generic.node.react-server.js
+@@ -89,7 +89,7 @@ ${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.slug} # https://github.c
+   const newEnv = prevEnv ? `${prevEnv}\n\n${toAddToEnv}` : toAddToEnv;
+   await fs.writeFile('.env', newEnv);
+   await wait(200);
+-  return redirect('/keystatic/created-github-app?slug=' + ghAppDataResult.slug);
++  return redirect('/admin/created-github-app?slug=' + ghAppDataResult.slug);
+ }
+ function localModeApiHandler(config, localBaseDirectory) {
+   const baseDirectory = path.resolve(localBaseDirectory !== null && localBaseDirectory !== void 0 ? localBaseDirectory : process.cwd());
+@@ -329,7 +329,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+         return createdGithubApp(req, options === null || options === void 0 ? void 0 : options.slugEnvName);
+       }
+       if (joined === 'github/login' || joined === 'github/repo-not-found' || joined === 'github/logout') {
+-        return redirect('/keystatic/setup');
++        return redirect('/admin/setup');
+       }
+       return {
+         status: 404,
+@@ -373,7 +373,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+           })
+         });
+       }
+-      return redirect('/keystatic', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
++      return redirect('/admin', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
+     }
+     if (joined === 'github/created-app') {
+       return {
+@@ -451,7 +451,7 @@ async function githubOauthCallback(req, config) {
+       status: 200
+     };
+   }
+-  return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
++  return redirect(`/admin${from ? `/${from}` : ''}`, headers);
+ }
+ async function getTokenCookies(tokenData, config) {
+   const headers = [['Set-Cookie', cookie.serialize('keystatic-gh-access-token', tokenData.access_token, {
+@@ -527,7 +527,7 @@ async function refreshGitHubAuth(req, config) {
+ async function githubRepoNotFound(req, config) {
+   const headers = await refreshGitHubAuth(req, config);
+   if (headers) {
+-    return redirect('/keystatic/repo-not-found', headers);
++    return redirect('/admin/repo-not-found', headers);
+   }
+   return githubLogin(req, config);
+ }
+diff --git a/dist/keystatic-core-api-generic.react-server.js b/dist/keystatic-core-api-generic.react-server.js
+index 22462073f5416e9654c402678bf8e701333eb79b..1afd04874127aea6a40b191de42af5d3e5dd8856 100644
+--- a/dist/keystatic-core-api-generic.react-server.js
++++ b/dist/keystatic-core-api-generic.react-server.js
+@@ -145,7 +145,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+         return createdGithubApp(req, options === null || options === void 0 ? void 0 : options.slugEnvName);
+       }
+       if (joined === 'github/login' || joined === 'github/repo-not-found' || joined === 'github/logout') {
+-        return redirect('/keystatic/setup');
++        return redirect('/admin/setup');
+       }
+       return {
+         status: 404,
+@@ -189,7 +189,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+           })
+         });
+       }
+-      return redirect('/keystatic', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
++      return redirect('/admin', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
+     }
+     if (joined === 'github/created-app') {
+       return {
+@@ -267,7 +267,7 @@ async function githubOauthCallback(req, config) {
+       status: 200
+     };
+   }
+-  return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
++  return redirect(`/admin${from ? `/${from}` : ''}`, headers);
+ }
+ async function getTokenCookies(tokenData, config) {
+   const headers = [['Set-Cookie', cookie.serialize('keystatic-gh-access-token', tokenData.access_token, {
+@@ -343,7 +343,7 @@ async function refreshGitHubAuth(req, config) {
+ async function githubRepoNotFound(req, config) {
+   const headers = await refreshGitHubAuth(req, config);
+   if (headers) {
+-    return redirect('/keystatic/repo-not-found', headers);
++    return redirect('/admin/repo-not-found', headers);
+   }
+   return githubLogin(req, config);
+ }
+diff --git a/dist/keystatic-core-api-generic.worker.js b/dist/keystatic-core-api-generic.worker.js
+index 22462073f5416e9654c402678bf8e701333eb79b..1afd04874127aea6a40b191de42af5d3e5dd8856 100644
+--- a/dist/keystatic-core-api-generic.worker.js
++++ b/dist/keystatic-core-api-generic.worker.js
+@@ -145,7 +145,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+         return createdGithubApp(req, options === null || options === void 0 ? void 0 : options.slugEnvName);
+       }
+       if (joined === 'github/login' || joined === 'github/repo-not-found' || joined === 'github/logout') {
+-        return redirect('/keystatic/setup');
++        return redirect('/admin/setup');
+       }
+       return {
+         status: 404,
+@@ -189,7 +189,7 @@ function makeGenericAPIRouteHandler(_config, options) {
+           })
+         });
+       }
+-      return redirect('/keystatic', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
++      return redirect('/admin', [['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')], ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')]]);
+     }
+     if (joined === 'github/created-app') {
+       return {
+@@ -267,7 +267,7 @@ async function githubOauthCallback(req, config) {
+       status: 200
+     };
+   }
+-  return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
++  return redirect(`/admin${from ? `/${from}` : ''}`, headers);
+ }
+ async function getTokenCookies(tokenData, config) {
+   const headers = [['Set-Cookie', cookie.serialize('keystatic-gh-access-token', tokenData.access_token, {
+@@ -343,7 +343,7 @@ async function refreshGitHubAuth(req, config) {
+ async function githubRepoNotFound(req, config) {
+   const headers = await refreshGitHubAuth(req, config);
+   if (headers) {
+-    return redirect('/keystatic/repo-not-found', headers);
++    return redirect('/admin/repo-not-found', headers);
+   }
+   return githubLogin(req, config);
+ }
+diff --git a/dist/keystatic-core-ui.js b/dist/keystatic-core-ui.js
+index 2f8809b7a3292d0c35cd7617b561195fec49f083..1ab3eda3aee23e23bc7370854d363eec0e80e7be 100644
+--- a/dist/keystatic-core-ui.js
++++ b/dist/keystatic-core-ui.js
+@@ -1654,7 +1654,7 @@ function PresenceAvatars() {
+   if ($[4] !== router.href || $[5] !== t1) {
+     t2 = /*#__PURE__*/jsx(HStack, {
+       children: t1.map(val => {
+-        if (!val.user || router.href !== `/keystatic/branch/${val.branch}/${val.location}`) {
++        if (!val.user || router.href !== `/admin/branch/${val.branch}/${val.location}`) {
+           return null;
+         }
+         return /*#__PURE__*/jsx(Avatar, {
+@@ -3142,7 +3142,7 @@ function ItemPageInner(props) {
+     t19 = updateResult.kind === "needs-new-branch" && /*#__PURE__*/jsx(CreateBranchDuringUpdateDialog, {
+       branchOid: baseCommit,
+       onCreate: async newBranch => {
+-        const itemBasePath = `/keystatic/branch/${encodeURIComponent(newBranch)}/collection/${encodeURIComponent(collection)}/item/`;
++        const itemBasePath = `/admin/branch/${encodeURIComponent(newBranch)}/collection/${encodeURIComponent(collection)}/item/`;
+         router.push(itemBasePath + encodeURIComponent(itemSlug));
+         const slug_0 = getSlugFromState(collectionConfig, props.state);
+         const hasUpdated_0 = await parentOnUpdate({
+@@ -5474,13 +5474,13 @@ function CreateItemInner(props) {
+     t25 = createResult.kind === "needs-new-branch" && /*#__PURE__*/jsx(CreateBranchDuringUpdateDialog, {
+       branchOid: baseCommit,
+       onCreate: async newBranch => {
+-        router.push(`/keystatic/branch/${encodeURIComponent(newBranch)}/collection/${encodeURIComponent(props.collection)}/create`);
++        router.push(`/admin/branch/${encodeURIComponent(newBranch)}/collection/${encodeURIComponent(props.collection)}/create`);
+         if (await props.createItem({
+           branch: newBranch,
+           sha: baseCommit
+         })) {
+           const slug_0 = getSlugFromState(collectionConfig, props.state);
+-          router.push(`/keystatic/branch/${encodeURIComponent(newBranch)}/collection/${encodeURIComponent(props.collection)}/item/${encodeURIComponent(slug_0)}`);
++          router.push(`/admin/branch/${encodeURIComponent(newBranch)}/collection/${encodeURIComponent(props.collection)}/item/${encodeURIComponent(slug_0)}`);
+         }
+       },
+       reason: createResult.reason,
+@@ -6800,7 +6800,7 @@ function SingletonPageInner(props) {
+     t28 = props.updateResult.kind === "needs-new-branch" && /*#__PURE__*/jsx(CreateBranchDuringUpdateDialog, {
+       branchOid: baseCommit,
+       onCreate: async newBranch => {
+-        router.push(`/keystatic/branch/${encodeURIComponent(newBranch)}/singleton/${encodeURIComponent(props.singleton)}`);
++        router.push(`/admin/branch/${encodeURIComponent(newBranch)}/singleton/${encodeURIComponent(props.singleton)}`);
+         props.onUpdate({
+           branch: newBranch,
+           sha: baseCommit
+@@ -7698,7 +7698,7 @@ function KeystaticSetup(props) {
+   if ($[11] !== props.config.storage.repo || $[12] !== deployedURL) {
+     t10 = JSON.stringify({
+       name: `${parseRepoConfig(props.config.storage.repo).owner} Keystatic`,
+-      url: deployedURL ? new URL("/keystatic", deployedURL).toString() : `${window.location.origin}/keystatic`,
++      url: deployedURL ? new URL("/admin", deployedURL).toString() : `${window.location.origin}/admin`,
+       public: true,
+       redirect_url: `${window.location.origin}/api/keystatic/github/created-app`,
+       callback_urls: [`${window.location.origin}/api/keystatic/github/oauth/callback`, `http://127.0.0.1/api/keystatic/github/oauth/callback`, ...(deployedURL ? [new URL("/api/keystatic/github/oauth/callback", deployedURL).toString()] : [])],
+@@ -7888,7 +7888,7 @@ function KeystaticCloudAuthCallback({
+           body: new URLSearchParams({
+             code,
+             client_id: project,
+-            redirect_uri: `${window.location.origin}/keystatic/cloud/oauth/callback`,
++            redirect_uri: `${window.location.origin}/admin/cloud/oauth/callback`,
+             code_verifier: storedState_0.code_verifier,
+             grant_type: 'authorization_code'
+           }).toString(),
+@@ -7907,7 +7907,7 @@ function KeystaticCloudAuthCallback({
+           project,
+           validUntil: Date.now() + parsed.expires_in * 1000
+         }));
+-        router.push(`/keystatic/${storedState_0.from}`);
++        router.push(`/admin/${storedState_0.from}`);
+       })().catch(error_0 => {
+         setError(error_0);
+       });
+@@ -7999,7 +7999,7 @@ function RedirectToBranch(props) {
+         }
+       }
+       if (data !== null && data !== void 0 && (_data$repository = data.repository) !== null && _data$repository !== void 0 && _data$repository.defaultBranchRef) {
+-        push(`/keystatic/branch/${encodeURIComponent(data.repository.defaultBranchRef.name)}`);
++        push(`/admin/branch/${encodeURIComponent(data.repository.defaultBranchRef.name)}`);
+       }
+       if (props.config.storage.kind === "github" && !(data !== null && data !== void 0 && (_data$repository2 = data.repository) !== null && _data$repository2 !== void 0 && _data$repository2.id) && (error === null || error === void 0 || (_error$graphQLErrors = error.graphQLErrors) === null || _error$graphQLErrors === void 0 || (_error$graphQLErrors = _error$graphQLErrors[0]) === null || _error$graphQLErrors === void 0 || (_error$graphQLErrors = _error$graphQLErrors.originalError) === null || _error$graphQLErrors === void 0 ? void 0 : _error$graphQLErrors.type) === "NOT_FOUND" || (error === null || error === void 0 || (_error$graphQLErrors2 = error.graphQLErrors) === null || _error$graphQLErrors2 === void 0 || (_error$graphQLErrors2 = _error$graphQLErrors2[0]) === null || _error$graphQLErrors2 === void 0 || (_error$graphQLErrors2 = _error$graphQLErrors2.originalError) === null || _error$graphQLErrors2 === void 0 ? void 0 : _error$graphQLErrors2.type) === "FORBIDDEN") {
+         window.location.href = "/api/keystatic/github/repo-not-found";
+@@ -8160,7 +8160,7 @@ function PageInner(t0) {
+       return t3;
+     }
+     branch = params[1];
+-    basePath = `/keystatic/branch/${encodeURIComponent(branch)}`;
++    basePath = `/admin/branch/${encodeURIComponent(branch)}`;
+     let t3;
+     if ($[20] !== params) {
+       t3 = parseParamsWithoutBranch(params.slice(2));
+@@ -8180,7 +8180,7 @@ function PageInner(t0) {
+       t2 = $[23];
+     }
+     parsedParams = t2;
+-    basePath = "/keystatic";
++    basePath = "/admin";
+   }
+   const t2 = branch || "";
+   let t3;

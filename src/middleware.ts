@@ -20,9 +20,9 @@ const CSP = [
   "frame-ancestors 'none'",
 ].join("; ");
 
-// Admin panel (/keystatic) and its API: the Keystatic UI talks to GitHub from the browser (GraphQL,
+// Admin panel (/admin) and its API (/api/keystatic): the Keystatic UI talks to GitHub from the browser (GraphQL,
 // raw file contents, avatars) and runs a blob worker. Only these routes get the wider policy.
-const ADMIN = /^\/(keystatic|api\/keystatic)(\/|$)/;
+const ADMIN = /^\/(admin|keystatic|api\/keystatic)(\/|$)/;
 const ADMIN_CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",

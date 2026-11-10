@@ -1,4 +1,4 @@
-// Home page sections that can be hidden from the /keystatic panel (src/data/site/sections.json).
+// Home page sections that can be hidden from the /admin panel (src/data/site/sections.json).
 // Hero and the contact section (#contatto) are always on: every CTA on the page points at #contatto.
 // A hidden section also loses its entry in the dock, the footer "Pagina" column, the cross-links
 // pointing at it, and (FAQ) its structured data.

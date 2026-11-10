@@ -8,12 +8,12 @@ export default defineConfig({
   site: process.env.PUBLIC_SITE_URL ?? "https://besaweb.com",
   output: "static", // pages prerendered; only /api/lead, /keystatic and /api/keystatic opt out
   adapter: node({ mode: "standalone" }),
-  // React only for the admin panel (/keystatic, src/pages/keystatic): no public page ships React.
+  // React only for the admin panel (/admin, src/pages/admin): no public page ships React.
   integrations: [react()],
   trailingSlash: "never",
   // Behind Coolify (Traefik) and Cloudflare the app sees plain http on an internal host. Trust the
   // proxy's X-Forwarded-Host/Proto for our own domains only, so SSR routes see https://besaweb.com:
-  // the /keystatic GitHub login builds its OAuth redirect_uri from the request URL.
+  // the /admin GitHub login builds its OAuth redirect_uri from the request URL.
   security: {
     allowedDomains: [
       { hostname: "besaweb.com", protocol: "https" },

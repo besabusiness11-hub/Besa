@@ -1,8 +1,8 @@
 # Deploy su Coolify
 
-Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Repo autonoma (non più nel monorepo `besa-platform`): `docker build -t besa-agency-site .` dalla root, testabile in locale con `docker run -p 4321:4321 besa-agency-site`. Pagine prerenderizzate, dinamici solo `/api/lead`, `/healthz` e il pannello (`/keystatic`, `/api/keystatic/*`).
+Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Repo autonoma (non più nel monorepo `besa-platform`): `docker build -t besa-agency-site .` dalla root, testabile in locale con `docker run -p 4321:4321 besa-agency-site`. Pagine prerenderizzate, dinamici solo `/api/lead`, `/healthz` e il pannello (`/admin`, `/api/keystatic/*`).
 
-**Interruttori**: cosa è acceso (modalità offerta, modulo dinamico, pagamento online, pulsante WhatsApp, sezioni della home) più prezzi, link di pagamento, numero WhatsApp e dati aziendali stanno in `src/data/site/*.json`, non in variabili d'ambiente. Si cambiano dal pannello `/keystatic` (ogni salvataggio è un commit su `main`, Coolify ripubblica) o a mano con commit e push. `pnpm features` stampa cosa è spento, perché e la checklist per riaccenderlo. Il Dockerfile esegue `pnpm test` prima della build: un salvataggio che rompe le regole (prezzi in validazione, `[TODO]`, valori non validi) fa fallire il deploy e Coolify tiene online la versione precedente.
+**Interruttori**: cosa è acceso (modalità offerta, modulo dinamico, pagamento online, pulsante WhatsApp, sezioni della home) più prezzi, link di pagamento, numero WhatsApp e dati aziendali stanno in `src/data/site/*.json`, non in variabili d'ambiente. Si cambiano dal pannello `/admin` (ogni salvataggio è un commit su `main`, Coolify ripubblica) o a mano con commit e push. `pnpm features` stampa cosa è spento, perché e la checklist per riaccenderlo. Il Dockerfile esegue `pnpm test` prima della build: un salvataggio che rompe le regole (prezzi in validazione, `[TODO]`, valori non validi) fa fallire il deploy e Coolify tiene online la versione precedente.
 
 **Fase di validazione (ora)**: `leadForm` spento. I contatti arrivano per email a info@besaweb.com dall'app di posta del visitatore; `/api/lead` risponde 404 e la CSP non include Turnstile. Le variabili SMTP e Turnstile qui sotto servono **solo con `leadForm` acceso**.
 
@@ -53,7 +53,7 @@ Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Repo autonoma (no
 - Se il problema e' solo DNS: ripunta `besaweb.com` al valore precedente (TTL basso ne accelera la propagazione).
 - Il sito vecchio resta intatto finche' non cambi il DNS: tienilo attivo almeno 48h dopo lo switch.
 
-## 4. Pannello admin (/keystatic)
+## 4. Pannello admin (/admin)
 
 Keystatic in modalità GitHub: chi entra fa login con GitHub e ogni «Save» è un commit su `besabusiness11-hub/Besa`. Possono salvare **solo gli account GitHub con permesso di scrittura sulla repo**: Keystatic usa il token dell'utente, quindi GitHub stesso rifiuta chi non ha accesso. Attenzione: l'account personale di Leo oggi non ha scrittura sulla repo (per questo il push usa l'alias SSH `github.com-besa`). Per usare il pannello: entra con l'account che ha accesso, oppure aggiungi l'account personale come collaboratore con ruolo Write.
 
@@ -73,7 +73,7 @@ GitHub -> organizzazione `besabusiness11-hub` -> Settings -> Developer settings 
 - Crea l'app, poi **Generate a new client secret** e annota Client ID e secret.
 - **Install App** -> organizzazione -> **Only select repositories** -> `Besa`.
 
-In alternativa Keystatic crea l'app da solo: `PUBLIC_KEYSTATIC_STORAGE=github pnpm dev`, apri `http://127.0.0.1:4321/keystatic` e segui la procedura (scrive le chiavi in `.env`). Controlla poi che l'app appartenga all'organizzazione, abbia le callback di produzione e sia installata solo su `Besa`.
+In alternativa Keystatic crea l'app da solo: `PUBLIC_KEYSTATIC_STORAGE=github pnpm dev`, apri `http://127.0.0.1:4321/admin` e segui la procedura (scrive le chiavi in `.env`). Controlla poi che l'app appartenga all'organizzazione, abbia le callback di produzione e sia installata solo su `Besa`.
 
 ### 4.2 Variabili su Coolify
 
@@ -85,14 +85,14 @@ In alternativa Keystatic crea l'app da solo: `PUBLIC_KEYSTATIC_STORAGE=github pn
 ### 4.3 Verifica
 
 ```sh
-curl -sI https://besaweb.com/keystatic | grep -iE 'x-robots|cache-control|content-security'   # noindex, no-store, CSP con api.github.com
+curl -sI https://besaweb.com/admin | grep -iE 'x-robots|cache-control|content-security'   # noindex, no-store, CSP con api.github.com
 curl -s -o /dev/null -w '%{http_code}\n' https://besaweb.com/api/keystatic/github/login        # 3xx (redirect a GitHub); 503 = variabili mancanti
 ```
 Poi entra, cambia una cosa innocua (per esempio la data «Spento dal»), Save: su GitHub compare il commit su `main`, Coolify parte da solo.
 
 ### 4.4 Anteprima prima di pubblicare
 
-- **In locale (subito, nessuna configurazione)**: `pnpm admin`, poi `http://127.0.0.1:4321/keystatic` in una scheda e `http://127.0.0.1:4321` nell'altra. In locale il pannello scrive i file sul disco e il sito si ricarica da solo. Quando va bene: commit e push a mano.
+- **In locale (subito, nessuna configurazione)**: `pnpm admin`, poi `http://127.0.0.1:4321/admin` in una scheda e `http://127.0.0.1:4321` nell'altra. In locale il pannello scrive i file sul disco e il sito si ricarica da solo. Quando va bene: commit e push a mano.
 - **Online, con un branch (facoltativo)**: nel pannello, menu del branch in alto a sinistra -> crea un branch (prefisso `admin/`), salva lì, poi «Create pull request». Con le **Preview Deployments** di Coolify attive (app collegata via GitHub App: Configuration -> Preview Deployments, URL tipo `{{pr_id}}.new.besaweb.com`, con `PUBLIC_NOINDEX=true` tra le variabili delle preview) ogni pull request ha il suo indirizzo di anteprima. Merge della pull request su GitHub = pubblicazione. Le modifiche si fanno sempre dal pannello di besaweb.com (sul branch); l'indirizzo di anteprima serve solo a guardare il sito, quindi non va aggiunto alle callback della GitHub App.
 - Il login funziona dietro Coolify/Cloudflare perché `astro.config.mjs` (`security.allowedDomains`) si fida di `X-Forwarded-Host`/`X-Forwarded-Proto` solo per `besaweb.com` e i suoi sottodomini in https: così il pannello costruisce la callback `https://besaweb.com/...`. Se cambi dominio, aggiorna quella lista e le callback della GitHub App.
 
@@ -100,7 +100,7 @@ Poi entra, cambia una cosa innocua (per esempio la data «Spento dal»), Save: s
 
 - Rate limit del form: in memoria, 5 richieste / 10 minuti per IP. Si azzera a ogni restart (singola istanza).
 - IP client: usa `cf-connecting-ip` / `x-forwarded-for`; mantieni l'app dietro il proxy di Coolify/Cloudflare.
-- Header di sicurezza (CSP, nosniff, ecc.) sono applicati da `server.mjs` a tutte le risposte (anche ai file statici, che il node adapter serve prima del middleware Astro) e da `src/middleware.ts` alle route dinamiche, dove la CSP del middleware sostituisce quella di `server.mjs`. Tieni i due elenchi allineati. Il pannello (`/keystatic`, `/api/keystatic`) ha una CSP più larga (GitHub API, avatar, worker) solo nel middleware, più `no-store` e `noindex`.
+- Header di sicurezza (CSP, nosniff, ecc.) sono applicati da `server.mjs` a tutte le risposte (anche ai file statici, che il node adapter serve prima del middleware Astro) e da `src/middleware.ts` alle route dinamiche, dove la CSP del middleware sostituisce quella di `server.mjs`. Tieni i due elenchi allineati. Il pannello (`/admin`, `/api/keystatic`) ha una CSP più larga (GitHub API, avatar, worker) solo nel middleware, più `no-store` e `noindex`.
 - Se aggiungi script/origini esterne, aggiorna la CSP in entrambi i file. Le origini Turnstile ci sono solo con `leadForm` acceso: `server.mjs` legge `src/lib/features.ts` direttamente (Node 24 rimuove i tipi; il Dockerfile copia il file e `src/data/site/switches.json` accanto a `server.mjs`).
 
 ## Rate limiting and proxies

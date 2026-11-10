@@ -1,5 +1,6 @@
 ---
-// Admin panel at /keystatic: the Keystatic UI in BESA colours, with a way back to the site.
+// Admin panel at /admin: the Keystatic UI in BESA colours, with a way back to the site.
+// Keystatic itself expects /keystatic; patches/@keystatic__core@0.6.9.patch moves it here.
 // Not indexed, never cached (see server.mjs and src/middleware.ts for its headers).
 import { Font } from "astro:assets";
 import { Keystatic } from "../../admin/keystatic-page";

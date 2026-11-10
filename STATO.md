@@ -1,6 +1,6 @@
 # Stato del sito besaweb.com
 
-Aggiornato il 10 novembre 2026. La situazione sempre aggiornata è nel **pannello** (besaweb.com/keystatic) oppure, dalla cartella del sito, con `pnpm features`.
+Aggiornato il 10 novembre 2026. La situazione sempre aggiornata è nel **pannello** (besaweb.com/admin) oppure, dalla cartella del sito, con `pnpm features`.
 
 ## In breve
 
@@ -32,7 +32,7 @@ I prezzi delle modalità `launch` e `full` si cambiano dal pannello, pagina «Of
 
 ## Come cambiare lo stato del sito: il pannello
 
-Tutto si cambia dal **pannello**: **besaweb.com/keystatic**.
+Tutto si cambia dal **pannello**: **besaweb.com/admin**.
 
 1. Apri il pannello e premi «Log in with GitHub». Entra con l'account GitHub che ha accesso alla repo del sito: gli altri account vedono il pannello ma non possono salvare.
 2. A sinistra trovi quattro pagine:
@@ -43,7 +43,7 @@ Tutto si cambia dal **pannello**: **besaweb.com/keystatic**.
 3. Premi **Save**. È la pubblicazione: il sito si aggiorna da solo in pochi minuti.
 4. Per tornare al sito c'è il pulsante «Torna al sito» in basso.
 
-**Vuoi vedere il risultato prima di pubblicare?** Dalla cartella del sito lancia `pnpm admin`: si apre lo stesso pannello in locale (http://127.0.0.1:4321/keystatic) e il sito nell'altra scheda (http://127.0.0.1:4321) cambia mentre salvi, senza pubblicare niente. Quando va bene, fai commit e push.
+**Vuoi vedere il risultato prima di pubblicare?** Dalla cartella del sito lancia `pnpm admin`: si apre lo stesso pannello in locale (http://127.0.0.1:4321/admin) e il sito nell'altra scheda (http://127.0.0.1:4321) cambia mentre salvi, senza pubblicare niente. Quando va bene, fai commit e push.
 
 **Se qualcosa non va, il sito non si rompe.** Prima di ogni pubblicazione partono i controlli automatici (per esempio: nessun prezzo visibile in validazione). Se un salvataggio non li passa, la pubblicazione si ferma e online resta la versione precedente.
 

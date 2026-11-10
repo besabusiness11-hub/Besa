@@ -31,11 +31,11 @@ Se dopo una modifica il CSS sembra vecchio: `pnpm exec astro dev stop` e rilanci
 | `pnpm build` | Build di produzione in `dist/` (prima genera `public/og/home.png` con Playwright; senza Chromium tiene il PNG già committato) |
 | `pnpm start` | Serve la build (`HOST=127.0.0.1 PORT=4321 pnpm start`; senza `HOST` ascolta solo su IPv6) |
 | `pnpm features` | Stampa cosa è spento, perché e come riaccenderlo |
-| `pnpm admin` | Dev server con il pannello in locale: http://127.0.0.1:4321/keystatic |
+| `pnpm admin` | Dev server con il pannello in locale: http://127.0.0.1:4321/admin |
 
 ## Interruttori e pannello
 
-Cosa è acceso, le sezioni della home, i prezzi, i link di pagamento, il numero WhatsApp e i dati aziendali stanno in `src/data/site/*.json` e si cambiano dal **pannello** `/keystatic` (Keystatic): login con GitHub, ogni «Save» è un commit su `main` e Coolify ripubblica. In locale `pnpm admin` apre lo stesso pannello che scrive i file su disco, per vedere le modifiche prima di pubblicarle. Configurazione: [`DEPLOY.md`](DEPLOY.md), sezione 4.
+Cosa è acceso, le sezioni della home, i prezzi, i link di pagamento, il numero WhatsApp e i dati aziendali stanno in `src/data/site/*.json` e si cambiano dal **pannello** `/admin` (Keystatic): login con GitHub, ogni «Save» è un commit su `main` e Coolify ripubblica. In locale `pnpm admin` apre lo stesso pannello che scrive i file su disco, per vedere le modifiche prima di pubblicarle. Configurazione: [`DEPLOY.md`](DEPLOY.md), sezione 4.
 
 - Modalità offerta: `validation` (senza prezzi, attiva ora), `launch`, `full`.
 - `leadForm`: modulo dinamico al posto dell'email.

@@ -13,7 +13,7 @@ Node 24 (`fnm use 24`), pnpm 11.
 - `pnpm check`: `astro check`.
 - `pnpm build`: `prebuild` renders `public/og/home.png` via Playwright; without Chromium it keeps the committed PNG.
 - `HOST=127.0.0.1 PORT=4321 node server.mjs`: serve the production build (without `HOST` it binds IPv6 only).
-- `pnpm admin`: dev server + admin panel in local mode (`/keystatic` writes `src/data/site/*.json` on disk).
+- `pnpm admin`: dev server + admin panel in local mode (`/admin` writes `src/data/site/*.json` on disk).
 - `pnpm features`: prints which switches are off, why, and how to re-enable.
 - `node scripts/check-mail-flow.mjs <url>`: DOM check of the email lead flow against a running server.
 - `docker build -t besa-agency-site .` from the repo root (runs `pnpm test` before `pnpm build`). Coolify: Base Directory `/`, Dockerfile `/Dockerfile`, port 4321, healthcheck `GET /healthz`.
@@ -21,13 +21,14 @@ Node 24 (`fnm use 24`), pnpm 11.
 Dependency quirks (all deliberate): pnpm enforces a minimum release age, so pin new deps to versions older than a day (e.g. `@astrojs/react` 7.1.1) instead of adding `minimumReleaseAgeExclude`; `pnpm-workspace.yaml` holds the build-script approvals and pins `@astrojs/language-server` to 2.16.16 (2.17.x crashes `astro check` with `this.bridge.deleteEnv is not a function`); `esbuild` is a direct devDependency because `vite.build.cssMinify: "esbuild"` needs it and Vite 8 no longer ships it.
 
 ## Architecture
-- Astro + Tailwind 4 + `@astrojs/node` standalone. All pages are prerendered; only `POST /api/lead` (`src/pages/api/lead.ts` + `src/lib/lead.ts`: zod, honeypot `website`, Turnstile, nodemailer SMTP, in-memory rate limit), `/healthz` and the admin panel (`/keystatic`, `/api/keystatic/*`) run server-side.
+- Astro + Tailwind 4 + `@astrojs/node` standalone. All pages are prerendered; only `POST /api/lead` (`src/pages/api/lead.ts` + `src/lib/lead.ts`: zod, honeypot `website`, Turnstile, nodemailer SMTP, in-memory rate limit), `/healthz` and the admin panel (`/admin`, `/api/keystatic/*`) run server-side.
 - `server.mjs` is the production entry: security headers, compression, cache headers, `X-Robots-Tag`. It applies headers to static files too (the node adapter serves them before Astro middleware); `src/middleware.ts` adds CSP to dynamic routes. Keep the two CSP lists aligned. Compression decides at `writeHead` time because SSR responses commit headers there; deciding later broke every browser form submission.
 - `server.mjs` imports `src/lib/features.ts` directly via Node type stripping (to drop Turnstile from the CSP when the form is off), so the Dockerfile copies that file and `src/data/site/switches.json` next to `server.mjs` in the runtime image. On SSR routes the middleware's CSP overwrites server.mjs's; the admin's wider CSP (GitHub API, avatars, blob worker) lives only in the middleware.
 
 ### Admin panel (Keystatic)
 - `keystatic.config.ts` (root) defines four singletons, each a JSON file in `src/data/site/`: `switches` (offer mode + `FEATURES` on/off), `sections` (home sections), `offer` (prices + checkout links), `contacts` (WhatsApp number, company data). Storage: local in dev, GitHub (`besabusiness11-hub/Besa`, commits to `main`, branch prefix `admin/`) in prod; `PUBLIC_KEYSTATIC_STORAGE` overrides.
-- Own routes instead of the `@keystatic/astro` integration (not installed as integration): `src/pages/keystatic/[...params].astro` (BESA colours via Keystar's `--kui-color-scale-indigo*`, "Torna al sito" button) and `src/pages/api/keystatic/[...params].ts` (503 without secrets, 404 for local mode outside dev). React (`@astrojs/react`) is used only there.
+- The panel lives at `/admin`, not Keystatic's default `/keystatic`: `patches/@keystatic__core@0.6.9.patch` (pnpm `patchedDependencies`) rewrites the UI route in Keystatic's router, links and server redirects; the API stays at `/api/keystatic`, and `/keystatic/*` 301s to `/admin/*`. Bumping `@keystatic/core` means regenerating the patch (`pnpm patch`, replace route literals `/keystatic` but not `/api/keystatic`). The Dockerfile copies `patches/` before `pnpm install`.
+- Own routes instead of the `@keystatic/astro` integration (not installed as integration): `src/pages/admin/[...params].astro` (BESA colours via Keystar's `--kui-color-scale-indigo*`, "Torna al sito" button) and `src/pages/api/keystatic/[...params].ts` (503 without secrets, 404 for local mode outside dev). React (`@astrojs/react`) is used only there.
 - Keystatic omits empty fields when saving, and TS infers types from the JSON: readers (`features.ts`, `offer.ts`, `sections.ts`, `contacts.ts`) cast via `unknown`, tolerate missing keys and throw on invalid values so a bad save fails the build. Adding a field = schema in `keystatic.config.ts` + reader + `admin.test.ts`.
 - Labels, `whyOff`, `reEnable` stay in `features.ts` and appear as help text under each toggle.
 - `security.allowedDomains` in `astro.config.mjs` trusts the proxy's forwarded host/proto for `besaweb.com` and subdomains: without it the OAuth `redirect_uri` is `http://` behind Coolify and GitHub login fails.
@@ -37,7 +38,7 @@ Dependency quirks (all deliberate): pnpm enforces a minimum release age, so pin 
 - `offer.ts` reads `PRICING` and `CHECKOUT` from `offer.json` and derives `FULL`/`LAUNCH`/`VALIDATION`. "launch" = one landing at the launch price; "full" = three plans + quote slider.
 - `sections.ts`: home sections on/off (`sections.json`). Hero and `#contatto` are always on. A hidden section also drops its `copy.nav.links` entry (dock, footer), the Features cross-links to it, and (FAQ) the FAQPage JSON-LD. Never index `copy.nav.links` by position.
 - `copy.ts` exports `buildCopy(mode, { leadForm, sections })` (tests build every mode) and `copy` = current switches.
-- In "validation": no amounts or "gratis" anywhere (`copy.test.ts` scans with an explicit allowlist), `offer`/`form.payment` are absent, the offer section is `OfferValidation.astro`, `/termini` is a noindex stub out of sitemap and footer. In launch/full, `/termini` holds cancellation, pause and code-buyout prices (never in marketing copy).
+- In "validation": the only amount is the setup fee `SETUP_PRICE` (€49, a constant in `copy.ts`, not yet in the panel; owner decision 2026-11-10: management fees only after the first month and only if the page brought more contacts, never with a figure), no "gratis"/"abbonamento"/"una tantum" (`copy.test.ts` checks every `€` amount), `offer`/`form.payment` are absent, the offer section is `OfferValidation.astro`, `/termini` is a noindex stub out of sitemap and footer. In launch/full, `/termini` holds cancellation, pause and code-buyout prices (never in marketing copy).
 - WhatsApp button shows only with `whatsappButton.enabled` AND a number (`contacts.json`, fallback `PUBLIC_WHATSAPP_NUMBER`).
 
 ### Lead capture

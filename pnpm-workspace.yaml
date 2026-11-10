@@ -8,3 +8,8 @@ allowBuilds:
 # with "this.bridge.deleteEnv is not a function".
 overrides:
   "@astrojs/language-server": 2.16.16
+
+# Keystatic's admin UI hardcodes the /keystatic route: the patch moves it to /admin (router, links,
+# server redirects). The API stays at /api/keystatic. Regenerate it when bumping @keystatic/core.
+patchedDependencies:
+  '@keystatic/core@0.6.9': patches/@keystatic__core@0.6.9.patch

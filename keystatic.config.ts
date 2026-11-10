@@ -1,4 +1,4 @@
-// Admin panel (/keystatic): edits the JSON files in src/data/site/. Every save is a commit on `main`
+// Admin panel (/admin): edits the JSON files in src/data/site/. Every save is a commit on `main`
 // in GitHub mode, so Coolify rebuilds and publishes the site in a few minutes.
 // - Dev (`pnpm dev`): local mode, saves write the files on disk and the site in the other tab reloads.
 // - Production: GitHub mode. Only GitHub accounts with write access to the repo can save.
