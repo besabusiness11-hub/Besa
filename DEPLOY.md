@@ -55,11 +55,11 @@ Servizio: sito agenzia (Astro 7 + `@astrojs/node` standalone). Repo autonoma (no
 
 ## 4. Pannello admin (/admin)
 
-Keystatic in modalità GitHub: chi entra fa login con GitHub e ogni «Save» è un commit su `besabusiness11-hub/Besa`. Possono salvare **solo gli account GitHub con permesso di scrittura sulla repo**: Keystatic usa il token dell'utente, quindi GitHub stesso rifiuta chi non ha accesso. Attenzione: l'account personale di Leo oggi non ha scrittura sulla repo (per questo il push usa l'alias SSH `github.com-besa`). Per usare il pannello: entra con l'account che ha accesso, oppure aggiungi l'account personale come collaboratore con ruolo Write.
+Keystatic in modalità GitHub: chi entra fa login con GitHub e ogni «Save» è un commit su `besabusiness11-hub/Besa`. Possono salvare **solo gli account GitHub con permesso di scrittura sulla repo**: Keystatic usa il token dell'utente, quindi GitHub stesso rifiuta chi non ha accesso. Attenzione: l'account personale di Leo oggi non ha scrittura sulla repo (per questo il push usa l'alias SSH `github.com-besa`). Per usare il pannello: entra con l'account che ha accesso, oppure aggiungi l'account personale come collaboratore (repo -> Settings -> Collaborators -> Add people; su una repo di un account utente il collaboratore ha già scrittura).
 
 ### 4.1 GitHub App (una volta)
 
-GitHub -> organizzazione `besabusiness11-hub` -> Settings -> Developer settings -> GitHub Apps -> **New GitHub App**:
+Da loggato come `besabusiness11-hub` (è un account utente, non un'organizzazione): foto profilo -> Settings -> Developer settings -> GitHub Apps -> **New GitHub App** (link diretto: https://github.com/settings/apps/new):
 - Nome: per esempio `BESA Pannello` (lo slug è la parte finale di `https://github.com/apps/<slug>`).
 - Homepage URL: `https://besaweb.com`
 - Callback URL (una per riga):
@@ -71,9 +71,9 @@ GitHub -> organizzazione `besabusiness11-hub` -> Settings -> Developer settings 
 - Repository permissions: **Contents: Read and write**, **Pull requests: Read-only** (il pannello mostra se un branch ha già una pull request; la crea GitHub), Metadata: Read-only (automatico).
 - Where can this GitHub App be installed: **Only on this account**.
 - Crea l'app, poi **Generate a new client secret** e annota Client ID e secret.
-- **Install App** -> organizzazione -> **Only select repositories** -> `Besa`.
+- Pagina dell'app -> **Install App** -> account `besabusiness11-hub` -> **Only select repositories** -> `Besa` -> Install.
 
-In alternativa Keystatic crea l'app da solo: `PUBLIC_KEYSTATIC_STORAGE=github pnpm dev`, apri `http://127.0.0.1:4321/admin` e segui la procedura (scrive le chiavi in `.env`). Controlla poi che l'app appartenga all'organizzazione, abbia le callback di produzione e sia installata solo su `Besa`.
+In alternativa Keystatic crea l'app da solo: `PUBLIC_KEYSTATIC_STORAGE=github pnpm dev`, apri `http://127.0.0.1:4321/admin` e segui la procedura (scrive le chiavi in `.env`). Controlla poi che l'app appartenga a `besabusiness11-hub`, abbia le callback di produzione e sia installata solo su `Besa`.
 
 ### 4.2 Variabili su Coolify
 
