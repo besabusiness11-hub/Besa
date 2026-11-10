@@ -8,6 +8,7 @@
 //   missing   = potential - messages                   never below zero
 //   perTarget = budget / potential                     what one message would cost at the target rate
 //   wasted    = missing x perTarget                    the part of the budget that pays for messages you do not get
+//   sameFor   = messages x perTarget = budget - wasted  what today's messages would cost at the target rate
 // When messages >= potential the page is not the bottleneck and wasted is 0: the card says so.
 
 export interface WasteInput {
@@ -31,6 +32,8 @@ export interface Waste {
   /** Cost of one message at the target rate; null with no potential. */
   perTarget: number | null;
   wasted: number;
+  /** Budget that would bring today's messages at the target rate; null with no messages or no potential. */
+  sameFor: number | null;
   year: number;
   /** True when today's messages already reach the target. */
   above: boolean;
@@ -50,7 +53,8 @@ export function waste({ budget, cpc, msgs: rawMsgs, target }: WasteInput): Waste
   const perNow = msgs > 0 ? budget / msgs : null;
   const perTarget = potential > 0 ? budget / potential : null;
   const wasted = perTarget === null ? 0 : missing * perTarget;
-  return { clicks, msgs, rate, potential, missing, perNow, perTarget, wasted, year: wasted * 12, above: msgs > 0 && potential <= msgs };
+  const sameFor = perTarget === null || msgs === 0 ? null : msgs * perTarget;
+  return { clicks, msgs, rate, potential, missing, perNow, perTarget, wasted, sameFor, year: wasted * 12, above: msgs > 0 && potential <= msgs };
 }
 
 /** How long the page's price takes to be "paid" by the waste, as text. Null when there is no waste. */
@@ -74,6 +78,7 @@ export function describe(i: WasteInput, w: Waste, price: number | null = null) {
     perT: w.perTarget === null ? "–" : eur(w.perTarget),
     perN: w.perNow === null ? "nessun messaggio" : eur(w.perNow),
     wasted: eur(w.wasted),
+    sameFor: w.sameFor === null ? "–" : eur(w.sameFor),
     year: eur(w.year),
   };
   if (price === null) return base;

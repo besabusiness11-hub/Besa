@@ -14,7 +14,14 @@ describe("waste", () => {
     expect(w.perTarget).toBe(10);
     expect(w.wasted).toBeCloseTo(240, 5);
     expect(w.year).toBeCloseTo(2880, 5);
+    expect(w.sameFor).toBeCloseTo(60, 5);
     expect(w.above).toBe(false);
+  });
+
+  it("sameFor: today's messages at the target rate cost the budget minus the waste", () => {
+    const w = waste({ budget: 1000, cpc: 0.8, msgs: 10, target: 4 });
+    expect(w.sameFor).toBeCloseTo(1000 - w.wasted, 5);
+    expect(waste({ ...base, msgs: 0 }).sameFor).toBeNull();
   });
 
   it("wasted = budget minus what the same messages would cost at the target rate", () => {

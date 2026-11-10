@@ -22,7 +22,7 @@ describe("buildMailDraft", () => {
     expect(d.body).toBe(
       [
         "Ciao Leo e Ben,",
-        "vorrei una bozza di landing page per il mio annuncio.",
+        "richiesta di una bozza di landing page per questo annuncio.",
         "",
         "Annuncio o profilo: https://www.instagram.com/pizzeria.mario/",
         "Numeri dal calcolatore: €300 al mese · €0,50 a click · 6 messaggi al mese",
@@ -54,7 +54,7 @@ describe("buildMailDraft", () => {
     expect(only.body).toContain("Annuncio o profilo: @pizzeria");
     const none = buildMailDraft({ link: "  ", calc: "", plan: undefined }, T);
     expect(none.body).toBe(
-      "Ciao Leo e Ben,\nvorrei una bozza di landing page per il mio annuncio.\n\nSe vuoi, aggiungi qui cosa offri, dove lavori, il tuo numero WhatsApp o altro che ci può servire:\n\n\nGrazie!",
+      "Ciao Leo e Ben,\nrichiesta di una bozza di landing page per questo annuncio.\n\nSe vuoi, aggiungi qui cosa offri, dove lavori, il tuo numero WhatsApp o altro che ci può servire:\n\n\nGrazie!",
     );
     // the only double empty line is the space left to write in, after the invitation
     expect(none.body.split("\n\n\n")).toHaveLength(2);

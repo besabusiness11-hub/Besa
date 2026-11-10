@@ -48,7 +48,7 @@ const h = copy.howItWorks;
             {i === 2 && (
               <div class="golive">
                 <div class="g-phone">
-                  <span class="g-on"><i></i>Online</span>
+                  <span class="g-on"><i></i>{h.viz.online}</span>
                   <span class="art"><i class="sun"></i><i class="hill"></i></span>
                   <span class="b-title"><i></i><i class="s"></i></span>
                   <span class="b-text"><i></i><i class="s"></i></span>
@@ -56,9 +56,9 @@ const h = copy.howItWorks;
                 </div>
                 <div class="g-talk">
                   <span class="g-av"><b>L</b><b>B</b></span>
-                  <span class="g-t"><strong>Ne parliamo</strong><small>com’è andata, cosa fare dopo</small></span>
+                  <span class="g-t"><strong>{h.viz.talkTitle}</strong><small>{h.viz.talkText}</small></span>
                 </div>
-                <span class="g-link"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M6 10 10 6M7 4.5l1-1a2.5 2.5 0 0 1 3.5 3.5l-1 1M9 11.5l-1 1A2.5 2.5 0 0 1 4.5 9l1-1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg>collegata all’annuncio</span>
+                <span class="g-link"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M6 10 10 6M7 4.5l1-1a2.5 2.5 0 0 1 3.5 3.5l-1 1M9 11.5l-1 1A2.5 2.5 0 0 1 4.5 9l1-1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg>{h.viz.linked}</span>
               </div>
             )}
           </div>}
@@ -133,7 +133,7 @@ const h = copy.howItWorks;
   .b-chk svg { color: oklch(0.8 0.15 150); }
   .c1 { right: 7.5rem; top: 8.6rem; } .c2 { right: 7.8rem; top: 10.8rem; } .c3 { right: 7.2rem; top: 14.6rem; }
 
-  /* step 3: the page is live, linked to the ad, and then we talk */
+  /* step 3: the page is live, linked to the ad, and then we look at the numbers (in writing, no call) */
   .golive { position: relative; width: 19rem; height: 17rem; }
   .g-phone { position: absolute; left: 0; top: 0; width: 9.5rem; height: 17rem; display: flex; flex-direction: column; gap: .45rem; padding: 1.2rem .6rem .7rem; border: 5px solid var(--color-surface-inverse); border-radius: 1.8rem; background: var(--color-surface-page); box-shadow: 0 30px 50px -28px oklch(0.2 0.08 266 / .6); rotate: -3deg; }
   .g-phone .art { height: 4rem; flex: none; }

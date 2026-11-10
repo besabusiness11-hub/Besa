@@ -65,7 +65,7 @@ Ratio >= 1.25 between steps. Max body width 65ch. `text-wrap: balance` on headin
 - **Annotation**: ink pill + thin line pointing at a mock element ("L'utente atterra qui: profilo, niente da fare"). Max 3 visible at once.
 - **Plan blocks**: asymmetric, not identical cards. Subscription dominant (blue drench), one-shot and custom as quieter rows. Price slot `[TODO: prezzo]`.
 - **FAQ**: native `<details>`; chevron rotates (transform), 48px summary.
-- **Team**: two portraits, different crop/size, short first-person bios `[TODO]`.
+- **Team**: two portraits, different crop/size, short bios in the third person (the site always speaks as "we", owner rule 2026-11-10).
 - **Footer**: wordmark, email, legal line `[TODO]`, privacy + cookie links.
 
 ## Motion

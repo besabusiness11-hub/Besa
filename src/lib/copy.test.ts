@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCopy, copy } from "./copy";
+import { buildCopy, copy, SETUP_PRICE } from "./copy";
 import { FEATURES, OFFER_MODE, OFFER_MODES } from "./features";
 import { SECTION_KEYS, type SectionState } from "./sections";
 
@@ -54,23 +54,20 @@ describe("fase di lancio (launch)", () => {
 });
 
 describe("fase di validazione (validation)", () => {
-  // Frasi che parlano della spesa del visitatore su Meta o della sua offerta, non del prezzo di BESA.
-  const ALLOWED = new Set([
-    "Immagina un cartellone che porta gente dentro la tua attività, e ogni persona che entra la paghi tu. Appena dentro, però, trova un corridoio con dieci porte e nessuna indicazione chiara: molti si perdono e tornano indietro. Eppure quella persona l’hai già pagata, perché il cartellone te la portasse dentro. BESA risolve proprio questo: dice a chi entra cosa fare e quale porta aprire.",
-    "click che paghi",
-    "Quanti click paghi",
-    "Meta ti fa pagare ogni click, che poi ti scrivano o no. Metti i tuoi numeri: ti mostriamo quanto spendi per click che non portano a niente.",
-    "Quanto paghi ogni click (circa)",
-    "Paghi affinché il tuo annuncio venga cliccato, ma poi mandi le persone sul tuo profilo social o su un sito generico. Lì non capiscono cosa fare né come contattarti e, se non sono davvero motivate, se ne vanno. Tu hai pagato il click e non hai ottenuto niente.",
-    "Il risultato vero dipende da offerta, prezzo e annuncio. Una buona pagina toglie un ostacolo, non fa miracoli.",
-    "Es. prima lezione gratis, sconto sul primo ordine",
-  ]);
-  const BANNED = /€|gratis|prezzo|abbonament|una tantum|paghi|pagare/i;
+  // Dal 2026-11-10 la validazione mostra un solo importo, il costo di partenza (SETUP_PRICE): il titolare vuole che
+  // chi visita sappia quanto spende oltre a Meta. Nessun altro importo, niente «gratis», niente piani a listino;
+  // i costi di gestione restano senza cifre (si propongono dopo il primo mese, solo se la pagina porta più contatti).
+  const SETUP = `€${SETUP_PRICE}`;
+  const amounts = (s: string) => s.match(/€\s?\d+(?:[.,]\d+)*/g) ?? [];
+  // Frasi sull’offerta del visitatore, non su quella di BESA.
+  const ALLOWED = new Set(["Es. prima lezione gratis, sconto sul primo ordine"]);
+  const BANNED = /gratis|abbonament|una tantum/i;
 
   for (const leadForm of [true, false]) {
-    it(`nessun importo né parola sul prezzo nel copy (modulo ${leadForm ? "acceso" : "spento"})`, () => {
-      const c = buildCopy("validation", { leadForm });
-      expect(strings(c).filter((s) => BANNED.test(s) && !ALLOWED.has(s))).toEqual([]);
+    it(`l’unico importo è il costo di partenza (modulo ${leadForm ? "acceso" : "spento"})`, () => {
+      const all = strings(buildCopy("validation", { leadForm }));
+      expect(all.flatMap(amounts).filter((m) => m !== SETUP)).toEqual([]);
+      expect(all.filter((s) => BANNED.test(s) && !ALLOWED.has(s))).toEqual([]);
     });
   }
 
@@ -79,17 +76,32 @@ describe("fase di validazione (validation)", () => {
     expect([...ALLOWED].filter((s) => !all.has(s))).toEqual([]);
   });
 
-  it("i blocchi con i prezzi mancano del tutto", () => {
+  it("il costo di partenza è spiegato nell’offerta e nella FAQ sul prezzo", () => {
+    const c = buildCopy("validation");
+    expect(strings(c.offerValidation).join("\n")).toContain(SETUP);
+    expect(c.faq.items.find((it) => it.q === "Quanto costa?")?.a).toContain(SETUP);
+  });
+
+  it("i blocchi con il listino mancano del tutto", () => {
     const c = buildCopy("validation");
     expect(c.offer).toBeUndefined();
     expect(c.form.payment).toBeUndefined();
     expect(c.problem.results.payback).toBeUndefined();
   });
 
-  it("descrizione (anche JSON-LD) e FAQ senza prezzi", () => {
+  it("descrizione (anche JSON-LD) senza importi; FAQ con il solo costo di partenza", () => {
     const c = buildCopy("validation");
+    expect(amounts(c.meta.description)).toEqual([]);
     expect(c.meta.description).not.toMatch(BANNED);
+    expect(c.faq.items.flatMap((it) => [...amounts(it.q), ...amounts(it.a)]).filter((m) => m !== SETUP)).toEqual([]);
     expect(c.faq.items.filter((it) => BANNED.test(it.q) || BANNED.test(it.a))).toEqual([]);
+  });
+
+  it("nelle altre modalità il costo di partenza non compare", () => {
+    for (const mode of OFFER_MODES.filter((m) => m !== "validation")) {
+      // offerValidation esiste in ogni modalità ma si mostra solo in "validation".
+      expect(strings({ ...buildCopy(mode), offerValidation: undefined }).filter((s) => s.includes(SETUP))).toEqual([]);
+    }
   });
 
   it("voce di menu «Offerta» al posto di «Piani»", () => {

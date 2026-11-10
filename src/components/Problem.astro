@@ -35,6 +35,8 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
       </div>
 
       <form class="inputs" id="calc" aria-label="Calcolatore" data-summary={p.calcSummary} data-price={price ?? undefined}>
+        {/* first, so the visitor knows these are placeholders and where to find their own */}
+        <p class="defaults">{p.defaultsNote} <CalcHelp id="calc-help" vals={describe(start, w, price)} tab="numbers" text={p.defaultsWhere} /></p>
         {inputs.map((i) => (
           <div class="rng">
             <div class="lbl"><label for={`c-${i.id}`}>{i.label}</label></div>
@@ -44,19 +46,6 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
             <button type="button" class="stp" data-for={`c-${i.id}`} data-d="1" aria-label={`${p.more}: ${i.label}`}>+</button>
           </div>
         ))}
-        <p class="defaults">{p.defaultsNote} <CalcHelp id="calc-help" vals={describe(start, w, price)} tab="numbers" /></p>
-
-        <div class="rng hyp">
-          <div class="lbl">
-            <label for="c-target">{tg.label}</label>
-            <CalcHelp id="calc-help" vals={describe(start, w, price)} tab="limits" />
-          </div>
-          <output for="c-target" id="o-target" class="val">{fmt("target", tg.value)}</output>
-          <button type="button" class="stp" data-for="c-target" data-d="-1" aria-label={`${p.less}: ${tg.label}`}>−</button>
-          <input type="range" id="c-target" name="target" min={tg.min} max={tg.max} step={tg.step} value={tg.value} aria-valuetext={fmt("target", tg.value)} style={`--p:${pct(tg)}%`} />
-          <button type="button" class="stp" data-for="c-target" data-d="1" aria-label={`${p.more}: ${tg.label}`}>+</button>
-          <p class="hint">{tg.hint}</p>
-        </div>
       </form>
     </div>
 
@@ -66,31 +55,36 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
           <p class="r-title">{r.title}</p>
           <CalcHelp id="calc-help" vals={describe(start, w, price)} tab="calc" card />
         </div>
+        <p class="r-same" data-tpl={r.same}>{fill(r.same, v)}</p>
 
-        <dl class="rows">
-          <div class="row"><dt>{r.clicks}</dt><dd data-k="clicks">{v.clicks}</dd></div>
-          <div class="row"><dt>{r.today}</dt><dd data-k="today">{v.msgs}</dd></div>
-          <div class="row gap-only"><dt data-tpl={r.extra}>{fill(r.extra, v)}</dt><dd data-k="missing">+{v.missing}</dd></div>
-          <div class="row total gap-only">
-            <dt>{r.total}</dt>
-            <dd><span data-k="wasted">{v.wasted}</span><small>{r.perMonth}</small></dd>
-          </div>
-        </dl>
+        {/* before and after, same spend: the whole point of the section */}
+        <table class="vs gap-only">
+          <thead>
+            <tr><th scope="col"><span class="sr-only">{r.colLabel}</span></th><th scope="col">{r.colNow}</th><th scope="col" class="with">{r.colWith}</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">{r.rowMsgs}</th><td data-k="today">{v.msgs}</td><td class="with" data-k="pot">{v.pot}</td></tr>
+            <tr><th scope="row">{r.rowCost}</th><td data-k="perNow">{w.perNow === null ? "–" : v.perN}</td><td class="with" data-k="perT">{v.perT}</td></tr>
+            <tr><th scope="row">{r.rowSpend}</th><td data-tpl="{budget}">{v.budget}</td><td class="with" data-tpl="{budget}">{v.budget}</td></tr>
+          </tbody>
+        </table>
 
-        <div class="verdict gap-only">
+        <div class="loss gap-only">
+          <p class="loss-t">{r.total}</p>
+          <p class="loss-v"><span data-k="wasted">{v.wasted}</span><small>{r.perMonth}</small></p>
           <p class="yr">{yearBefore}<strong data-k="year">{v.year}</strong>{yearAfter}</p>
-          {r.payback && <p class="pb" data-tpl={r.payback}>{fill(r.payback, v)}</p>}
+        </div>
+
+        <div class="gain gap-only">
+          <p class="gain-t">{r.gain}</p>
+          <p class="gain-v"><strong data-k="missing">+{v.missing}</strong> {r.gainMsgs}</p>
+          <p class="gain-x" id="gain-less" data-tpl={r.gainLess} hidden={w.sameFor === null}>{fill(r.gainLess, v)}</p>
+          {r.payback && <p class="gain-x" data-tpl={r.payback}>{fill(r.payback, v)}</p>}
         </div>
 
         <div class="above-only above">
           <p class="above-t">{r.above.title}</p>
           <p class="above-x" data-tpl={r.above.text}>{fill(r.above.text, v)}</p>
-        </div>
-
-        <div class="cmp gap-only" aria-live="off">
-          <p class="cmp-c"><span>{r.compareNow}</span><strong data-k="perNow">{w.perNow === null ? "–" : v.perN}</strong></p>
-          <svg class="cmp-a" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 12h15m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          <p class="cmp-c to"><span>{r.compareWith}</span><strong data-k="perT">{v.perT}</strong></p>
         </div>
 
         <div class="dots-box">
@@ -105,6 +99,27 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
           </p>
         </div>
       </div></div>
+    </div>
+
+    {/* Our hypothesis, outside the form so that on phones it sits under the receipt it changes (form="calc" keeps it in the form). */}
+    <div class="rng hyp" id="calc-hyp">
+      <div class="lbl">
+        <label for="c-target">{tg.label}</label>
+        <CalcHelp id="calc-help" vals={describe(start, w, price)} tab="limits" />
+      </div>
+      <output for="c-target" id="o-target" class="val">{fmt("target", tg.value)}</output>
+      <button type="button" class="stp" data-for="c-target" data-d="-1" aria-label={`${p.less}: ${tg.label}`}>−</button>
+      <input type="range" form="calc" id="c-target" name="target" min={tg.min} max={tg.max} step={tg.step} value={tg.value} aria-valuetext={fmt("target", tg.value)} style={`--p:${pct(tg)}%`} />
+      <button type="button" class="stp" data-for="c-target" data-d="1" aria-label={`${p.more}: ${tg.label}`}>+</button>
+      <p class="hint">{tg.hint}</p>
+    </div>
+
+    <div class="method">
+      <p class="method-t">{p.method.title}</p>
+      <ol class="method-l">
+        {p.method.steps.map((t) => <li data-tpl={t}>{fill(t, v)}</li>)}
+      </ol>
+      <CalcHelp id="calc-help" vals={describe(start, w, price)} tab="calc" text={p.method.all} />
       <p class="note">{p.note}</p>
     </div>
 
@@ -118,7 +133,7 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
     </div>
 
     <div class="closing reveal">
-      <p>{p.closing}</p>
+      <p><strong class="closing-q">{p.closing.q}</strong> {p.closing.text}</p>
       <LinkCatcher id="lc-calc" where="calc" tone="light" />
     </div>
     <p id="calc-live" class="sr-only" aria-live="polite"></p>
@@ -130,7 +145,9 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
 
   const form = document.getElementById("calc") as HTMLFormElement | null;
   const rc = document.getElementById("receipt");
-  if (form && rc) {
+  // The hypothesis slider lives outside the form (form="calc"): listen on both.
+  const hyp = document.getElementById("calc-hyp");
+  if (form && rc && hyp) {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const el = (k: string) => rc.querySelector<HTMLElement>(`[data-k="${k}"]`)!;
     const dots = Array.from(rc.querySelectorAll<HTMLElement>(".dots i"));
@@ -159,7 +176,7 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
     const fmt = (name: string, v: number) => (name === "msgs" ? nf(v) : name === "target" ? `${nf(v, 1)}%` : eur(v));
 
     const update = () => {
-      for (const inp of Array.from(form.querySelectorAll<HTMLInputElement>("input[type=range]"))) {
+      for (const inp of Array.from(form.elements).filter((x): x is HTMLInputElement => x instanceof HTMLInputElement && x.type === "range")) {
         const v = Number(inp.value);
         const txt = fmt(inp.name, v);
         document.getElementById("o-" + inp.name)!.textContent = txt;
@@ -171,8 +188,8 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
       const vals = describe(input, w, price) as unknown as Record<string, string>;
 
       rc.dataset.state = w.above ? "above" : "gap";
-      tween("clicks", w.clicks, (n) => nf(Math.round(n)));
       tween("today", w.msgs, (n) => nf(Math.round(n)));
+      tween("pot", w.potential, (n) => nf(Math.round(n)));
       tween("missing", w.missing, (n) => "+" + nf(Math.round(n)));
       tween("wasted", w.wasted, (n) => eur(Math.round(n)));
       tween("year", w.year, (n) => eur(Math.round(n)));
@@ -186,6 +203,7 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
 
       // Text built from templates: labels, payback line, the help card's formulas.
       document.querySelectorAll<HTMLElement>("[data-tpl]").forEach((n) => { n.textContent = fill(n.dataset.tpl!, vals); });
+      document.getElementById("gain-less")!.hidden = w.sameFor === null;
 
       const now = w.msgs > 0 ? Math.min(100, Math.max(1, Math.round(w.rate))) : 0;
       const more = w.above ? now : Math.max(now, Math.min(100, Math.round(input.target)));
@@ -201,18 +219,21 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
       liveT = window.setTimeout(() => {
         live.textContent = w.above
           ? rc.querySelector(".above-t")!.textContent + " " + rc.querySelector(".above-x")!.textContent
-          : `${rc.querySelector(".total dt")!.textContent}: ${vals.wasted} ${rc.querySelector(".total small")!.textContent}.`;
+          : `${rc.querySelector(".loss-t")!.textContent}: ${vals.wasted} ${rc.querySelector(".loss-v small")!.textContent}.`;
       }, 700);
     };
     form.addEventListener("input", update);
+    hyp.addEventListener("input", update);
     // Steppers: fine control where a thumb is too coarse (small values on a phone).
-    form.addEventListener("click", (e) => {
+    const step = (e: Event) => {
       const b = (e.target as HTMLElement).closest<HTMLButtonElement>(".stp");
       if (!b) return;
       const inp = document.getElementById(b.dataset.for!) as HTMLInputElement;
       b.dataset.d === "1" ? inp.stepUp() : inp.stepDown();
       inp.dispatchEvent(new Event("input", { bubbles: true }));
-    });
+    };
+    form.addEventListener("click", step);
+    hyp.addEventListener("click", step);
     form.addEventListener("submit", (e) => e.preventDefault());
 
     // Each "i" button opens the same card on its own tab.
@@ -227,10 +248,17 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
 
 <style>
   .calc-sec { background: var(--color-surface-page); }
-  .layout { display: grid; gap: 2.5rem; }
+  /* phones: sliders, then the receipt they change, then our hypothesis and how the sum works */
+  .layout { display: grid; gap: 2.5rem; grid-template-areas: "side" "receipt" "hyp" "method" "why" "closing"; }
+  .side { grid-area: side; }
+  .receipt-wrap { grid-area: receipt; }
+  .hyp { grid-area: hyp; }
+  .method { grid-area: method; }
+  .why { grid-area: why; }
+  .closing { grid-area: closing; }
   @media (min-width: 64rem) {
-    .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 28rem); column-gap: 5rem; row-gap: 4rem; align-items: start; }
-    .why, .closing { grid-column: 1 / -1; }
+    .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 28rem); grid-template-areas: "side receipt" "hyp receipt" "method receipt" "why why" "closing closing"; column-gap: 5rem; row-gap: 1.75rem; align-items: start; }
+    .why { margin-top: 2.25rem; }
   }
   .t2 { font-size: var(--text-h2); line-height: 1.05; letter-spacing: -0.03em; max-width: 18ch; text-wrap: balance; }
 
@@ -249,10 +277,10 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
   .rng .stp:last-of-type { justify-self: end; }
   @media (hover: hover) { :global(.js) .stp:hover { background: var(--color-accent-subtle); } }
   .val { font-weight: 800; font-size: 1.375rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
-  .defaults { display: flex; align-items: center; gap: .6rem; font-size: .875rem; color: var(--color-text-secondary); }
+  .defaults { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; padding: .75rem 1rem; border-radius: var(--radius-base); background: var(--color-surface-sunken); font-size: .9375rem; font-weight: 600; color: var(--color-text-primary); }
 
   /* the one number that is our hypothesis, not theirs: set apart so it never reads as data */
-  .hyp { --ch-bg-in: var(--color-surface-page); padding: 1rem 1rem .75rem; border-radius: var(--radius-lg); background: var(--color-surface-subtle); }
+  .hyp { --ch-bg-in: var(--color-surface-page); max-width: 34rem; padding: 1rem 1rem .75rem; border-radius: var(--radius-lg); background: var(--color-surface-subtle); }
   .hyp .hint { grid-column: 1 / -1; font-size: .875rem; line-height: 1.4; color: var(--color-text-secondary); }
 
   input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 2.75rem; margin: 0; background: transparent; cursor: pointer; --track: linear-gradient(to right, var(--color-accent-solid) var(--p), var(--color-border-subtle) var(--p)); }
@@ -279,33 +307,40 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
   .receipt[data-state="gap"] .above-only, .receipt[data-state="above"] .gap-only { display: none; }
   .r-head { position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: .9rem; margin-bottom: .4rem; border-bottom: 2px dashed var(--color-border-subtle); }
   .r-head :global(.ch-btn) { position: absolute; right: 0; }
-  .r-title { text-align: center; font-weight: 800; font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary); max-width: none; }
-  .rows { margin: 0; display: grid; }
-  .row { display: flex; align-items: baseline; gap: .5rem; padding-block: .6rem; }
-  .row dt { font-size: .9375rem; color: var(--color-text-secondary); flex: 0 1 auto; }
-  .row::after { content: ""; order: 1; flex: 1 1 1rem; min-width: 1rem; border-bottom: 2px dotted var(--color-border-subtle); translate: 0 -.3rem; }
-  .row dd { order: 2; margin: 0; font-weight: 800; font-size: 1.25rem; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
-  .total { margin-top: .5rem; padding-top: 1.1rem; border-top: 2px dashed var(--color-border-subtle); align-items: flex-end; }
-  .total dt { color: var(--color-text-primary); font-weight: 700; max-width: 12ch; line-height: 1.25; }
-  .total dd { display: grid; justify-items: end; color: var(--color-accent-text); }
-  .total dd span { font-size: clamp(2.25rem, 1.7rem + 2vw, 3rem); line-height: 1; letter-spacing: -.035em; }
-  .total dd small { font-size: .8125rem; font-weight: 600; letter-spacing: 0; color: var(--color-text-secondary); }
+  .r-title { text-align: center; font-weight: 800; font-size: 1.0625rem; letter-spacing: .04em; text-transform: uppercase; color: var(--color-text-primary); max-width: none; }
+  .r-same { margin-top: .6rem; text-align: center; font-size: .875rem; line-height: 1.4; color: var(--color-text-secondary); max-width: none; text-wrap: balance; }
 
-  .verdict { margin-top: .9rem; display: grid; gap: .35rem; }
-  .yr { font-size: 1rem; font-weight: 600; }
-  .yr strong { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
-  .pb { font-size: .9375rem; line-height: 1.45; color: var(--color-text-secondary); }
+  /* today against BESA, same spend: the BESA column is the tinted one */
+  .vs { width: 100%; margin-top: 1rem; border-collapse: separate; border-spacing: 0; font-variant-numeric: tabular-nums; }
+  .vs th, .vs td { padding: .6rem .6rem; text-align: right; vertical-align: baseline; }
+  .vs thead th { padding-top: .5rem; font-size: .8125rem; font-weight: 800; white-space: nowrap; color: var(--color-text-secondary); }
+  .vs thead th.with { color: var(--color-accent-text); }
+  .vs tbody th { padding-left: 0; text-align: left; font-size: .875rem; font-weight: 500; line-height: 1.3; color: var(--color-text-secondary); }
+  .vs td { font-size: 1.125rem; font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+  .vs .with { background: var(--color-accent-subtle); }
+  .vs td.with { color: var(--color-accent-text); }
+  .vs thead .with { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+  .vs tbody tr:last-child .with { border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+  .vs tbody tr > * { border-top: 2px dotted var(--color-border-subtle); }
+  .vs tbody tr > .with { border-top-color: color-mix(in oklab, var(--color-accent-solid) 18%, transparent); }
+
+  /* what today costs, in red; what changes with us, in blue */
+  .loss { margin-top: 1.1rem; padding: 1rem; border-radius: var(--radius-base); background: color-mix(in oklab, var(--color-status-error) 8%, var(--color-surface-page)); }
+  .loss-t { font-size: .9375rem; font-weight: 700; color: var(--color-status-error); max-width: none; }
+  .loss-v { display: flex; align-items: baseline; gap: .4rem; margin-top: .2rem; color: var(--color-status-error); }
+  .loss-v span { font-size: clamp(2.25rem, 1.7rem + 2vw, 3rem); font-weight: 800; line-height: 1; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+  .loss-v small { font-size: .875rem; font-weight: 600; color: var(--color-text-secondary); }
+  .yr { margin-top: .4rem; font-size: .9375rem; font-weight: 600; }
+  .yr strong { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--color-status-error); }
+  .gain { margin-top: .75rem; padding: 1rem; border-radius: var(--radius-base); background: var(--color-accent-subtle); }
+  .gain-t { font-size: .9375rem; font-weight: 700; max-width: none; }
+  .gain-v { margin-top: .2rem; font-size: 1rem; font-weight: 600; line-height: 1.3; }
+  .gain-v strong { font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem); font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; color: var(--color-accent-text); }
+  .gain-x { margin-top: .45rem; font-size: .9375rem; line-height: 1.45; color: var(--color-text-secondary); }
+  .gain-x[hidden] { display: none; }
   .above { margin-top: .9rem; padding: 1rem; border-radius: var(--radius-base); background: var(--color-surface-subtle); }
   .above-t { font-weight: 800; font-size: 1.0625rem; }
   .above-x { margin-top: .35rem; font-size: .9375rem; line-height: 1.45; color: var(--color-text-secondary); }
-
-  /* cost of one message: today against the page */
-  .cmp { margin-top: 1.25rem; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: .5rem .75rem; }
-  .cmp-c { display: grid; gap: .15rem; }
-  .cmp-c span { font-size: .8125rem; line-height: 1.3; color: var(--color-text-secondary); }
-  .cmp-c strong { font-size: clamp(1.5rem, 1.25rem + 1vw, 1.875rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; font-variant-numeric: tabular-nums; }
-  .cmp-c.to strong { color: var(--color-accent-text); }
-  .cmp-a { color: var(--color-text-secondary); }
 
   .dots-box { margin-top: 1.25rem; padding: 1.1rem; border-radius: var(--radius-base); background: var(--color-surface-sunken); }
   .dots-title { font-size: .9375rem; line-height: 1.4; }
@@ -319,7 +354,12 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
   .k.on { background: var(--color-accent-solid); }
   .k.more { background: var(--color-surface-page); box-shadow: inset 0 0 0 2px var(--color-accent-solid); }
   .k:not(:first-child) { margin-left: .75rem; }
-  .note { font-size: .8125rem; line-height: 1.45; color: var(--color-text-secondary); }
+  /* how the sum works, in words, with the hypothesis that follows the slider */
+  .method { max-width: 34rem; }
+  .method-t { font-weight: 800; font-size: 1.0625rem; }
+  .method-l { margin: .75rem 0 1rem; padding-left: 1.25rem; list-style: decimal; display: grid; gap: .45rem; font-size: .9375rem; line-height: 1.5; color: var(--color-text-secondary); }
+  .method-l li::marker { font-weight: 800; color: var(--color-accent-text); }
+  .note { margin-top: 1rem; font-size: .875rem; line-height: 1.5; color: var(--color-text-secondary); }
 
   /* ---- why it happens: three plain facts, hairlines instead of cards ---- */
   .why { padding-top: 2.5rem; border-top: 1px solid var(--color-border-subtle); }
@@ -337,6 +377,7 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
 
   .closing { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem 2rem; padding-top: 2rem; border-top: 1px solid var(--color-border-subtle); }
   .closing :global(.lc-wrap) { flex: 1 1 20rem; max-width: 34rem; }
+  .closing-q { display: block; color: var(--color-accent-text); }
   .closing p { font-size: var(--text-h3); line-height: 1.3; font-weight: 700; letter-spacing: -.015em; max-width: 36ch; }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -345,8 +386,6 @@ const [yearBefore, yearAfter] = r.year.split("{year}");
     .dots i.more { animation: dot-more 600ms var(--ease-expo) backwards; animation-delay: calc(var(--d) * 4ms + 150ms); }
     @keyframes dot-on { from { scale: .3; } }
     @keyframes dot-more { from { scale: .3; opacity: 0; } }
-    .receipt[data-state="gap"] .cmp-a { animation: nudge 1.8s var(--ease-out) 1.2s 2; }
-    @keyframes nudge { 40% { translate: .3rem 0; } }
   }
   /* the receipt prints as it scrolls in: clip-path on desktop, where the card sits beside the sliders; on the
      stacked layout clip-path plus the drop-shadow filter repaints every frame, so it only fades and slides there */

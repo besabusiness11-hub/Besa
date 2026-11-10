@@ -1,0 +1,56 @@
+---
+// Many ads or a special request: no limit on how many. A direct email with its own subject and a short
+// template, separate from the one-link draft flow. Always on (no panel switch), in every offer mode.
+import { copy } from "../lib/copy";
+import { em } from "../lib/em";
+import { plainMailto } from "../lib/mail-draft";
+import { SITE } from "../lib/site";
+const b = copy.bulk;
+const href = `${plainMailto(SITE.email, b.subject)}&body=${encodeURIComponent(b.body.replace(/\r?\n/g, "\r\n"))}`;
+---
+<section id="richieste" class="bulk bg-surface-subtle section" aria-labelledby="bulk-title">
+  <div class="wrap panel">
+    <div class="text reveal">
+      <h2 id="bulk-title" class="t-h2 max-w-[16ch]" set:html={em(b.headline)} />
+      <p class="lead mt-5 text-text-secondary">{b.lead}</p>
+    </div>
+
+    <div class="card reveal">
+      <ul class="pts">
+        {b.points.map((t) => (
+          <li>
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            <span>{t}</span>
+          </li>
+        ))}
+      </ul>
+      <a class="write" id="bulk-write" href={href}>
+        <span>{b.cta}</span>
+        <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </a>
+      <p class="or">{b.or} <a href={plainMailto(SITE.email, b.subject)}>{SITE.email}</a></p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { track } from "../lib/mail-state";
+  document.getElementById("bulk-write")?.addEventListener("click", () => track("mail_open", { where: "bulk" }));
+</script>
+
+<style>
+  .panel { display: grid; gap: 2.5rem; }
+  @media (min-width: 64rem) { .panel { grid-template-columns: minmax(0, 1fr) minmax(0, 30rem); column-gap: 5rem; align-items: center; } }
+
+  .card { border-radius: var(--radius-xl); background: var(--color-surface-page); padding: clamp(1.25rem, .9rem + 1.6vw, 2rem); box-shadow: 0 0 0 1px var(--color-border-subtle), 0 40px 80px -48px oklch(0.2 0.1 266 / .45); }
+  .pts { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+  .pts li { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); gap: .6rem; align-items: start; line-height: 1.45; }
+  .pts svg { display: block; box-sizing: content-box; padding: .3rem; border-radius: 9999px; background: var(--color-accent-subtle); color: var(--color-accent-text); }
+
+  .write { display: flex; align-items: center; justify-content: center; gap: .5rem; min-height: 3.5rem; margin-top: 1.5rem; padding: .75rem 1.5rem; border-radius: var(--radius-base); background: var(--color-accent-solid); color: var(--color-text-on-accent); font-weight: 700; font-size: 1.0625rem; text-decoration: none; box-shadow: 0 14px 30px -14px oklch(0.448 0.193 268 / .9); transition: background-color 150ms var(--ease-out), scale 150ms var(--ease-out); }
+  .write svg { transition: translate 250ms var(--ease-out); }
+  .write:active { scale: .98; }
+  @media (hover: hover) { .write:hover { background: var(--color-accent-solid-hover); } .write:hover svg { translate: 3px 0; } }
+  .or { margin-top: .9rem; text-align: center; font-size: .875rem; color: var(--color-text-secondary); max-width: none; }
+  .or a { color: var(--color-accent-text); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+</style>

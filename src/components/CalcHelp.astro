@@ -3,8 +3,9 @@
 // Same shell as LinkHelp. The formulas carry live numbers: Problem.astro fills the [data-tpl] nodes on every input.
 import { copy } from "../lib/copy";
 import { fill, type WasteStrings } from "../lib/waste";
-interface Props { id: string; vals: WasteStrings; tab?: "calc" | "numbers" | "limits"; card?: boolean }
-const { id, vals, tab = "calc", card = false } = Astro.props;
+// `text`: a visible text button instead of the "i" icon, where the help is the point (where to find the numbers).
+interface Props { id: string; vals: WasteStrings; tab?: "calc" | "numbers" | "limits"; card?: boolean; text?: string }
+const { id, vals, tab = "calc", card = false, text } = Astro.props;
 const h = copy.problem.help;
 const v = vals as unknown as Record<string, string>;
 const tabs = [
@@ -13,9 +14,16 @@ const tabs = [
   { id: "limits", label: h.tabs.limits },
 ] as const;
 ---
-<button type="button" class="ch-btn" popovertarget={id} data-help-tab={tab} aria-label={h.button} title={h.button}>
-  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 7v4.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" /><circle cx="8" cy="4.4" r="1.25" fill="currentColor" /></svg>
-</button>
+{text ? (
+  <button type="button" class="ch-btn ch-txt" popovertarget={id} data-help-tab={tab}>
+    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 7v4.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" /><circle cx="8" cy="4.4" r="1.25" fill="currentColor" /></svg>
+    {text}
+  </button>
+) : (
+  <button type="button" class="ch-btn" popovertarget={id} data-help-tab={tab} aria-label={h.button} title={h.button}>
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 7v4.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" /><circle cx="8" cy="4.4" r="1.25" fill="currentColor" /></svg>
+  </button>
+)}
 
 {/* One card per page (card=true); the other buttons only open it on their own tab. */}
 {card && (
@@ -81,6 +89,8 @@ const tabs = [
 <style>
   .ch-btn { --ch-bg: var(--ch-bg-in, var(--color-accent-subtle)); --ch-fg: var(--color-accent-text); display: inline-grid; place-items: center; flex: none; width: 1.625rem; height: 1.625rem; padding: 0; border: 0; border-radius: 9999px; background: var(--ch-bg); color: var(--ch-fg); cursor: pointer; position: relative; transition: scale 150ms var(--ease-out), box-shadow 200ms var(--ease-out); }
   .ch-btn::before { content: ""; position: absolute; inset: -.625rem; }
+  .ch-txt { display: inline-flex; gap: .35rem; width: auto; height: auto; min-height: 2rem; padding: .3rem .8rem .3rem .6rem; font: inherit; font-size: .875rem; font-weight: 700; white-space: nowrap; }
+  .ch-txt::before { inset: -.375rem; }
   .ch-btn:active { scale: .92; }
   @media (hover: hover) { .ch-btn:hover { box-shadow: 0 0 0 4px color-mix(in oklab, var(--ch-bg) 45%, transparent); } }
   .ch-btn:focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }

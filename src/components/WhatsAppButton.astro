@@ -7,7 +7,7 @@ import { FEATURES } from "../lib/features";
 const number = whatsappNumber();
 const on = FEATURES.whatsappButton.enabled;
 if (on && number.length < 8) console.warn("[features] whatsappButton è acceso ma il numero WhatsApp manca o non è valido: il pulsante non compare.");
-const text = encodeURIComponent("Ciao, vi scrivo dal sito besaweb.com.");
+const text = encodeURIComponent("Ciao, messaggio dal sito besaweb.com.");
 ---
 {on && number.length >= 8 && (
   <a class="wa" href={`https://wa.me/${number}?text=${text}`} target="_blank" rel="noopener noreferrer" aria-label="Scrivici su WhatsApp" data-umami-event="whatsapp_click">

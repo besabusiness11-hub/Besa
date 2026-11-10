@@ -8,6 +8,14 @@ import { legalLine } from "./contacts";
 import { CHECKOUT, eur, PRICING } from "./offer";
 import { anchorOn, SECTIONS, type SectionState } from "./sections";
 
+/**
+ * Costo per creare e mettere online la pagina in "validation" (deciso dal titolare il 2026-11-10): l’unico importo
+ * che compare in questa fase. I costi di gestione si propongono solo dopo il primo mese, e solo se la pagina ha
+ * portato più contatti del mese prima. Non è ancora nel pannello: per renderlo modificabile da /admin va aggiunto
+ * allo schema di offer.json (keystatic.config.ts + offer.ts + admin.test.ts).
+ */
+export const SETUP_PRICE = 49;
+
 export interface CopyOptions {
   /** Modulo dinamico acceso (FEATURES.leadForm): cambia le frasi che parlano del «modulo». */
   leadForm?: boolean;
@@ -20,6 +28,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
   const V = mode === "validation";
   /** Blocchi con importi: assenti in "validation". */
   const priced = <const T>(block: T): T | undefined => (V ? undefined : block);
+  const setup = eur(SETUP_PRICE);
   return {
     meta: {
       title: "Landing page per Meta Ads | BESA",
@@ -34,7 +43,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
       dockCta: "Ottieni la bozza",
       links: [
         { label: "Fai due conti", href: "#problema" },
-        { label: "Come funziona", href: "#come-funziona" },
+        { label: "Come lavoriamo", href: "#come-funziona" },
         { label: "Cosa include", href: "#cosa-include" },
         { label: V ? "Offerta" : "Piani", href: "#piani" },
         { label: "Chi siamo", href: "#chi-siamo" },
@@ -54,19 +63,19 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
 
     hero: {
       headline: "Ottieni di più dagli ads {em}che stai già pagando{/em}.",
-      lead: "Costruiamo landing page ottimizzate per convertire i click in messaggi. Se ci mandi il link dell’annuncio, al resto pensiamo noi.",
+      lead: "Costruiamo landing page ottimizzate per convertire i click in azioni. Se ci mandi il link dell’annuncio, al resto pensiamo noi.",
       cta: "Ottieni la bozza",
       note: "Ci basta un link. Il resto lo facciamo noi.",
       keep: V
         ? "Il tuo annuncio resta com’è. La bozza la guardi dal telefono, senza impegno."
         : "Il tuo annuncio resta com’è. La bozza è gratis e la provi prima di pagare.",
-      eli5: "Non ti torna? Te lo spiego in modo semplicissimo",
+      eli5: "Non ti torna? Te lo spieghiamo in modo semplicissimo",
       compare: {
         legend: "Dove arriva chi clicca il tuo annuncio",
         before: "Oggi",
         after: "Con BESA",
         captionBefore: "Atterra sul profilo o su un sito generico, trova tante cose, nessuna che gli dice cosa fare. Guarda velocemente e se ne va.",
-        captionAfter: "Atterra su una pagina fatta per quell’annuncio: con la stessa offerta, un pulsante chiaro su cosa fare. E ti scrive.",
+        captionAfter: "Atterra su una pagina fatta esclusivamente per quell’annuncio: con la stessa offerta, un pulsante chiaro su cosa fare. E ti scrive.",
         note: "Esempio illustrativo",
         ad: { name: "La tua attività", sponsored: "Sponsorizzato", offer: "La tua offerta", cta: "Scopri di più" },
         profile: { handle: "latuaattivita", link: "link in bio", doubts: ["Dove scrivo?", "Quanto costa?", "Era questa l’offerta?"] },
@@ -92,7 +101,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
       subject: "Richiesta bozza BESA",
       body: {
         greeting: "Ciao Leo e Ben,",
-        intro: "vorrei una bozza di landing page per il mio annuncio.",
+        intro: "richiesta di una bozza di landing page per questo annuncio.",
         link: "Annuncio o profilo: {link}",
         calc: "Numeri dal calcolatore: {calc}",
         plan: "Piano scelto: {plan}",
@@ -172,6 +181,8 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
       headline: "Quanti soldi delle tue inserzioni {em}non diventano messaggi{/em}?",
       lead: "Meta ti fa pagare ogni click, che poi ti scrivano o no. Metti i tuoi numeri: ti mostriamo quanto spendi per click che non portano a niente.",
       defaultsNote: "Valori di esempio: metti i tuoi.",
+      /** Accanto alla nota sui valori di esempio: apre la scheda sul tab «I tuoi numeri». */
+      defaultsWhere: "Dove li trovo?",
       less: "Diminuisci",
       more: "Aumenta",
       inputs: {
@@ -179,29 +190,37 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
         cpc: { label: "Quanto paghi ogni click (circa)", min: 0.1, max: 3, step: 0.05, value: 0.5 },
         msgs: { label: "Messaggi che ricevi al mese", min: 0, max: 150, step: 1, value: 6 },
         target: {
-          label: "Con una pagina fatta bene ti scrive circa",
-          hint: "È la nostra ipotesi, non una promessa. Puoi cambiarla.",
-          min: 2,
+          label: "Con una pagina BESA ti scrive circa",
+          hint: "È la nostra ipotesi, non una promessa. Sulle landing page di tutti i settori scrivono di solito circa 6 persone su 100 (Unbounce, 2024), ma chi arriva dai social di solito è meno pronto: per questo partiamo dal 3%. Puoi cambiarla.",
+          min: 1,
           max: 12,
           step: 0.5,
-          value: 5,
+          value: 3,
         },
       },
+      // Lo scontrino: prima e dopo con la stessa spesa. {…} sono riempiti dal calcolatore (data-tpl).
       results: {
         title: "Il tuo mese di inserzioni",
+        same: "Stessa spesa su Meta in tutti e due i casi: {budget} al mese, {clicks} click che paghi.",
         clicks: "click che paghi",
-        today: "messaggi che ricevi oggi",
-        extra: "messaggi in più con una pagina al {t}%",
-        total: "Spesa che non ti porta messaggi",
+        colLabel: "Ogni mese",
+        colNow: "Oggi",
+        colWith: "Con BESA",
+        rowMsgs: "Messaggi che ricevi",
+        rowCost: "Ogni messaggio ti costa",
+        rowSpend: "Spesa su Meta",
+        total: "Oggi spendi senza ricevere messaggi",
         perMonth: "al mese",
         year: "In un anno: {year}",
+        gain: "Con BESA, alla stessa spesa:",
+        gainMsgs: "messaggi in più ogni mese",
+        // Solo con almeno un messaggio oggi: la stessa resa di oggi, con meno budget.
+        gainLess: "Oppure ricevi gli stessi {msgs} messaggi di oggi spendendo circa {sameFor} al mese invece di {budget}.",
         // Cita il prezzo: in "validation" manca e la riga non viene mostrata.
         payback: V ? undefined : "La tua pagina costa {price}, una volta. Con questi numeri è lo spreco di {span}.",
-        compareNow: "Oggi un messaggio ti costa",
-        compareWith: "Con la pagina ti costerebbe",
         compareNone: "nessun messaggio",
         dotsPre: "Su 100 persone che cliccano, oggi ti scrivono",
-        dotsPost: "Con una pagina fatta bene, circa",
+        dotsPost: "Con una pagina BESA, circa",
         dotsLegendNow: "ti scrive già",
         dotsLegendMore: "ti scriverebbe",
         dotsLegendGone: "se ne va",
@@ -212,28 +231,44 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
       },
       calcSummary: "{budget} al mese · {cpc} a click · {msgs} messaggi al mese",
       why: {
-        headline: "Perché si perdono.",
+        headline: "Perché perdi potenziali clienti?",
         items: [
           {
             title: "Li devi convincere velocemente.",
-            text: "Chi clicca il tuo annuncio è interessato, ma non ancora convinto. Sei in vantaggio, perché ha appena dimostrato interesse: ora va accompagnato subito dal click al passo successivo (un messaggio, una chiamata), senza lasciarlo da solo a cercare cosa fare.",
+            text: "Chi clicca il tuo annuncio è interessato, ma non ancora convinto. Sei in vantaggio, perché ha appena dimostrato interesse: ora va accompagnato subito dal click al passo successivo (un messaggio, una chiamata), senza lasciarlo da solo a cercare cosa fare. È quello che facciamo noi: una pagina che riprende il tuo annuncio, risponde ai suoi dubbi in pochi secondi e lo porta a contattarti con un solo tocco.",
           },
           {
-            title: "Chi clicca vuole risposte, subito.",
+            title: "Chi clicca sull’annuncio vuole risposte, subito.",
             text: "Vuole sapere quanto costa e come contattarti. Un profilo o un sito generico gli mette davanti dieci cose da guardare, e molti smettono di cercare.",
           },
           {
-            title: "Le persone non hanno pazienza.",
-            text: "Una pagina lenta o piena di cose perde le persone prima che leggano la prima riga. Le nostre sono leggere apposta.",
+            title: "L’essere umano è pigro.",
+            text: "Una pagina lenta o piena di elementi viene abbandonata velocemente. Le nostre pagine web sono leggere volutamente.",
           },
         ],
       },
-      closing: "Si risolve senza toccare l’annuncio né il budget: cambia solo la pagina dove atterra chi clicca. Lì lavoriamo noi.",
-      note: "Solo aritmetica sui numeri che inserisci e su un’ipotesi che scegli tu. Non è una previsione. Il calcolo resta nel tuo browser: non salviamo niente.",
+      closing: {
+        q: "Come risolviamo il problema?",
+        text: "Non tocchiamo l’annuncio né il budget: cambia solo la pagina dove atterra l’utente interessato.",
+      },
+      // Come facciamo il conto, in chiaro sotto lo scontrino. {t} segue il cursore dell’ipotesi.
+      method: {
+        title: "Come facciamo il conto",
+        steps: [
+          "Dividiamo quanto spendi per quanto paghi ogni click: così sappiamo quante persone arrivano.",
+          "Guardiamo quante di loro oggi ti scrivono, con i messaggi che hai indicato.",
+          "Ipotizziamo che con una pagina BESA ti scriva il {t}% di chi arriva. La percentuale la scegli tu.",
+          "La differenza sono i messaggi che oggi perdi, e la spesa che va in click senza risposta.",
+        ],
+        all: "Vedi tutti i passaggi",
+      },
+      note: leadForm
+        ? "È un conto semplice, fatto con i numeri che metti tu: non è una previsione. Lo fa il tuo telefono o computer, noi non vediamo niente e non salviamo niente. Li riceviamo solo se ce li mandi tu, insieme alla richiesta."
+        : "È un conto semplice, fatto con i numeri che metti tu: non è una previsione. Lo fa il tuo telefono o computer, noi non vediamo niente e non salviamo niente. Li riceviamo solo se ce li mandi tu, nella email.",
       help: {
         button: "Come facciamo il conto?",
         title: "Come facciamo il conto",
-        subtitle: "Quattro passaggi di aritmetica, con i tuoi numeri. Niente viene salvato.",
+        subtitle: "Quattro passaggi semplici, con i tuoi numeri. Non salviamo niente.",
         close: "Chiudi",
         done: "Ho capito",
         tabs: { calc: "Il conto", numbers: "I tuoi numeri", limits: "Quanto è affidabile" },
@@ -263,7 +298,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
           items: [
             {
               title: "Il {t}% è un’ipotesi.",
-              text: "Come riferimento, la mediana di molte landing page nel mondo è intorno al 6% (Unbounce, report 2024, tutti i settori). Noi partiamo più in basso, per prudenza.",
+              text: "Come riferimento, la mediana di molte landing page nel mondo è intorno al 6% (Unbounce, report 2024, tutti i settori). Chi arriva dai social di solito è meno pronto, per questo partiamo dal 3%.",
               source: { label: "Fonte: Unbounce, tassi di conversione medi delle landing page", href: "https://unbounce.com/average-conversion-rates-landing-pages/" },
             },
             { title: "Il conto è prudente.", text: "Non contiamo i click persi prima ancora che la pagina si carichi: è un’altra perdita, in più rispetto a questa." },
@@ -275,11 +310,18 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
 
     fix: {
       headline: "Un annuncio = una pagina = {em}un’azione{/em}.",
-      lead: "Chi clicca ritrova la stessa offerta dell’annuncio e un solo pulsante per contattarti. Nessuna distrazione, nessun dubbio su cosa fare.",
+      lead: "Replichiamo esattamente la stessa offerta dell’annuncio e mettiamo un solo pulsante per contattarti. Nessuna distrazione, nessun dubbio su cosa fare: solo un’azione.",
     },
 
     howItWorks: {
-      headline: "Come funziona: {em}mandi un link{/em}, al resto pensiamo noi.",
+      headline: "Come lavoriamo con te: {em}mandi un link{/em}, al resto pensiamo noi.",
+      // Etichette del disegno del passo 3 (decorativo, aria-hidden).
+      viz: {
+        online: "Online",
+        talkTitle: V ? "Dopo il primo mese" : "Ti aggiorniamo",
+        talkText: V ? "contiamo insieme i contatti in più" : "com’è andata, cosa migliorare",
+        linked: "collegata all’annuncio",
+      },
       steps: [
         {
           title: "Ci mandi il tuo annuncio",
@@ -296,21 +338,22 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
         },
         V
           ? {
-              title: "Ti facciamo la bozza",
-              text: "Partiamo da cosa prometti nell’annuncio: scriviamo i testi e prepariamo la pagina. In 48 ore la apri dal telefono, su un indirizzo di prova. Senza impegno.",
+              title: "Creiamo la bozza per te",
+              text: "Partiamo da cosa offri nell’annuncio: scriviamo i testi e prepariamo la pagina. In 48 ore la apri dal telefono, su un indirizzo di prova. Senza impegno.",
             }
           : {
-              title: "Ti facciamo la bozza, gratis",
-              text: "Partiamo da cosa prometti nell’annuncio: scriviamo i testi e prepariamo la pagina. In 48 ore la apri dal telefono, su un indirizzo di prova. Non paghi niente e non ti impegni.",
+              title: "Creiamo la bozza per te, gratis",
+              text: "Partiamo da cosa offri nell’annuncio: scriviamo i testi e prepariamo la pagina. In 48 ore la apri dal telefono, su un indirizzo di prova. Non paghi niente e non ti impegni.",
             },
+        // Nessuna chiamata nemmeno qui: tutto per iscritto, come promesso al passo 1.
         V
           ? {
-              title: "Ne parliamo e, se ti convince, andiamo online",
-              text: "Ci mandi testi, foto e tutto quello che serve, e la pagina va online entro 5 giorni lavorativi. Poi la colleghi alle tue inserzioni: ti mandiamo la guida, oppure lo facciamo noi.",
+              title: `Se ti convince, la mettiamo online per ${setup}`,
+              text: "Ci scrivi cosa sistemare e ci mandi testi e foto, per email o su WhatsApp se ci lasci il numero. La pagina va online entro 5 giorni lavorativi. Poi va collegata alle tue inserzioni e al Pixel di Meta, che conta i contatti. Il collegamento lo facciamo noi, oppure ti mandiamo una guida passo passo.",
             }
           : {
               title: "Se ti piace, paghi e andiamo online",
-              text: "Firmi, ci mandi testi e foto e la pagina va online entro 5 giorni lavorativi. Poi la colleghi alle tue inserzioni: ti mandiamo la guida, oppure lo facciamo noi.",
+              text: "Firmi, ci mandi testi e foto e la pagina va online entro 5 giorni lavorativi. Poi va collegata alle tue inserzioni e al Pixel di Meta, che conta i contatti. Il collegamento lo facciamo noi, oppure ti mandiamo una guida passo passo.",
             },
       ],
     },
@@ -344,7 +387,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
           text: FULL
             ? "Cambi offerta o annuncio? Con l’abbonamento ci scrivi e aggiorniamo la pagina."
             : V
-              ? "Ti seguiamo anche dopo la messa online. Qualcosa da sistemare? Ci scrivi e ne parliamo."
+              ? "Ti seguiamo anche dopo la messa online. Qualcosa da sistemare? Ci scrivi e lo sistemiamo."
               : "Qualcosa da sistemare? Nei 30 giorni dopo la messa online le correzioni sono gratis.",
           chat: ["Da lunedì l’offerta cambia, aggiorniamo?", "Fatto, è già online."],
         },
@@ -358,6 +401,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
           id: "people",
           title: "Parli con chi la costruisce",
           text: "Leo e Ben, nessun intermediario. Ti risponde chi ci mette le mani.",
+          bubble: "Ciao, siamo Leo e Ben.",
         },
       ],
     },
@@ -493,20 +537,36 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
       },
     }),
 
-    // Sezione offerta in "validation": nessun importo. L’assenza di listino è presentata come metodo
-    // (offerta costruita sui tuoi annunci, decisa dopo la bozza), non come fase iniziale.
+    // Sezione offerta in "validation": l’unico importo è il costo di partenza (SETUP_PRICE). I costi di gestione
+    // non hanno cifre: si propongono dopo il primo mese, solo se la pagina ha portato più contatti del mese prima.
     offerValidation: {
       eyebrow: "L’offerta",
-      headline: "Prima vedi la tua pagina. Poi decidiamo insieme {em}come proseguire{/em}.",
-      lead: "Ogni attività ha numeri diversi: quante inserzioni hai, quanto spesso cambi offerta, quanto vuoi essere seguito. Per questo l’offerta la costruiamo sui tuoi annunci, dopo che hai visto il risultato.",
+      headline: `${setup} per partire. Il resto, {em}solo se funziona{/em}.`,
+      lead: `Oltre a quello che spendi su Meta, che resta com’è, ti chiediamo ${setup} per creare la tua pagina. Dopo il primo mese guardiamo i numeri: parliamo di costi di gestione solo se la pagina ti ha portato contatti che senza di lei non avresti avuto.`,
       points: [
-        { key: "48 ore", text: "La bozza della tua pagina, pronta da aprire sul telefono." },
-        { key: "Su misura", text: "Un’offerta pensata per le tue inserzioni e per quello che ti serve davvero." },
-        { key: "Decidi tu", text: "Vai avanti solo se la bozza ti convince. Senza impegno." },
+        { key: "Bozza in 48 ore", text: "La apri dal telefono, senza impegno. Se non ti convince, ci fermiamo lì." },
+        { key: `${setup} per andare online`, text: "Se la bozza ti convince, la pagina va online per questa cifra, una volta sola. Il budget delle inserzioni resta tuo e va a Meta come oggi." },
+        { key: "Il primo mese", text: "Nessun altro costo. La pagina lavora e contiamo i contatti che porta, con il Pixel di Meta." },
+        { key: "Poi, solo se funziona", text: "Confrontiamo i contatti del primo mese con quelli del mese prima. Se sono di più, ti proponiamo per iscritto i costi di gestione. Se no, non ti chiediamo altro." },
       ],
       cta: "Ottieni la bozza",
       /** Link verso questa sezione da altre parti della pagina (Features). */
       link: "Vedi l’offerta",
+    },
+
+    // Richieste particolari e tanti annunci: nessun limite. Email diretta con un oggetto suo, in ogni modalità.
+    bulk: {
+      headline: "Hai tanti annunci? {em}Mandaceli tutti{/em}.",
+      lead: "Non c’è un limite: che tu abbia 2 annunci o 100, prepariamo una pagina per ognuno. Lo stesso se hai una richiesta particolare: più sedi, un’offerta diversa per ogni zona, o qualcosa fuori dal solito.",
+      points: [
+        "Scrivici direttamente cosa ti serve, anche in due righe.",
+        "Puoi mandarci tutti i link insieme, o il tuo @profilo: gli annunci li troviamo noi.",
+        "Ti rispondiamo entro 1 giorno lavorativo con una proposta per il tuo caso.",
+      ],
+      cta: "Scrivici la tua richiesta",
+      subject: "Richiesta particolare BESA",
+      body: "Ciao Leo e Ben,\nrichiesta particolare: \n\nAnnunci (link o @profilo): \n\nGrazie!",
+      or: "oppure scrivi a",
     },
 
     proof: {
@@ -541,8 +601,8 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
           name: "Ben",
           role: "Prodotto e sviluppo tecnico",
           // Fumetto sopra la besamoji, al passaggio sul nome o sull’immagine.
-          greeting: "Ciao, sono Ben!",
-          bio: "Studio Business Creation insieme a Leo. In BESA trasformo la bozza in una pagina che funziona davvero: la costruisco, la metto online, collego il Pixel di Meta e controllo che resti veloce e sicura nel tempo. Ho sviluppato anche gli strumenti interni con cui seguiamo ogni progetto, dalla tua richiesta alla pagina pubblicata. Se qualcosa non va dietro le quinte, sono io che lo sistemo.",
+          greeting: "Ciao da Ben!",
+          bio: "Studia Business Creation insieme a Leo. In BESA trasforma la bozza in una pagina che funziona davvero: la costruisce, la mette online, collega il Pixel di Meta e controlla che resti veloce e sicura nel tempo. Ha sviluppato anche gli strumenti interni con cui seguiamo ogni progetto, dalla tua richiesta alla pagina pubblicata. Se qualcosa non va dietro le quinte, è lui che lo sistema.",
           photoAlt: "Illustrazione di Ben",
           linkedin: "https://www.linkedin.com/in/benito-giacometti-valentino-589840388/",
           linkedinLabel: "Ben su LinkedIn",
@@ -550,8 +610,8 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
         {
           name: "Leo",
           role: "Business, strategia, marketing e contenuti",
-          greeting: "Ciao, sono Leo!",
-          bio: "Studio Business Creation & Entrepreneurship a H-FARM e da anni lancio progetti digitali. Per BESA mi occupo di strategia imprenditoriale e ho ideato il sistema che crea le tue landing page e le mantiene veloci, stabili e misurabili. Mi interessa una cosa sola: che la tua pagina trasformi i click che hai pagato in messaggi veri.",
+          greeting: "Ciao da Leo!",
+          bio: "Studia Business Creation & Entrepreneurship a H-FARM e da anni lancia progetti digitali. In BESA si occupa di strategia imprenditoriale e ha ideato il sistema che crea le tue landing page e le mantiene veloci, stabili e misurabili. Gli interessa una cosa sola: che la tua pagina trasformi i click che hai pagato in messaggi veri.",
           photoAlt: "Illustrazione di Leo",
           linkedin: "https://www.linkedin.com/in/leonardo-margiotta-644126289/",
           linkedinLabel: "Leo su LinkedIn",
@@ -580,7 +640,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
         },
         {
           q: "Devo cambiare il mio annuncio?",
-          a: "No. Partiamo dall’annuncio che hai e costruiamo la pagina in modo coerente. Se vuoi ritoccarlo, ne parliamo, ma non è una condizione.",
+          a: "No. Partiamo dall’annuncio che hai e costruiamo la pagina in modo coerente. Se vuoi ritoccarlo, ti diamo qualche consiglio, ma non è una condizione.",
         },
         {
           q: "Dove vedo la pagina prima di decidere?",
@@ -589,11 +649,11 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
         V
           ? {
               q: "Come funziona il pagamento?",
-              a: "Ne parliamo solo dopo che hai visto la bozza, e solo se ti convince. A quel punto ti mandiamo una proposta scritta, costruita sui tuoi annunci, con tutte le condizioni chiare prima di partire.",
+              a: `La bozza la vedi senza impegno. Se ti convince, la pagina va online per ${setup}, una volta sola, e per il primo mese non ti chiediamo altro. Poi confrontiamo i contatti arrivati con quelli del mese prima: solo se sono di più ti proponiamo per iscritto i costi di gestione, con tutte le condizioni chiare.`,
             }
           : {
               q: "Quando pago?",
-              a: "Solo dopo aver visto la bozza, e solo se ti convince. Poi firmi, ci mandi testi e foto e andiamo online. Collegare la pagina alle tue inserzioni è facile: ti mandiamo la guida, oppure lo facciamo noi.",
+              a: "Solo dopo aver visto la bozza, e solo se ti convince. Poi firmi, ci mandi testi e foto e andiamo online. Il collegamento della pagina alle tue inserzioni e al Pixel di Meta lo facciamo noi, oppure ti mandiamo una guida passo passo.",
             },
         {
           q: "Cos’è il Pixel di Meta e mi serve?",
@@ -620,7 +680,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
         {
           q: "Quanto costa?",
           a: V
-            ? "Dipende da quante inserzioni hai, da quanto spesso cambi offerta e da quanto vuoi essere seguito: per questo l’offerta la costruiamo su di te. Prima vedi la bozza, poi ti mandiamo una proposta chiara, senza impegno."
+            ? `Oltre a quello che spendi su Meta, che non cambia: ${setup} per creare la pagina e metterla online. I costi di gestione arrivano solo dopo il primo mese, e solo se la pagina ti ha portato più contatti del mese prima. Hai tanti annunci o un caso particolare? Scrivici: non c’è un limite.`
             : FULL
               ? `Dipende da quanto vuoi seguirla nel tempo. La una tantum costa ${eur(PRICING.oneTime)} una volta sola; l’abbonamento ${eur(PRICING.monthly)} al mese, con modifiche ai contenuti illimitate; il su misura parte da ${eur(PRICING.customFrom)} al mese per chi ha più inserzioni attive. In ogni caso hosting, certificato SSL ed email con i contatti sono inclusi. Il dominio (l’indirizzo del sito, tipo latuaattivita.it) resta a tuo nome: se ce l’hai lo colleghiamo, se no lo registriamo noi per te (il primo anno è incluso). La prima bozza la vedi prima di pagare.`
               : `Una landing costa ${eur(PRICING.launch)}, una volta sola. Hosting, certificato SSL ed email con i contatti sono inclusi (l’hosting per 12 mesi, poi ${eur(PRICING.hostingYear)} all’anno). Il dominio (l’indirizzo del sito, tipo latuaattivita.it) resta a tuo nome: se ce l’hai lo colleghiamo, se no lo registriamo noi per te (il primo anno è incluso). La prima bozza la vedi prima di pagare.`,
@@ -808,7 +868,7 @@ export function buildCopy(mode: OfferMode, { leadForm = FEATURES.leadForm.enable
         {
           title: "Come lavoriamo",
           text: V
-            ? "Ci mandi il link del tuo annuncio o del tuo profilo e ci dici cosa vuoi ottenere. Noi prepariamo una bozza della pagina, che apri facilmente dal telefono. Se ti piace, ne parliamo, la colleghi all’annuncio e vediamo insieme se ti arrivano più contatti."
+            ? `Ci mandi il link del tuo annuncio o del tuo profilo e ci dici cosa vuoi ottenere. Noi prepariamo una bozza della pagina, che apri facilmente dal telefono. Se ti piace, la mettiamo online per ${setup}, la colleghiamo all’annuncio e dopo un mese vediamo insieme se ti arrivano più contatti.`
             : "Ci mandi il link del tuo annuncio o del tuo profilo e ci dici cosa vuoi ottenere. Noi prepariamo una bozza della pagina, gratis, che apri facilmente dal telefono. Se ti piace, paghi, la colleghi all’annuncio e vediamo insieme se ti arrivano più contatti.",
         },
       ],

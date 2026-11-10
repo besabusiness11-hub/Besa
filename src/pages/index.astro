@@ -16,6 +16,7 @@ import Proof from "../components/Proof.astro";
 import SectionNav from "../components/SectionNav.astro";
 import Team from "../components/Team.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
+import BulkRequest from "../components/BulkRequest.astro";
 import Base from "../layouts/Base.astro";
 import { copy } from "../lib/copy";
 import { FEATURES } from "../lib/features";
@@ -41,6 +42,8 @@ import { faqJsonLd, organizationJsonLd, serviceJsonLd, websiteJsonLd } from "../
     {on.servizio && <Features />}
     {on.cosaInclude && <Inside />}
     {on.piani && (VALIDATION ? <OfferValidation /> : <Offer />)}
+    {/* Many ads or special requests: always on, no panel switch. */}
+    <BulkRequest />
     {on.proof && <Proof />}
     {on.chiSiamo && <Team />}
     {on.faq && <Faq />}

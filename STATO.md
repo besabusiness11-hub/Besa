@@ -6,7 +6,7 @@ Aggiornato il 10 novembre 2026. La situazione sempre aggiornata è nel **pannell
 
 Il sito è in **fase di validazione**:
 
-- **Non ci sono prezzi.** La sezione "Offerta" dice che stiamo partendo su invito e che l'offerta la spieghiamo a voce.
+- **Un solo prezzo: €49 per partire.** La sezione "Offerta" spiega che la pagina va online per €49 e che dei costi di gestione si parla solo dopo il primo mese, e solo se la pagina ha portato più contatti del mese prima. I €49 per ora si cambiano solo nel codice (`SETUP_PRICE` in `src/lib/copy.ts`), non dal pannello.
 - **I contatti arrivano per email** a info@besaweb.com. Il visitatore incolla il link del suo annuncio, preme "Ottieni la bozza" e si apre la sua app di posta con il messaggio già scritto. Se la posta non si apre, può copiare il messaggio da un popup.
 - **Il modulo dinamico è spento**, ma il suo codice è ancora nel sito, pronto da riaccendere.
 
@@ -14,7 +14,7 @@ Il sito è in **fase di validazione**:
 
 | Cosa | Stato | Perché |
 |---|---|---|
-| Modalità offerta | **validation** (senza prezzi) | Stiamo validando l'idea con i primi clienti |
+| Modalità offerta | **validation** (solo i €49 di partenza) | Stiamo validando l'idea con i primi clienti |
 | Modulo dinamico (anteprima, ricevuta, invio dal sito) | **Spento** | Per ora bastano le email, senza nessun servizio da configurare |
 | Pagamento online | **Spento** | Non c'è ancora un link di pagamento né la P.IVA |
 | Pulsante WhatsApp | **Spento** | Il numero non è ancora deciso |
@@ -24,7 +24,7 @@ Il sito è in **fase di validazione**:
 
 | Modalità | Cosa vede il visitatore |
 |---|---|
-| `validation` | Nessun prezzo, offerta "su invito". **È quella attiva ora.** |
+| `validation` | Solo i €49 di partenza, costi di gestione dopo il primo mese se la pagina funziona. **È quella attiva ora.** |
 | `launch` | Una landing page a 390 € |
 | `full` | Tre piani (Abbonamento, Una tantum, Su misura) e il cursore per il preventivo |
 
@@ -45,7 +45,7 @@ Tutto si cambia dal **pannello**: **besaweb.com/admin**.
 
 **Vuoi vedere il risultato prima di pubblicare?** Dalla cartella del sito lancia `pnpm admin`: si apre lo stesso pannello in locale (http://127.0.0.1:4321/admin) e il sito nell'altra scheda (http://127.0.0.1:4321) cambia mentre salvi, senza pubblicare niente. Quando va bene, fai commit e push.
 
-**Se qualcosa non va, il sito non si rompe.** Prima di ogni pubblicazione partono i controlli automatici (per esempio: nessun prezzo visibile in validazione). Se un salvataggio non li passa, la pubblicazione si ferma e online resta la versione precedente.
+**Se qualcosa non va, il sito non si rompe.** Prima di ogni pubblicazione partono i controlli automatici (per esempio: in validazione nessun prezzo oltre ai €49 di partenza). Se un salvataggio non li passa, la pubblicazione si ferma e online resta la versione precedente.
 
 **Prima di accendere qualcosa, fai la sua checklist.** Se riaccendi il modulo senza aver configurato l'invio delle email, le richieste dei visitatori non arrivano.
 

@@ -24,7 +24,8 @@ const c = h.compare;
     </div>
 
 
-    <figure class="stage" id="cmp">
+    {/* --auto: how long "Oggi" stays on before the switch plays (time to read its caption). Read by the script too. */}
+    <figure class="stage" id="cmp" style="--auto: 7000ms">
       <fieldset class="seg">
         <legend class="seg-legend">{c.legend}</legend>
         <div class="seg-track">
@@ -122,7 +123,8 @@ const c = h.compare;
         if (!e.isIntersecting) return;
         io.disconnect();
         stage.classList.add("is-auto");
-        timer = window.setTimeout(() => { after.checked = true; stop(); }, 3200);
+        const wait = parseFloat(getComputedStyle(stage).getPropertyValue("--auto")) || 7000;
+        timer = window.setTimeout(() => { after.checked = true; stop(); }, wait);
       }, { threshold: 0.25 });
       io.observe(stage);
     }
@@ -165,7 +167,7 @@ const c = h.compare;
   .seg-opt:has(input:focus-visible) { outline: 3px solid var(--color-focus-ring-on-accent); outline-offset: 2px; }
   .stage:has(#cmp-after:checked) .seg-pill { translate: 100% 0; }
   .seg-fill { position: absolute; inset: 0; border-radius: inherit; background: color-mix(in oklab, var(--color-text-on-accent) 22%, transparent); transform: scaleX(0); transform-origin: left; }
-  .stage.is-auto .seg-fill { animation: fill 3.2s linear forwards; }
+  .stage.is-auto .seg-fill { animation: fill var(--auto) linear forwards; }
   @keyframes fill { to { transform: none; } }
 
   /* scene: ad card, wire, phone, overlays. Pure decoration; captions carry the meaning. */

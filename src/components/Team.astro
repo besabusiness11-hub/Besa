@@ -14,7 +14,7 @@ const t = copy.team;
 
     {/* Compact cards: the besamoji tile beside name, role and LinkedIn; the bio below. Each besamoji
         greets once when its card scrolls in, and again on hover or focus; hovering the name or the tile
-        also pops a speech bubble ("Ciao, sono Leo!"). */}
+        also pops a speech bubble ("Ciao da Leo!"). */}
     <div class="duo">
       {t.members.map((m, i) => (
         <article class:list={["person", i === 0 ? "l" : "r"]} data-who={m.name.toLowerCase()}>
