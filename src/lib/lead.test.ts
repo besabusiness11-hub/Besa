@@ -99,7 +99,9 @@ import { clientIp, createRateLimiter as mkLimiter, readBody as rb } from "./lead
 describe("hardening", () => {
   it("ignores forwarded headers unless a trusted proxy is configured", () => {
     const h = new Headers({ "x-forwarded-for": "1.1.1.1", "cf-connecting-ip": "2.2.2.2" });
-    expect(clientIp(h, "9.9.9.9", undefined)).toBe("9.9.9.9");
+    // "" = not configured. Not `undefined`: that falls back to process.env.TRUSTED_PROXY, which Coolify
+    // also sets during the Docker build, where the tests run.
+    expect(clientIp(h, "9.9.9.9", "")).toBe("9.9.9.9");
     expect(clientIp(h, "9.9.9.9", "cloudflare")).toBe("2.2.2.2");
     const x = new Headers({ "x-forwarded-for": "6.6.6.6, 3.3.3.3" });
     expect(clientIp(x, "9.9.9.9", "xff-last")).toBe("3.3.3.3");
